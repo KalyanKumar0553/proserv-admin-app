@@ -1,0 +1,2 @@
+####
+https://github.com/gruemme/spring-boot-3-security-h2-example/blob/main/src/main/java/com/example/demo/model/UserRole.java
