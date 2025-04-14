@@ -9,6 +9,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class ProServApiApplication {
 
 	public static void main(String[] args) throws Exception {
-		SpringApplication.run(ProServApiApplication.class, args);
+		SpringApplication.run(ProServApiApplication.class, args); 
 	}
 }
