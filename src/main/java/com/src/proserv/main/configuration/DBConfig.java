@@ -5,6 +5,7 @@ import java.util.HashMap;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -16,23 +17,30 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.src.proserv.main", entityManagerFactoryRef = "dbEntityManager", transactionManagerRef = "dbTransactionManager")
+@EnableJpaRepositories(basePackages = "com.src.proserv.main.repository", entityManagerFactoryRef = "dbEntityManager", transactionManagerRef = "dbTransactionManager")
 public class DBConfig {
 
 	@Autowired
 	private Environment env;
+	
+	
+	@Value("${spring.jpa.properties.hibernate.dialect}")
+    private String hibernateDialect;
+	
+	 @Value("${spring.jpa.hibernate.ddl-auto}")
+	 private String ddlAuto;
+	
 
 	@Bean
 	LocalContainerEntityManagerFactoryBean dbEntityManager() {
-		System.out.println("Inside configuration");
 		final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 		em.setDataSource(dbDataSource());
-		em.setPackagesToScan("com.src.proserv.main");
+		em.setPackagesToScan("com.src.proserv.main.model");
 		final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(vendorAdapter);
 		final HashMap<String, Object> properties = new HashMap<String, Object>();
-		properties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-		properties.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
+		properties.put("hibernate.hbm2ddl.auto", ddlAuto);
+		properties.put("hibernate.dialect", hibernateDialect);
 		em.setJpaPropertyMap(properties);
 
 		return em;
