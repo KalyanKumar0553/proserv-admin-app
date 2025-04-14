@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class ZipCode {
+public class ZipCode  extends Auditable {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

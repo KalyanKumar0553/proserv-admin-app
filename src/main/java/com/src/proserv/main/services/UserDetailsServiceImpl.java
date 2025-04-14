@@ -76,10 +76,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			user.setEnabled(false);
 			String userID = generateUUID();
 			user.setUUID(userID);
-			user.setCreatedBy(userID);
-			user.setCreatedOn(LocalDateTime.now());
-			user.setLastModifiedBy(userID);
-			user.setLastModifiedOn(LocalDateTime.now());
 			Context context = new Context();
 			context.setVariable("otp", otp);
 			sendOTP(user,context);
@@ -109,8 +105,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	public String generateOtp() {
 		Random random = new Random();
-		return "123456";
-//		return String.format("%06d", random.nextInt(999999));
+		return String.format("%06d", random.nextInt(999999));
 	}
 
 	public Optional<UserInfo> findUserByUsername(String username) {
@@ -193,8 +188,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			String hashPassword = PasswordUtil.hashPassword(password, salt);
 			String encodedPassword = passwordEncoder.encode(hashPassword);
 			user.setPassword(encodedPassword);
-			user.setLastModifiedBy(user.getUUID());
-			user.setLastModifiedOn(LocalDateTime.now());
 			userRepository.save(user);
 		} else {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Error: Failed To Reset Password");
@@ -208,8 +201,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		String hashPassword = PasswordUtil.hashPassword(password, salt);
 		String encodedPassword = passwordEncoder.encode(hashPassword);
 		user.setPassword(encodedPassword);
-		user.setLastModifiedBy(user.getUUID());
-		user.setLastModifiedOn(LocalDateTime.now());
 		userRepository.save(user);
 	}
 
@@ -226,7 +217,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		} if(profileRequest.getProfilePic()!=null) {
 			user.setProfilePic(profileRequest.getProfilePic());
 		}
-		user.setLastModifiedOn(LocalDateTime.now());
 		userRepository.save(user);
 	}
 }

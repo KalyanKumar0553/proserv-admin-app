@@ -76,10 +76,6 @@ public class OperationService {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
 					"Service Operation with Name and Title exists already");
 		}
-		serviceOperation.setCreatedBy(userUUID);
-		serviceOperation.setCreatedOn(LocalDateTime.now());
-		serviceOperation.setLastModifiedBy(userUUID);
-		serviceOperation.setLastModifiedOn(LocalDateTime.now());
 		serviceOperationRepository.save(serviceOperation);
 		return "Service Operation Created Succesfully";
 	}
@@ -98,8 +94,6 @@ public class OperationService {
 		serviceOperation.setDisplayURL(serviceOperationRequestDTO.getDisplayURL());
 		serviceOperation.setCreatedBy(userUUID);
 		serviceOperation.setCreatedOn(LocalDateTime.now());
-		serviceOperation.setLastModifiedBy(userUUID);
-		serviceOperation.setLastModifiedOn(LocalDateTime.now());
 		serviceOperationRepository.save(serviceOperation);
 		return "Service Operation Updated Succesfully";
 	}

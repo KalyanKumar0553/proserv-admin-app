@@ -69,10 +69,6 @@ public class FAQService {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
 					"Question is already available with taskID");
 		}
-		faq.setCreatedBy(userUUID);
-		faq.setCreatedOn(LocalDateTime.now());
-		faq.setLastModifiedBy(userUUID);
-		faq.setLastModifiedOn(LocalDateTime.now());
 		faqRepository.save(faq);
 		return "FAQ Created Succesfully";
 	}

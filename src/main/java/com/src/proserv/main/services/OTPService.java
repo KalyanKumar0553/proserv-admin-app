@@ -46,15 +46,7 @@ public class OTPService {
 			LocalDateTime nextOtpAt = otpSentAt.plusMinutes(OTP_VALIDITY_MINUTES);
 			LocalDateTime currentTime =  LocalDateTime.now();
 
-			System.out.println("Current Time : " + LocalDateTime.now());
-			System.out.println("OTP Sent Time : " + otpSentAt);
-			System.out.println("Limit Time : " + nextOtpAt);
-
-
 			boolean isLessThanValidityMinutes = nextOtpAt.isBefore(currentTime);
-
-			System.out.println("isLessThanValidityMinutes : " + isLessThanValidityMinutes);
-
 			if (isLessThanValidityMinutes) {
 				throw new OTPException(RequestStatus.OTP_TIME_LIMIT_ERROR,AppUtils.formatSecondsToHMString(ChronoUnit.SECONDS.between(nextOtpAt,otpSentAt)));
 			}

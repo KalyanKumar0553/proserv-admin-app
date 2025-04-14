@@ -29,10 +29,6 @@ public class ServiceLocationTaskService {
 		if (exists) {
 			throw new RuntimeException("Service task already exists for this location.");
 		}
-		task.setCreatedBy(userUUID);
-		task.setCreatedOn(LocalDateTime.now());
-		task.setLastModifiedBy(userUUID);
-		task.setLastModifiedOn(LocalDateTime.now());
 		return repository.save(task);
 	}
 
@@ -56,8 +52,6 @@ public class ServiceLocationTaskService {
 
 	public ServiceLocationTask update(Long locationID,Long id, ServiceLocationTask updated, String userUUID) {
 		return repository.findById(id).map(existing -> {
-			existing.setLastModifiedBy(userUUID);
-			existing.setLastModifiedBy(userUUID);
 			existing.setEnabled(updated.getEnabled());
 			return repository.save(existing);
 		}).orElseThrow(() -> new AbstractRuntimeException(500,"Service task not found with details"));

@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class City {
+public class City extends Auditable{
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

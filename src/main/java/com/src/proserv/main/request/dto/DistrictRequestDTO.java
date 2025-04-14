@@ -14,8 +14,6 @@ public class DistrictRequestDTO {
 
 	public static District toEntityFromDistrictRequestDTO(District district,DistrictRequestDTO request,String userUUID) {
 		district.setName(request.getDistrictName());
-		district.setLastModifiedBy(userUUID);
-		district.setLastModifiedOn(LocalDateTime.now());
 		return district;
 	}
 }

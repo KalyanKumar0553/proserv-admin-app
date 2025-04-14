@@ -1,8 +1,7 @@
 package com.src.proserv.main.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.UUID;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,7 +11,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class ProServRoles {
+public class ProServRoles  extends Auditable {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,13 +19,6 @@ public class ProServRoles {
 
     private String userUUID;
 
-    private LocalDateTime createdOn;
-
-    private Long createdBy;
-
-    private LocalDateTime lastModifiedOn;
-
-    private Long lastModifiedBy;
-
     private String roles;
+
 }

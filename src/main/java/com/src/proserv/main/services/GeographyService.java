@@ -38,8 +38,6 @@ public class GeographyService {
 		if(stateHolder.isPresent()) {
 			State currState = stateHolder.get();
 			currState.setName(stateRequest.getName());
-			currState.setLastModifiedBy(userUUID);
-			currState.setLastModifiedOn(LocalDateTime.now());
 			stateRepository.save(currState);
 		} else {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Unable To Update State");
@@ -50,10 +48,6 @@ public class GeographyService {
 	public String createState(String userUUID,StateRequestDTO stateRequest) {
 		State currState = State.builder().name(stateRequest.getName()).code(stateRequest.getCode()).build();
 		currState.setName(stateRequest.getName());
-		currState.setCreatedBy(userUUID);
-		currState.setCreatedOn(LocalDateTime.now());
-		currState.setLastModifiedBy(userUUID);
-		currState.setLastModifiedOn(LocalDateTime.now());
 		stateRepository.save(currState);
 		return "Succesfully Added State";
 	}
@@ -79,8 +73,6 @@ public class GeographyService {
 	public String createDistrict(String userUUID,DistrictRequestDTO districtRequest) {
 		District currDistrict = District.builder().stateCode(districtRequest.getStateCode()).name(districtRequest.getDistrictName()).build();
 		currDistrict = DistrictRequestDTO.toEntityFromDistrictRequestDTO(currDistrict, districtRequest, userUUID);
-		currDistrict.setCreatedBy(userUUID);
-		currDistrict.setCreatedOn(LocalDateTime.now());
 		Optional<District> existingDistrictHolder = districtRepository.findByStateCodeAndName(districtRequest.getStateCode(),districtRequest.getDistrictName());
 		if(existingDistrictHolder.isPresent()) {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "District with State code and Name already exists");

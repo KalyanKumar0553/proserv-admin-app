@@ -20,11 +20,7 @@ public class ProviderService {
 	final ProviderRepository providerRepository;
 
     public Provider saveProvider(Provider provider,String userUUID) {
-    	provider.setCreatedBy(userUUID);
-    	provider.setCreatedOn(LocalDateTime.now());
-    	provider.setLastModifiedBy(userUUID);
-    	provider.setLastModifiedOn(LocalDateTime.now());
-        return providerRepository.save(provider);
+    	return providerRepository.save(provider);
     }
 
     public List<Provider> getAllProviders() {
@@ -47,8 +43,6 @@ public class ProviderService {
             provider.setPreferredTimes(updatedProvider.getPreferredTimes());
             provider.setPreferredDays(updatedProvider.getPreferredDays());
             provider.setGender(updatedProvider.getGender());
-            provider.setLastModifiedBy(userUUID);
-            provider.setLastModifiedOn(LocalDateTime.now());
             return providerRepository.save(provider);
         }).orElseThrow(() -> new RuntimeException("Provider not found with ID: " + id));
         return "Succesfully Updated Provider";

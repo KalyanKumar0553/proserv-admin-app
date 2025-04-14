@@ -67,10 +67,6 @@ public class CategoryService {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
 					"Service Category with Name exists already");
 		}
-		serviceCategory.setCreatedBy(userUUID);
-		serviceCategory.setCreatedOn(LocalDateTime.now());
-		serviceCategory.setLastModifiedBy(userUUID);
-		serviceCategory.setLastModifiedOn(LocalDateTime.now());
 		categoryRepository.save(serviceCategory);
 		return "Service Category Created Succesfully";
 	}
@@ -84,8 +80,6 @@ public class CategoryService {
 		ServiceCategory sc = existingServiceCategory.get();
 		sc.setName(serviceCategoryRequest.getName());
 		sc.setDisplayURL(serviceCategoryRequest.getDisplayURL());
-		sc.setLastModifiedBy(userUUID);
-		sc.setLastModifiedOn(LocalDateTime.now());
 		categoryRepository.save(sc);
 		return "Service Category Created Succesfully";
 	}

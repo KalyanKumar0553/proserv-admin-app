@@ -34,8 +34,6 @@ public class UserAddressRequestDTO extends Auditable {
 		currAddress.setLandmark(addressRequest.getLandmark());
 		currAddress.setContactPerson(addressRequest.getContactPerson());
 		currAddress.setContactMobile(addressRequest.getContactMobile());
-		currAddress.setLastModifiedOn(LocalDateTime.now());
-		currAddress.setLastModifiedBy(user.getUUID());
 		return currAddress;
     }
 }

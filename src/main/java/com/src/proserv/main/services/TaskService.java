@@ -71,8 +71,6 @@ public class TaskService {
 		}
 		serviceTask.setCreatedBy(userUUID);
 		serviceTask.setCreatedOn(LocalDateTime.now());
-		serviceTask.setLastModifiedBy(userUUID);
-		serviceTask.setLastModifiedOn(LocalDateTime.now());
 		taskRepository.save(serviceTask);
 		return "Service Task Created Succesfully";
 	}
