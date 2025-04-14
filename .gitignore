@@ -5,6 +5,20 @@
 /tmp
 /out-tsc
 /bazel-out
+/node
+/node/*
+.settings/
+.settings/*
+dist/*
+dist/
+.mvn/
+.mvn/*
+
+.angular/
+.angular/*
+
+.vscode/
+.vscode/*
 
 # Node
 /node_modules
