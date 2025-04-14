@@ -1,10 +1,10 @@
 package com.src.proserv.main.configuration;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +22,6 @@ import com.src.proserv.main.services.UserDetailsServiceImpl;
 
 import lombok.extern.log4j.Log4j2;
 
-@SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
 @Log4j2

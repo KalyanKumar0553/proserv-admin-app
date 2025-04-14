@@ -1,0 +1,44 @@
+@import './../../../app.component.scss';
+
+.login-container {
+    font-family: 'Inter', sans-serif;
+    background: $background-color;
+  
+    .login-box {
+      max-width: 400px;
+    }
+  
+    .btn-primary {
+      background-color: $primary-color;
+      border-color: $primary-color;
+      border-radius: 8px;
+      font-weight: 600;
+      height: 45px;
+    }
+  
+    .form-control {
+      border-radius: 6px;
+      height: 45px;
+      font-size: 14px;
+    }
+  
+    .return-login {
+      width:100%;
+      text-align: right;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 14px;
+    }
+  
+    .custom-control-label {
+      font-size: 13px;
+    }
+  
+    .object-fit-cover {
+      width: 600px;
+      height: 550px;
+    }
+  }
+  

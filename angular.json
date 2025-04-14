@@ -8,57 +8,82 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
-        }
-      },
-      "root": "",
-      "sourceRoot": "src",
-      "prefix": "app",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:application",
-          "options": {
-            "outputPath": "target/classes/static",
-            "index": "src/index.html",
-            "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
-            "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/assets",
-              "src/favicon.ico"
-            ],
-            "styles": [
-              "src/assets/css/styles.scss",
-              "src/styles.scss"
-            ],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
-                }
-              ],
-              "outputHashing": "all"
-            },
-            "development": {
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true
-            }
-          },
-          "defaultConfiguration": "production"
         },
+		"@angular-eslint/schematics:application": {
+		     "setParserOptionsProject": true
+		 },
+		 "@angular-eslint/schematics:library": {
+		     "setParserOptionsProject": true
+		 }
+      },
+	  "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+	  "prefix": "app",
+      "architect": {
+		"build": {
+		         "builder": "@angular-devkit/build-angular:browser",
+		         "options": {
+		           "outputPath": "target/classes/static",
+		           "index": "src/index.html",
+		           "main": "src/main.ts",
+		           "tsConfig": "src/tsconfig.app.json",
+		           "polyfills": "src/polyfills.ts",
+		           "assets": [
+		             "src/assets",
+		             "src/favicon.ico"
+		           ],
+		           "styles": [
+		             "node_modules/bootstrap/dist/css/bootstrap.css",
+					 "src/assets/css/styles.scss",
+					 "src/styles.scss",
+		           ],
+		           "scripts": [
+		           ],
+		           "allowedCommonJsDependencies": [
+		           ]
+		         },
+		         "configurations": {
+		           "production": {
+		             "optimization": {
+		               "scripts": true,
+		               "styles": {
+		                 "minify": false,
+		                 "inlineCritical": false
+		               },
+		               "fonts": true
+		             },
+		             "outputHashing": "all",
+		             "sourceMap": false,
+		             "namedChunks": false,
+		             "extractLicenses": true,
+		             "vendorChunk": false,
+		             "buildOptimizer": true,
+		             "fileReplacements": [
+		               {
+		                 "replace": "src/environments/environment.ts",
+		                 "with": "src/environments/environment.prod.ts"
+		               }
+		             ]
+		           },
+		           "development": {
+		             "vendorChunk": true,
+		             "extractLicenses": false,
+		             "namedChunks": true,
+		             "buildOptimizer": false,
+		             "sourceMap": true,
+		             "optimization": {
+		               "scripts": true,
+		               "styles": {
+		                 "minify": false,
+		                 "inlineCritical": true
+		               },
+		               "fonts": true
+		             },
+		             "outputHashing": "all"
+		           }
+		         }
+		       },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
@@ -98,6 +123,7 @@
       }
     }
   },
+  "defaultProject": "proserv-admin-app",
   "cli": {
     "analytics": false
   }
