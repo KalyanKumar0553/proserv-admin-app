@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @Table(name="faq")
 @Builder
-public class FrequentlyAskedQuestion extends Auditable{
+public class FrequentlyAskedQuestion extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

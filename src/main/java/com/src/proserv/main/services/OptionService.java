@@ -73,8 +73,6 @@ public class OptionService {
 		}
 		serviceOption.setCreatedBy(userUUID);
 		serviceOption.setCreatedOn(LocalDateTime.now());
-		serviceOption.setLastModifiedBy(userUUID);
-		serviceOption.setLastModifiedOn(LocalDateTime.now());
 		optionRepository.save(serviceOption);
 		return "Service Option Created Succesfully";
 	}
@@ -87,8 +85,6 @@ public class OptionService {
 		ServiceOption serviceOption = existingServiceOption.get();
 		serviceOption.setName(serviceOptionRequest.getName());
 		serviceOption.setDescription(serviceOptionRequest.getDescription());
-		serviceOption.setLastModifiedBy(userUUID);
-		serviceOption.setLastModifiedOn(LocalDateTime.now());
 		optionRepository.save(serviceOption);
 		return "Service Option Updated Succesfully";
 	}

@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(AbstractRuntimeException.class)
     public ResponseEntity<?> handleResourceNotFoundException(AbstractRuntimeException ex) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),true,ex.getErrorCode());
-    	ex.printStackTrace();
+//    	ex.printStackTrace();
         return ResponseEntity.status(ex.getErrorCode()).body(errorDetails);
     }
 

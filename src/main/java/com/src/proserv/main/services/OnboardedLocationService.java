@@ -24,10 +24,6 @@ public class OnboardedLocationService {
     	if(exists) {
     		throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Location already Onboarded");
     	}
-    	location.setCreatedBy(userUUID);
-    	location.setCreatedOn(LocalDateTime.now());
-    	location.setLastModifiedBy(userUUID);
-    	location.setLastModifiedOn(LocalDateTime.now());
     	repository.save(location);
         return "Location Onboarded Successfully";
     }
@@ -50,8 +46,6 @@ public class OnboardedLocationService {
             loc.setDistrictID(updated.getDistrictID());
             loc.setName(updated.getName());
             loc.setEnabled(updated.getEnabled());
-            loc.setLastModifiedBy(userUUID);
-            loc.setLastModifiedOn(LocalDateTime.now());
             return repository.save(loc);
         }).orElseThrow(() -> new RuntimeException("Location not found with ID"));
     }
