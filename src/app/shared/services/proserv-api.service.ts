@@ -10,7 +10,7 @@ export class ProServApiService extends ApiHandlerService {
   
   constructor(httpClient: HttpClient) {
     super(httpClient);
-    this.baseUrl = environment.GF_API_ENDPOINT;
+    this.baseUrl = environment.API_ENDPOINT;
   }
 
 }

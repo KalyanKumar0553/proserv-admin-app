@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.src.proserv.main.model.Otp;
@@ -20,6 +21,10 @@ public interface OtpRepository extends JpaRepository<Otp, Long> {
 
 	@Transactional
 	@Modifying
-	@Query(value = "DELETE FROM OtpAttempt o WHERE o.username = :username")
+	@Query(value = "DELETE FROM Otp o WHERE o.username = :username")
 	void deleteAllByUsername(String username);
+	
+	@Modifying
+    @Query("DELETE FROM Otp o WHERE o.createdAt < :cleanupTime")
+    int deleteOldExpiredOtps(@Param("cleanupTime") LocalDateTime cleanupTime);
 }

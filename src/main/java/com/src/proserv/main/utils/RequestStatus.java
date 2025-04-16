@@ -9,7 +9,7 @@ public enum RequestStatus {
 	SIGNUP_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Unable To Create the User"),
 	SIGNUP_SUCCESS(HttpStatus.OK.value(), "User registered successfully. Please verify OTP sent to %s "),
 	LOGIN_REQUEST_PASSWORD_REQUIRED_ERROR(HttpStatus.BAD_REQUEST.value(),"Invalid Request. Password is Required to login"),
-	LOGIN_REQUEST_INVALID_USERNAME_ERROR(HttpStatus.BAD_REQUEST.value(),"Invalid Username. Please enter email or 10 digit mobile number."),
+	LOGIN_REQUEST_INVALID_USERNAME_ERROR(HttpStatus.BAD_REQUEST.value(),"Invalid Username. Please enter valid email or 10 digit mobile number."),
 	LOGIN_REQUEST_USERNAME_REQUIRED_ERROR(HttpStatus.BAD_REQUEST.value(),"Invalid Request. Username is Required to login"),
 	OTP_VERIFICATION_ERROR_OTP_REQUIRED(HttpStatus.BAD_REQUEST.value(),"Invalid Request. OTP is Required to verify"),
 	VERIFICATION_REQUEST_OTP_ERROR(HttpStatus.BAD_REQUEST.value(),"Invalid Request. Please enter valid OTP"),

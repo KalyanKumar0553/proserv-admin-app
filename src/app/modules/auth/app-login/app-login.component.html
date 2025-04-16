@@ -22,10 +22,10 @@
                 <input type="password" #passwordInput class="form-control" [(ngModel)]="password" placeholder="Enter your password" />
               </div>
             
-              <div class="form-group d-flex justify-content-between align-items-center">
+              <div class="form-group d-flex justify-content-between align-items-center remember-control">
                 <div class="custom-control custom-checkbox">
                   <input type="checkbox" class="custom-control-input" id="rememberMe" />
-                  <label class="custom-control-label" for="rememberMe">Remember me</label>
+                  <label class="custom-control-label remember-control-label" for="rememberMe">Remember me</label>
                 </div>
                 <a class="text-primary small" href="#" (click)="showForgotPasswordScreen()">Forgot password ?</a>
               </div>
@@ -34,7 +34,7 @@
                   {{ errorMsg }}
                 </div>
               }
-              <button class="btn btn-primary btn-block" (click)="signinUser()">Sign in</button>
+              <button class="btn btn-primary btn-block" (click)="login()">Login</button>
           } @else if (state==forgotPasswordState) {
               <div class="form-group">
                 <label>Username</label>

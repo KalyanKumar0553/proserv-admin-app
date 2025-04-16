@@ -3,6 +3,9 @@ package com.src.proserv.main.validators;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import org.springframework.http.HttpStatus;
+
+import com.src.proserv.main.exceptions.AbstractRuntimeException;
 import com.src.proserv.main.utils.AppConstants;
 
 public class AppValidators {
@@ -24,5 +27,21 @@ public class AppValidators {
 			return true;
 		}
 		return false;
+	}
+	
+	public static void validatePassword(String password) {
+		if (password.length() < 8) {
+            throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Password must be at least 8 characters long.");
+        }
+        if (!password.matches(".*[A-Z].*")) {
+        	throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Password must contain at least one uppercase letter.");
+        }
+        if (!password.matches(".*[0-9].*")) {
+        	throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Password must contain at least one digit.");
+        }
+        if (!password.matches(".*[@#$%*()_].*")) {
+        	throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Password must contain at least one special character (@ # $ % * ( ) _ ).");
+        }
+
 	}
 }

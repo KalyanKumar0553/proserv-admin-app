@@ -1,0 +1,155 @@
+@import './../../../app.component.scss';
+
+.header-bg {
+    background-color: $background-color;
+}
+
+header {
+  position: sticky;
+  top:0;
+}
+
+.header-logo {
+    height: 64px;
+    width: 150px;
+}
+.active-menu {
+    text-decoration: underline !important;
+    text-decoration-line: overline  !important;
+}
+
+nav {
+    .nav-item-wrapper {
+        position: relative;
+        display: inline-block;
+
+        &:hover,
+        &:focus-within {
+            .submenu {
+                display: block;
+            }
+
+            .arrow-icon {
+                transform: rotate(-45deg);
+            }
+
+            .nav-item::after {
+                width: 100%;
+            }
+        }
+    }
+
+    .nav-item {
+        position: relative;
+        font-weight: 500;
+        color: $primary-color;
+        text-decoration: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        display: inline-block;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+
+        i.arrow-icon {
+            display: inline-block;
+            margin-left: 4px;
+            transition: transform 0.3s ease;
+            border: solid $primary-color;
+            border-width: 0 2px 2px 0;
+            padding: 3px;
+            transform: rotate(45deg);
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 4px;
+            height: 2px;
+            width: 0;
+            background-color: $primary-color;
+            transition: width 0.3s ease;
+        }
+
+        &:hover,
+        &:focus {
+            transform: scale(1.05);
+        }
+
+        &.active {
+            font-weight: 700;
+
+            &::after {
+                width: 100%;
+            }
+        }
+    }
+
+    .submenu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: $primary-color;
+        border-radius: 0.25rem;
+        min-width: 160px;
+        box-shadow: 0 6px 20px rgba($primary-color, 0.3);
+        z-index: 1000;
+
+        .submenu-item {
+            display: block;
+            padding: 8px 16px;
+            color: $background-color;
+            background-color: $primary-color;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            position: relative;
+
+            &:hover {
+                background-color: $background-color;
+                color: $primary-color;
+                transform: scale(1.05);
+
+                &::after {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+.logo {
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+.profile {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px $primary-color;
+    }
+}
+
+.profile-icon-wrapper {
+    width: 48px;
+    height: 50px;
+    font-size: 25px;
+    border-radius: 50%;
+    border: 3px solid $primary-color;
+    background-color: $background-color;
+    color: $primary-color;
+}
+.nav-item-wrapper {
+    position: relative;
+
+    &:hover .submenu-popover {
+        display: block;
+    }
+}

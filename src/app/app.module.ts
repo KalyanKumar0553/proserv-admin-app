@@ -4,8 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app.routing';
-import { ComponentsModule } from './shared/components/components.module';
 import { AppComponent } from './app.component';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 
 @NgModule({
   imports: [
@@ -13,12 +14,16 @@ import { AppComponent } from './app.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ComponentsModule,
     RouterModule,
+    CategoriesModule,
     AppRoutingModule
 ],
   declarations: [
-    AppComponent,
+    AppComponent
+  ],
+  exports:[
+    RouterModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthStateConstants } from 'app/shared/constants/constants.enum';
 import RouteUrl from 'app/shared/constants/router-url.enum';
-import { AuthService } from 'app/shared/services/auth-service';
+import { AuthService } from 'app/shared/services/auth.service';
 import { ValidationService } from 'app/shared/services/validation-service'
 @Component({
   selector: 'app-login',
@@ -18,10 +18,9 @@ export class AppLoginComponent implements OnInit {
   @ViewChild('otpInput') otpInputRef!: ElementRef;
 
   state: string = AuthStateConstants.LOGIN_STATE;
-  email: string = null;
+  username:string = "";
   password: String = null;
   errorMsg = "";
-  username:string = "";
   otp:string = "";
   retypePassword:string = "";
   submitted = false;
@@ -35,39 +34,37 @@ export class AppLoginComponent implements OnInit {
   constructor(private router: Router,private validationService:ValidationService,private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.email = "";
+    this.username = "";
     this.state = AuthStateConstants.LOGIN_STATE;
-    console.log(this.state);
   }
 
   updateStateToForgotPassword() {
-    this.email = "";
+    this.username = "";
     this.password = "";
     this.errorMsg = "";
     this.state = AuthStateConstants.FORGOT_PASSWORD_STATE;
   }
   
   updateStateToLogin() {
-    this.email = "";
+    this.username = "";
     this.errorMsg = "";
     this.state = AuthStateConstants.LOGIN_STATE;
   }
 
   login() {
     this.errorMsg = "";
-    if(!this.email) {
+    if(!this.username) {
       this.errorMsg = "Please enter email !";
     } else  if(!this.password) {
       this.errorMsg = "Please enter password !";
-    }else if(!this.validationService.validateEmail(this.email)) {
+    }else if(!this.validationService.validateEmail(this.username)) {
       this.errorMsg = "Please enter valid email !";
     } else {
-      this.authService.loginUser({"email":this.email,"password":this.password,"isEmailSent":true}).then(res=>{
+      this.authService.loginUser({"username":this.username,"password":this.password}).then(res=>{
           this.navigateToDashboard();
       }).catch(err=>{
         this.errorMsg = "Unable To login with credentials !";
-      });
-        
+      }); 
     }
   }
 
@@ -77,12 +74,12 @@ export class AppLoginComponent implements OnInit {
 
   resetPassword() {
     this.errorMsg = "";
-    if(!this.email) {
+    if(!this.username) {
       this.errorMsg = "Please enter email !";
-    } else if(!this.validationService.validateEmail(this.email)) {
+    } else if(!this.validationService.validateEmail(this.username)) {
       this.errorMsg = "Please enter valid email !";
     } else {
-      let result = this.authService.resetPassword({"email":this.email,"isEmailSent":true});
+      let result = this.authService.resetPassword({"email":this.username,"isEmailSent":true});
     }
   }
 

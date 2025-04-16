@@ -1,1 +1,37 @@
-<p>header works!</p>
+<header class="d-flex justify-content-between align-items-center px-4 py-2 header-bg text-white shadow-sm">
+    <!-- Left Section -->
+    <div class="d-flex align-items-center gap-4">
+        <img src="./../../../../assets/images/logo.png" alt="Logo" class="header-logo" />
+
+        <nav class="d-flex gap-3">
+            <div class="nav-item-wrapper" tabindex="0" (mouseenter)="setHover('home')" (mouseleave)="setHover(null)">
+                <span class="nav-item">
+                    <i class="bi bi-house-door-fill"></i>
+                    Home
+                </span>
+            </div>
+            <div class="nav-item-wrapper" tabindex="1" (mouseenter)="setHover('categories')" (mouseleave)="setHover(null)">
+                <span class="nav-item">
+                    Categories
+                    <i class="arrow-icon" [class.rotate]="setHover('categories')"></i>
+                </span>
+                <div class="submenu" [class.visible]="setHover('categories')">
+                    <a class="submenu-item" href="#/dashboard/list-category">List Categories</a>
+                    <a class="submenu-item" href="#">Add Category</a>
+                    <a class="submenu-item" href="#">Delete Category</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Profile Section -->
+    <div>
+        <div class="d-flex align-items-center position-relative nav-item-wrapper">
+            <div class="profile-icon-wrapper d-flex align-items-center justify-content-center" tabindex="0"
+                role="button" id="profilePopover" data-bs-toggle="popover" data-bs-placement="bottom"
+                data-bs-html="true" data-bs-trigger="focus" data-bs-content="">
+                <i class="bi bi-person-fill profile-icon"></i>
+            </div>
+        </div>
+    </div>
+</header>
