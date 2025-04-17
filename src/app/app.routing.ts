@@ -10,17 +10,19 @@ import { ListCategoryComponent } from './modules/categories/list-category/list-c
 const routes: Routes =[
   {
     path: '',
-    component: AppLoginComponent,
-  },
-  { 
-    path: 'dashboard', 
     component: DashboardComponent,
     children: [
       {
         path: 'list-category',
         component: ListCategoryComponent,
+      },{
+        
       }
     ]
+  },
+  {
+    path: 'login',
+    component: AppLoginComponent,
   },
 ];
 

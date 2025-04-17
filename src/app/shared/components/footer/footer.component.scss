@@ -2,3 +2,9 @@ footer {
     position: sticky;
     bottom: 0;
 }
+.footer-border {
+    box-shadow: var(--bs-box-shadow-sm) !important;
+    border-top: 1px;
+    border-style: outset;
+    padding-top: 14px;
+}

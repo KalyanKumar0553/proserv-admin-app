@@ -5,20 +5,22 @@
 
         <nav class="d-flex gap-3">
             <div class="nav-item-wrapper" tabindex="0" (mouseenter)="setHover('home')" (mouseleave)="setHover(null)">
-                <span class="nav-item">
-                    <i class="bi bi-house-door-fill"></i>
-                    Home
-                </span>
+                <a href="">
+                    <span class="nav-item" [class.active]="isActive('home')" (click)="setActive('home')">
+                        <i class="bi bi-house-door-fill"></i>
+                        Home
+                    </span>
+                </a>
             </div>
             <div class="nav-item-wrapper" tabindex="1" (mouseenter)="setHover('categories')" (mouseleave)="setHover(null)">
-                <span class="nav-item">
+                <span class="nav-item" [class.active]="isActive('categories')">
                     Categories
-                    <i class="arrow-icon" [class.rotate]="setHover('categories')"></i>
+                    <i class="arrow-icon" [class.rotate]="isHovered('categories')"></i>
                 </span>
-                <div class="submenu" [class.visible]="setHover('categories')">
-                    <a class="submenu-item" href="#/dashboard/list-category">List Categories</a>
-                    <a class="submenu-item" href="#">Add Category</a>
-                    <a class="submenu-item" href="#">Delete Category</a>
+                <div class="submenu" [class.visible]="isHovered('categories')">
+                    <a class="submenu-item" routerLink="/list-category" (click)="setActive('categories')">List Categories</a>
+                    <a class="submenu-item" (click)="setActive('categories')">Add Category</a>
+                    <a class="submenu-item" (click)="setActive('categories')">Delete Category</a>
                 </div>
             </div>
         </nav>
