@@ -59,7 +59,6 @@ public class AuthValidator {
 		} else {
 			throw new InvalidRequestException(RequestStatus.LOGIN_REQUEST_INVALID_USERNAME_ERROR);
 		}
-		AppValidators.validatePassword(password.get());
 	}
 
 	public void validateOTPVerificationRequest(OTPVerificationRequestDTO otpVerificationRequest) {

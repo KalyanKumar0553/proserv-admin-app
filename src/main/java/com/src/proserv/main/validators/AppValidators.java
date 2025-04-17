@@ -39,8 +39,14 @@ public class AppValidators {
         if (!password.matches(".*[0-9].*")) {
         	throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Password must contain at least one digit.");
         }
+        if (!password.matches(".*[a-z].*")) {
+        	throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Password must contain at least one lowercase letter.");
+        }
         if (!password.matches(".*[@#$%*()_].*")) {
-        	throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Password must contain at least one special character (@ # $ % * ( ) _ ).");
+        	throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Password must contain at least one special character @ # $ % * ( ) _ ");
+        }
+        if (!password.matches("^[A-Za-z0-9@#$%*()_]+$")) {
+        	throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Password contains invalid characters. Only letters, digits, and @ # $ % * ( ) _ are allowed.");
         }
 
 	}

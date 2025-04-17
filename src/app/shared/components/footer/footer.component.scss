@@ -1,7 +1,9 @@
 footer {
-    position: sticky;
+    position: absolute;
     bottom: 0;
+    width: 100%;
 }
+
 .footer-border {
     box-shadow: var(--bs-box-shadow-sm) !important;
     border-top: 1px;

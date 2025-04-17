@@ -30,6 +30,10 @@ export class AuthService {
     return this.apiService.save(ApiUrls.SEND_OTP,payload).toPromise();
   }
 
+  async sendOTP(payload:any={}) {
+
+  }
+
   clearTimer() {
     if(this.clearDataTimer) {
       clearTimeout(this.clearDataTimer);

@@ -1,10 +1,23 @@
-<aside class="sidebar">
-    <div class="logo">ProServe</div>
-    <nav class="nav">
-      <a routerLink="/dashboard" class="active">Dashboard Overview</a>
-      <a routerLink="/appointments">Appointments</a>
-      <a routerLink="/clients">Client Management</a>
-      <a routerLink="/performance">Performance Metrics</a>
-      <a routerLink="/settings">Settings</a>
-    </nav>
-  </aside>
+<div class="nav-container">
+  <div class="sidenav" *ngFor="let navItem of navItems">
+    <div class="nav-main-title">
+      <span class="title-text" (click)="setActiveLabel(item)" *ngIf="!navItem.expanded">
+        {{navItem.label}}
+      </span>
+      <span class="title-text" *ngIf="navItem.expanded">
+        {{navItem.label}}
+      </span>
+      <span *ngIf="navItem?.child?.length>0" class="title-icon">
+        <i class="bi bi-plus title-icon-img" *ngIf="!navItem.expanded" (click)="toggleExpansion(navItem)"></i>
+        <i class="bi bi-dash title-icon-img" *ngIf="navItem.expanded" (click)="toggleExpansion(navItem)"></i>
+      </span>
+    </div>
+    <ul class="nav flex-column" *ngIf="navItem.expanded">
+      <li class="nav-item" [class.active-item]="item.active" *ngFor="let item of navItem.child" (click)="setActiveLabel(item)">
+        <a class="nav-link">
+          {{ item.label }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

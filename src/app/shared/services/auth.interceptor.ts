@@ -1,29 +1,37 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {
+  HttpEvent,
+  HttpInterceptor,
+  HttpHandler,
+  HttpRequest,
+  HttpErrorResponse
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  // Inject the token from a service (e.g., AuthService) if needed
-  private getToken(): string | null {
-    // Retrieve token from local storage, a service, etc.
-    return localStorage.getItem('accessToken');
-  }
+  constructor(private router: Router) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.getToken();
+    const token = localStorage.getItem('access_token');
 
-    if (token) {
-      // Clone the request and add the authorization header
-      const clonedRequest = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
+    // Clone the request and add the Authorization header
+    const authReq = token
+      ? req.clone({
+          headers: req.headers.set('Authorization', `Bearer ${token}`)
+        })
+      : req;
+
+    return next.handle(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          // Navigate to login page
+          this.router.navigate(['/login']);
         }
-      });
-      return next.handle(clonedRequest);
-    }
-
-    // If no token, pass the request unmodified
-    return next.handle(req);
+        return throwError(() => error);
+      })
+    );
   }
 }

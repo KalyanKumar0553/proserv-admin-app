@@ -1,8 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthStateConstants } from 'app/shared/constants/constants.enum';
+import { AuthStateConstants, LocalStorageKeys } from 'app/shared/constants/constants.enum';
 import RouteUrl from 'app/shared/constants/router-url.enum';
 import { AuthService } from 'app/shared/services/auth.service';
+import { LocalStorageService } from 'app/shared/services/local-service';
 import { ValidationService } from 'app/shared/services/validation-service'
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ export class AppLoginComponent implements OnInit {
   otp:string = "";
   retypePassword:string = "";
   submitted = false;
+  rememberMe : boolean = false;
 
   loginState:string = AuthStateConstants.LOGIN_STATE;
   forgotPasswordState:string = AuthStateConstants.FORGOT_PASSWORD_STATE;
@@ -31,7 +33,7 @@ export class AppLoginComponent implements OnInit {
   
   AuthStateConstants: any = AuthStateConstants;
   
-  constructor(private router: Router,private validationService:ValidationService,private authService: AuthService) { }
+  constructor(private router: Router,private validationService:ValidationService,private authService: AuthService,private localService : LocalStorageService) { }
 
   ngOnInit(): void {
     this.username = "";
@@ -49,27 +51,6 @@ export class AppLoginComponent implements OnInit {
     this.username = "";
     this.errorMsg = "";
     this.state = AuthStateConstants.LOGIN_STATE;
-  }
-
-  login() {
-    this.errorMsg = "";
-    if(!this.username) {
-      this.errorMsg = "Please enter email !";
-    } else  if(!this.password) {
-      this.errorMsg = "Please enter password !";
-    }else if(!this.validationService.validateEmail(this.username)) {
-      this.errorMsg = "Please enter valid email !";
-    } else {
-      this.authService.loginUser({"username":this.username,"password":this.password}).then(res=>{
-          this.navigateToDashboard();
-      }).catch(err=>{
-        this.errorMsg = "Unable To login with credentials !";
-      }); 
-    }
-  }
-
-  navigateToDashboard() {
-    this.router.navigateByUrl(RouteUrl.ROUTE_SEPARATOR+RouteUrl.ADMIN_DASHBOARD);
   }
 
   resetPassword() {
@@ -98,6 +79,7 @@ export class AppLoginComponent implements OnInit {
       this.usernameInputRef.nativeElement.focus();
       return;
     }
+    this.authService.sendOTP()
     this.state = this.verifyOTPAndResetPasswordState;
   }
 
@@ -154,7 +136,7 @@ export class AppLoginComponent implements OnInit {
     this.state = this.loginState;
   }
 
-  signinUser() {
+  login() {
     if (!this.username || !this.password) {
       this.errorMsg = '* All fields are required.';
       if(!this.username) {
@@ -173,6 +155,14 @@ export class AppLoginComponent implements OnInit {
       return;
     }
     this.errorMsg = '';
+    this.authService.loginUser({"username":this.username,"password":this.password}).then(res=>{
+      if(res?.statusMsg?.accessToken) {
+        this.localService.saveData(LocalStorageKeys.TOKEN,res?.statusMsg?.accessToken);
+        this.router.navigateByUrl(RouteUrl.ROUTE_SEPARATOR+RouteUrl.HOME);
+      }
+    }).catch(err=>{
+      this.errorMsg = err?.message || "Unable To login with credentials !";
+    }); 
   }
 
   isValidEmailOrPhone(value: string): boolean {

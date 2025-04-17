@@ -12,3 +12,6 @@ export enum ApiUrls {
   LOGIN = '/auth/login',
   SEND_OTP = '/auth/send_otp'
 }
+export enum LocalStorageKeys {
+   TOKEN = 'token'
+}

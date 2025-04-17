@@ -5,7 +5,7 @@
 }
 
 header {
-  position: sticky;
+  position: static;
   top:0;
 }
 
@@ -13,6 +13,11 @@ header {
     height: 64px;
     width: 150px;
 }
+
+.header-container {
+    width: 235px;
+}
+
 .active-menu {
     text-decoration: underline !important;
     text-decoration-line: overline  !important;
