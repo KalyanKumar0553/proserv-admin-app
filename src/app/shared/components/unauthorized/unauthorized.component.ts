@@ -18,7 +18,6 @@ export class UnauthorizedComponent {
   goHome() {
     let previousUrl = this.navigationTracker.getPreviousUrl();
     previousUrl = (previousUrl == '/' || previousUrl == '/unauthorized')  ? '/login' : previousUrl;
-    console.log(previousUrl);
     this.router.navigateByUrl(previousUrl);
   }
 }

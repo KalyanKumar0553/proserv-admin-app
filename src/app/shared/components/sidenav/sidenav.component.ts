@@ -40,8 +40,6 @@ export class SidenavComponent {
     });
     navItem.active=true;
     if(navItem.route != prevActiveRoute) {
-      console.log(navItem.route);
-      console.log(prevActiveRoute);
       this.componentChangeEvent.emit(navItem.route);
     }
   }
