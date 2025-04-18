@@ -24,10 +24,13 @@ export class DashboardComponent implements OnInit {
   constructor(private localService: LocalStorageService,private router:Router,private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.loading = true;
     this.authService.fetchRoles().then(()=>{
       this.router.navigate(['/home'])
     }).catch(err=>{
       this.router.navigate(['/login']);
+    }).finally(()=>{
+      this.loading = false;
     });
   }
 }

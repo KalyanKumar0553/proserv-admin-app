@@ -9,6 +9,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { AuthInterceptor } from './shared/services/auth.interceptor';
 import { CredentialsInterceptor } from './shared/services/credentials-interceptor';
+import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { CredentialsInterceptor } from './shared/services/credentials-intercepto
     HttpClientModule,
     RouterModule,
     CategoriesModule,
-    AppRoutingModule
+    AppRoutingModule,
+    SpinnerComponent
 ],
   declarations: [
     AppComponent
