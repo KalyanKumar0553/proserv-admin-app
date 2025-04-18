@@ -44,4 +44,22 @@
     margin-left: 7px;
   }
 
+  .alert {
+    padding-top: 9px;
+    padding-bottom: 9px;
+
+    strong {  
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0px;
+    }
+  }
+
+  .alert-dismissible .btn-close {
+    top: -7px;
+  }
+
+  .reset-password-error  {
+    margin-top:11px;
+  }
 }

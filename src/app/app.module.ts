@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { AuthInterceptor } from './shared/services/auth.interceptor';
+import { CredentialsInterceptor } from './shared/services/credentials-interceptor';
 
 @NgModule({
   imports: [
@@ -30,6 +31,11 @@ import { AuthInterceptor } from './shared/services/auth.interceptor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CredentialsInterceptor,
       multi: true
     }
   ],

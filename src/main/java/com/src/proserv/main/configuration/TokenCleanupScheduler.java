@@ -8,14 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.src.proserv.main.repository.InvalidatedTokenRepository;
 
+import lombok.AllArgsConstructor;
+
 @Component
+@AllArgsConstructor
 public class TokenCleanupScheduler {
 
     private final InvalidatedTokenRepository tokenRepository;
-
-    public TokenCleanupScheduler(InvalidatedTokenRepository tokenRepository) {
-        this.tokenRepository = tokenRepository;
-    }
 
     @Scheduled(fixedRate = 60 * 60 * 1000)
     @Transactional

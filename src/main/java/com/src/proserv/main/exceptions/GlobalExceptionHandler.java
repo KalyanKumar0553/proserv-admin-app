@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGlobalException(Exception ex, WebRequest request) {
-    	ErrorDetails errorDetails = new ErrorDetails(new Date(), "Request Failed with Internal Server Error",true,HttpStatus.INTERNAL_SERVER_ERROR.value());
+    	ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),true,HttpStatus.INTERNAL_SERVER_ERROR.value());
 //    	ex.printStackTrace();
     	return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }

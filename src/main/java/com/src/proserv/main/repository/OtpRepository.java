@@ -17,7 +17,7 @@ public interface OtpRepository extends JpaRepository<Otp, Long> {
 
 	Optional<Otp> findFirstByUsernameOrderByCreatedAtDesc(String username);
 
-    Optional<Otp> findByUsernameAndCreatedAtBetweenOrderByCreatedAtAsc(String username,LocalDateTime startTime,LocalDateTime endTime);
+    Optional<Otp> findFirstByUsernameAndCreatedAtBetweenOrderByCreatedAtDesc(String username,LocalDateTime startTime,LocalDateTime endTime);
 
 	@Transactional
 	@Modifying

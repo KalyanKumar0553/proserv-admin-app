@@ -1,0 +1,11 @@
+<div class="unauthorized-container">
+    <div class="icon text-primary">
+      <i class="bi bi-lock-fill"></i>
+    </div>
+    <h2>Access denied</h2>
+    <p>
+      You don't have permissions to access this page.<br />
+      Contact an administrator to get permissions or go to the home page and browse other pages.
+    </p>
+    <button *ngIf="!hideHome" (click)="goHome()" class="btn btn-primary">Go to home</button>
+  </div>

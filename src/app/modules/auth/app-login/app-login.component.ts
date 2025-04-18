@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthStateConstants, LocalStorageKeys } from 'app/shared/constants/constants.enum';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertTypes, AuthStateConstants, LocalStorageKeys } from 'app/shared/constants/constants.enum';
 import RouteUrl from 'app/shared/constants/router-url.enum';
 import { AuthService } from 'app/shared/services/auth.service';
 import { LocalStorageService } from 'app/shared/services/local-service';
-import { ValidationService } from 'app/shared/services/validation-service'
+import { AuthValidationService } from 'app/shared/services/auth-validation-service'
 @Component({
   selector: 'app-login',
   templateUrl: './app-login.component.html',
@@ -26,18 +26,24 @@ export class AppLoginComponent implements OnInit {
   retypePassword:string = "";
   submitted = false;
   rememberMe : boolean = false;
-
+  alertType:string =  AlertTypes.ERROR
   loginState:string = AuthStateConstants.LOGIN_STATE;
   forgotPasswordState:string = AuthStateConstants.FORGOT_PASSWORD_STATE;
   verifyOTPAndResetPasswordState:string = AuthStateConstants.VERIFY_OTP_STATE;
   
   AuthStateConstants: any = AuthStateConstants;
   
-  constructor(private router: Router,private validationService:ValidationService,private authService: AuthService,private localService : LocalStorageService) { }
+  constructor(private route: ActivatedRoute,private router: Router,private validationService:AuthValidationService,private authService: AuthService,private localService : LocalStorageService) { }
 
   ngOnInit(): void {
     this.username = "";
     this.state = AuthStateConstants.LOGIN_STATE;
+    this.localService.clearData();
+    this.route.queryParams.subscribe(params => {
+      if (params['reason'] === 'session_expired') {
+        this.errorMsg = 'Your session has expired. Please login again.';
+      }
+    });
   }
 
   updateStateToForgotPassword() {
@@ -53,121 +59,58 @@ export class AppLoginComponent implements OnInit {
     this.state = AuthStateConstants.LOGIN_STATE;
   }
 
-  resetPassword() {
-    this.errorMsg = "";
-    if(!this.username) {
-      this.errorMsg = "Please enter email !";
-    } else if(!this.validationService.validateEmail(this.username)) {
-      this.errorMsg = "Please enter valid email !";
-    } else {
-      let result = this.authService.resetPassword({"email":this.username,"isEmailSent":true});
-    }
-  }
-
 
   sendOTP() {
+    this.alertType = AlertTypes.ERROR;
     this.errorMsg = "";
-    if (!this.username) {
-      this.errorMsg = '* All fields are required.';
-      if(!this.username) {
-        this.usernameInputRef.nativeElement.focus();
-        return;
-      }
-    }
-    if(!this.isValidEmailOrPhone(this.username)) {
-      this.errorMsg = "* Please enter valid email or phone number";
-      this.usernameInputRef.nativeElement.focus();
-      return;
-    }
-    this.authService.sendOTP()
-    this.state = this.verifyOTPAndResetPasswordState;
+    this.validationService.validateSendOTPRequest(this);
+    this.authService.sendOTP({"username":this.username}).then(res=>{
+      this.state = this.verifyOTPAndResetPasswordState;
+    }).catch(err=>{
+      this.errorMsg = err?.message || "Unable To Send OTP.";
+    });
   }
 
   verifyOTPAndReset() {
-    if (!this.username || !this.password || !this.otp || !this.retypePassword) {
-      this.errorMsg = '* All fields are required.';
-      if(!this.username) {
-        this.usernameInputRef.nativeElement.focus();
+    this.alertType = AlertTypes.ERROR;
+    if(!this.validationService.validateResetPasswordWithOTPRequest(this)) {
         return;
-      }
-      if(!this.otp) {
-        this.otpInputRef.nativeElement.focus();
-        return;
-      }
-      if(!this.password) {
-        this.passwordInputRef.nativeElement.focus();
-        return;
-      }
-      if(!this.retypePassword) {
-        this.retypePasswordInputRef.nativeElement.focus();
-        return;
-      }
+    } else {
+      this.authService.resetPasswordWithOTP({"username":this.username,"password":this.password,"retypePassword":this.retypePassword,"otp":this.otp}).then(res=>{
+        this.validationService.resetFields(this,['username','password','retypePassword','otp','errorMsg']);
+        // this.state = this.loginState;
+        this.errorMsg = "Password Succesfullt Updated. Please try login."
+        this.alertType = AlertTypes.SUCCESS;
+      }).catch(err=>{
+        this.errorMsg = err?.message || "Unable To Reset Password.";
+      })
     }
-    if(this.otp.length!=6) {
-      this.errorMsg = "* Please enter valid OTP";
-      this.otpInputRef.nativeElement.focus();
-      return;
-    }
-    if(this.password != this.retypePassword) {
-      this.errorMsg = "* Password doesn't match";
-      this.retypePasswordInputRef.nativeElement.focus();
-      return;
-    }
-    this.username = "";
-    this.password = "";
-    this.retypePassword = "";
-    this.otp = "";
-    this.errorMsg = "";
-    this.state = this.loginState;
   }
 
   showForgotPasswordScreen() {
-    this.username = "";
-    this.errorMsg = "";
-    this.otp = "";
+    this.validationService.resetFields(this,['username','errorMsg','otp']);
     this.state = this.forgotPasswordState;
   }
 
   showLoginScreen() {
-    this.username = "";
-    this.password = "";
-    this.errorMsg = "";
-    this.otp = "";
+    this.validationService.resetFields(this,['username','password','otp','errorMsg']);
     this.state = this.loginState;
   }
 
-  login() {
-    if (!this.username || !this.password) {
-      this.errorMsg = '* All fields are required.';
-      if(!this.username) {
-        this.usernameInputRef.nativeElement.focus();
-        return;
-      }
-      if(!this.password) {
-        this.passwordInputRef.nativeElement.focus();
-        return;
-      }
-      return;
-    }
-    if(!this.isValidEmailOrPhone(this.username)) {
-      this.errorMsg = "* Please enter valid email or phone number";
-      this.usernameInputRef.nativeElement.focus();
+  login(event:any) {
+    this.alertType = AlertTypes.ERROR;
+    if(!this.validationService.validateLoginRequest(this)) {
       return;
     }
     this.errorMsg = '';
     this.authService.loginUser({"username":this.username,"password":this.password}).then(res=>{
+      let token = res?.statusMsg?.accessToken;
       if(res?.statusMsg?.accessToken) {
-        this.localService.saveData(LocalStorageKeys.TOKEN,res?.statusMsg?.accessToken);
+        this.authService.setUserSession(res?.statusMsg?.accessToken);
         this.router.navigateByUrl(RouteUrl.ROUTE_SEPARATOR+RouteUrl.HOME);
       }
     }).catch(err=>{
       this.errorMsg = err?.message || "Unable To login with credentials !";
     }); 
-  }
-
-  isValidEmailOrPhone(value: string): boolean {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phonePattern = /^\d{10}$/;
-    return emailPattern.test(value) || phonePattern.test(value);
   }
 }

@@ -21,7 +21,7 @@ import com.src.proserv.main.utils.RequestStatus;
 
 @Service
 public class OTPService {
-	private static final int MAX_ATTEMPTS = 5;
+	private static final int MAX_ATTEMPTS = 35;
 	private static final int OTP_VALIDITY_MINUTES = 3;
 
 	@Autowired
@@ -36,19 +36,20 @@ public class OTPService {
 	public boolean canSendOtp(String username) {
 		LocalDateTime startOfToday = LocalDateTime.now().toLocalDate().atStartOfDay();
 		LocalDateTime endOfToday = LocalDateTime.now().toLocalDate().atTime(LocalTime.MAX);
-		Optional<OtpAttempt> todayOTPAttempt = otpAttemptRepository.findByUsernameAndCreatedAtBetweenOrderByCreatedAtAsc(username,startOfToday, endOfToday);
-		if (todayOTPAttempt.isPresent()) {
-			if (todayOTPAttempt.get().getAttempts() >= MAX_ATTEMPTS) {
+		Optional<Otp> latestOTP = otpRepository.findFirstByUsernameAndCreatedAtBetweenOrderByCreatedAtDesc(username,startOfToday, endOfToday);
+		Optional<OtpAttempt> latestOTPAttempt = otpAttemptRepository.findByUsernameAndCreatedAtBetweenOrderByCreatedAtDesc(username,startOfToday, endOfToday);
+		if (latestOTPAttempt.isPresent()) {
+			if (latestOTPAttempt.get().getAttempts() >= MAX_ATTEMPTS) {
 				throw new OTPException(RequestStatus.OTP_LIMIT_EXCEED_ERROR);
 			}
 
-			LocalDateTime otpSentAt = todayOTPAttempt.get().getCreatedAt();
+			LocalDateTime otpSentAt = latestOTP.get().getCreatedAt();
 			LocalDateTime nextOtpAt = otpSentAt.plusMinutes(OTP_VALIDITY_MINUTES);
 			LocalDateTime currentTime =  LocalDateTime.now();
-
-			boolean isLessThanValidityMinutes = nextOtpAt.isBefore(currentTime);
-			if (isLessThanValidityMinutes) {
-				throw new OTPException(RequestStatus.OTP_TIME_LIMIT_ERROR,AppUtils.formatSecondsToHMString(ChronoUnit.SECONDS.between(nextOtpAt,otpSentAt)));
+			
+			boolean canSendOTP = nextOtpAt.isBefore(currentTime);
+			if (!canSendOTP) {
+				throw new OTPException(RequestStatus.OTP_TIME_LIMIT_ERROR,AppUtils.formatSecondsToHMString(ChronoUnit.SECONDS.between(currentTime,nextOtpAt)));
 			}
 		}
 		return true;
@@ -57,7 +58,7 @@ public class OTPService {
 	public void recordOtpAttempt(String username) {
 		LocalDateTime startOfToday = LocalDateTime.now().toLocalDate().atStartOfDay();
 		LocalDateTime endOfToday = LocalDateTime.now().toLocalDate().atTime(LocalTime.MAX);
-		Optional<OtpAttempt> otpAttemptOpt = otpAttemptRepository.findByUsernameAndCreatedAtBetweenOrderByCreatedAtAsc(username,startOfToday, endOfToday);
+		Optional<OtpAttempt> otpAttemptOpt = otpAttemptRepository.findByUsernameAndCreatedAtBetweenOrderByCreatedAtDesc(username,startOfToday, endOfToday);
 		if (otpAttemptOpt.isPresent()) {
 			OtpAttempt otpAttempt = otpAttemptOpt.get();
 			otpAttempt.setAttempts(otpAttempt.getAttempts() + 1);

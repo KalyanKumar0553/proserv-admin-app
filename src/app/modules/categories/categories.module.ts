@@ -6,6 +6,7 @@ import { CategoriesComponent } from './categories.component';
 import { SidenavComponent } from 'app/shared/components/sidenav/sidenav.component';
 import { DeleteCategoryComponent } from './delete-category/delete-category.component';
 import { AddUpdateCategoryComponent } from './add-update-category/add-update-category.component';
+import { UnauthorizedComponent } from 'app/shared/components/unauthorized/unauthorized.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { AddUpdateCategoryComponent } from './add-update-category/add-update-cat
   imports: [
     CommonModule,
     CategoriesRoutingModule,
-    SidenavComponent
+    SidenavComponent,
+    UnauthorizedComponent
   ]
 })
 export class CategoriesModule { }

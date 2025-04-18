@@ -18,4 +18,5 @@ public interface InvalidatedTokenRepository extends JpaRepository<InvalidatedTok
     @Modifying
     @Query("DELETE FROM InvalidatedToken t WHERE t.expirationDate <= :now")
     void deleteAllExpiredTokens(LocalDateTime now);
+    
 }

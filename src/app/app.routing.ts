@@ -8,6 +8,9 @@ import { DashboardComponent } from './shared/components/dashboard/dashboard.comp
 import { ListCategoryComponent } from './modules/categories/list-category/list-category.component';
 import { OverviewComponent } from './shared/components/overview/overview.component';
 import { CategoriesComponent } from './modules/categories/categories.component';
+import { RoleGuard } from './shared/services/role-guard';
+import { Roles } from './shared/models/roles.enum';
+import { UnauthorizedComponent } from './shared/components/unauthorized/unauthorized.component';
 
 const routes: Routes =[
   {
@@ -17,21 +20,24 @@ const routes: Routes =[
       {
         path: 'categories',
         component: CategoriesComponent,
+        canActivate: [RoleGuard],
+        data: { roles: [Roles.ADMIN,Roles.USER] },
       },
       {
         path: 'home',
         component: OverviewComponent,
+        canActivate: [RoleGuard],
+        data: { roles: [Roles.ADMIN,Roles.USER] },
       },
-      {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full',
-      }
     ]
   },
   {
     path: 'login',
     component: AppLoginComponent,
+  },
+  {
+    path: 'unauthorized',
+    component: UnauthorizedComponent,
   },
 ];
 

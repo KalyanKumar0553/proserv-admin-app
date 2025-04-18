@@ -9,25 +9,27 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { LocalStorageKeys } from '../constants/constants.enum';
+import { LocalStorageService } from './local-service';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router) {}
+  
+  constructor(private router: Router,private localService:LocalStorageService,private authService:AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('access_token');
-
-    // Clone the request and add the Authorization header
-    const authReq = token
+    
+    const authReq = this.authService.getToken()
       ? req.clone({
-          headers: req.headers.set('Authorization', `Bearer ${token}`)
+          headers: req.headers.set('Authorization', `Bearer ${this.authService.getToken()}`)
         })
       : req;
 
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          // Navigate to login page
+          this.localService.clearData();
           this.router.navigate(['/login']);
         }
         return throwError(() => error);

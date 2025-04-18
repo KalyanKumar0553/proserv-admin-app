@@ -10,8 +10,17 @@ export enum ResponseErrors {
 export enum ApiUrls {
   LOGOUT = '/auth/logout',
   LOGIN = '/auth/login',
-  SEND_OTP = '/auth/send_otp'
+  SEND_OTP = '/auth/send_otp',
+  RESET_PASSWORD_WITHOOUT_OTP = '/auth/reset_password_without_otp',
+  RESET_PASSWORD_WITH_OTP = '/auth/reset_password_with_otp',
+  ROLES = '/auth/roles'
 }
 export enum LocalStorageKeys {
-   TOKEN = 'token'
+   USER_TOKEN = 'TOKEN'
+}
+export enum AlertTypes {
+  INFO = 'alert-info',
+  SUCCESS = 'alert-success',
+  ERROR = 'alert-danger',
+  WARN = 'alert-warning'
 }

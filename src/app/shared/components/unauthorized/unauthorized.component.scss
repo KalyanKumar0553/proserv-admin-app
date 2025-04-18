@@ -1,0 +1,47 @@
+@import './../../../app.component.scss';
+
+.unauthorized-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    padding: 20px;
+  
+    .icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+  
+    h2 {
+      font-size: 24px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .bi-lock-fill {
+      color: $primary-color;
+    }
+  
+    p {
+      margin-bottom: 25px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+  
+    .btn-primary {
+      background-color: $primary-color;
+      border: none;
+      padding: 10px 24px;
+      font-size: 16px;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+  
+      &:hover {
+        background-color: $primary-color;
+      }
+    }
+  }
+  

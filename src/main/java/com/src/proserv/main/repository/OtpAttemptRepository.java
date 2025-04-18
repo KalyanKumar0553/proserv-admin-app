@@ -14,7 +14,7 @@ import com.src.proserv.main.model.OtpAttempt;
 
 public interface OtpAttemptRepository extends JpaRepository<OtpAttempt, Long> {
 
-	Optional<OtpAttempt> findByUsernameAndCreatedAtBetweenOrderByCreatedAtAsc(String username,LocalDateTime startTime,LocalDateTime endTime);
+	Optional<OtpAttempt> findByUsernameAndCreatedAtBetweenOrderByCreatedAtDesc(String username,LocalDateTime startTime,LocalDateTime endTime);
 
 	@Transactional
 	@Modifying

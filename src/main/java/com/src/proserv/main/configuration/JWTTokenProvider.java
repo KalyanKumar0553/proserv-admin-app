@@ -5,12 +5,15 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -88,10 +91,14 @@ public class JWTTokenProvider {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
-
+        List<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .claim("userUUID", string)
+                .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)

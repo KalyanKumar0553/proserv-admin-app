@@ -1,4 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Roles } from 'app/shared/models/roles.enum';
+import { AuthService } from 'app/shared/services/auth.service';
 
 @Component({
   selector: 'app-categories',
@@ -9,10 +11,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 export class CategoriesComponent implements OnInit, OnDestroy{
   
   activeLabel:string = 'list-categories';
-  
+  roles = Roles;
+
   ngOnInit(): void {
     this.activeLabel = 'list-categories';
   }
+
+  constructor(public authService: AuthService) {}
 
   ngOnDestroy(): void {
     this.activeLabel = '';

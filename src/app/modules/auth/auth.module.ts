@@ -7,7 +7,6 @@ import { AppRoutingModule } from 'app/app.routing';
 import { RouterModule } from '@angular/router';
 
 
-
 @NgModule({
   declarations: [
     AppLoginComponent,

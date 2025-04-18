@@ -7,6 +7,5 @@ public class SendOTPRequestDTO {
 	private String username;
 	private String email;
 	private String mobile;
-	private String password;
-	private String otp;
+	
 }

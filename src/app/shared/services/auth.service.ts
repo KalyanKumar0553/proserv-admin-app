@@ -1,24 +1,29 @@
-import {HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {firstValueFrom, lastValueFrom} from 'rxjs';
 import {Router} from '@angular/router';
-import RouteUrl from '../constants/router-url.enum';
 import { LocalStorageService } from './local-service';
 import { ApiUrls } from '../constants/constants.enum';
 import { ProServApiService } from './proserv-api.service';
+import {jwtDecode} from 'jwt-decode';
+import { JwtPayload } from '../models/jwt-payload.model';
+import { Roles } from '../models/roles.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  private currentUser: { roles: Roles[]; token: string; exp: number } | null = null;
+  private checkInterval = 10000;
+
   public clearDataTimer: any;
 
-  constructor(private apiService:ProServApiService,private router: Router,private localService: LocalStorageService){}
+  constructor(private apiService:ProServApiService,private router: Router,private localService: LocalStorageService){
+    this.restoreSession();
+    setInterval(() => this.autoLogoutIfExpired(), this.checkInterval);
+  }
 
   async logoutUser() {
     this.clearTimer();
-    this.localService.clearData();
     return this.apiService.update(ApiUrls.LOGOUT,{}).toPromise();
   }
 
@@ -26,17 +31,80 @@ export class AuthService {
     return this.apiService.save(ApiUrls.LOGIN,payload).toPromise();
   }
 
-  async resetPassword(payload:any={}) {
-    return this.apiService.save(ApiUrls.SEND_OTP,payload).toPromise();
+  async resetPasswordWithoutOTP(payload:any={}) {
+    return this.apiService.save(ApiUrls.RESET_PASSWORD_WITHOOUT_OTP,payload).toPromise();
+  }
+
+  async resetPasswordWithOTP(payload:any={}) {
+    return this.apiService.save(ApiUrls.RESET_PASSWORD_WITH_OTP,payload).toPromise();
   }
 
   async sendOTP(payload:any={}) {
+    return this.apiService.save(ApiUrls.SEND_OTP,payload).toPromise();
+  }
 
+  async fetchRoles() {
+    return this.apiService.get(ApiUrls.ROLES).toPromise();
   }
 
   clearTimer() {
     if(this.clearDataTimer) {
       clearTimeout(this.clearDataTimer);
     }
+  }
+
+  getUser(): { roles: Roles[]; token: string } | null {
+    if (!this.currentUser) {
+      const stored = localStorage.getItem('user');
+      this.currentUser = stored ? JSON.parse(stored) : null;
+    }
+    return this.currentUser;
+  }
+
+  getRoles(): Roles[] {
+    return this.getUser()?.roles || [];
+  }
+
+  hasRole(role: Roles): boolean {
+    return this.getRoles().includes(role);
+  }
+
+  hasAnyRole(rolesToCheck: Roles[]): boolean {
+    return this.getRoles().some(r => rolesToCheck.includes(r));
+  }
+
+  getToken(): string | null {
+    return this.getUser()?.token || null;
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken();
+  }
+
+  setUserSession(token: string) {
+    const decoded = jwtDecode<JwtPayload>(token);
+    this.currentUser = { token, roles: decoded.roles, exp: decoded.exp };
+    localStorage.setItem('user', JSON.stringify(this.currentUser));
+  }
+
+  private restoreSession() {
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      this.currentUser = JSON.parse(stored);
+    }
+  }
+
+  private autoLogoutIfExpired() {
+    if (this.currentUser && this.isTokenExpired()) {
+      this.router.navigate(['/login'], {
+        queryParams: { reason: 'session_expired' }
+      });
+    }
+  }
+
+  private isTokenExpired(): boolean {
+    if (!this.currentUser) return true;
+    const now = Math.floor(Date.now() / 1000); // current time in seconds
+    return this.currentUser.exp < now;
   }
 }
