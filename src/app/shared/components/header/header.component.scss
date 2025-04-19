@@ -2,6 +2,9 @@
 
 .header-bg {
     background-color: $background-color;
+    box-shadow: 0 0 15px 0px #c6d3c6 !important;
+    margin-bottom:0.05rem;
+    position:sticky;
 }
 
 header {
@@ -23,14 +26,14 @@ header {
     text-decoration-line: overline  !important;
 }
 
-nav {
+nav,.nav-item-main {
     .nav-item-wrapper {
         position: relative;
         display: inline-block;
 
         &:hover,
         &:focus-within {
-            .submenu {
+            .submenu,.profile-submenu {
                 display: block;
             }
             
@@ -89,12 +92,17 @@ nav {
             }
         }
     }
-
     .submenu {
+        left: 0;
+    }
+    .profile-submenu {
+        right: 0.2rem;
+        font-size: 13px !important;
+    }
+    .submenu,.profile-submenu {
         display: none;
         position: absolute;
         top: 100%;
-        left: 0;
         background-color: $primary-color;
         border-radius: 0.25rem;
         min-width: 160px;

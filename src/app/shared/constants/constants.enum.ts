@@ -13,7 +13,8 @@ export enum ApiUrls {
   SEND_OTP = '/auth/send_otp',
   RESET_PASSWORD_WITHOOUT_OTP = '/auth/reset_password_without_otp',
   RESET_PASSWORD_WITH_OTP = '/auth/reset_password_with_otp',
-  ROLES = '/auth/roles'
+  ROLES = '/auth/roles',
+  PING = '/auth/ping'
 }
 export enum LocalStorageKeys {
    USER_TOKEN = 'TOKEN'

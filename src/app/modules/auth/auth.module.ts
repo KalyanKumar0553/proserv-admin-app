@@ -5,6 +5,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from 'app/app.routing';
 import { RouterModule } from '@angular/router';
+import { SpinnerComponent } from 'app/shared/components/spinner/spinner.component';
+import { DeviceDetectorService } from 'app/shared/services/device-detector.service';
+import { BrowserNotSupportedComponent } from 'app/shared/components/browser-not-supported/browser-not-supported.component';
 
 
 @NgModule({
@@ -16,7 +19,9 @@ import { RouterModule } from '@angular/router';
     BrowserModule, 
     FormsModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SpinnerComponent,
+    BrowserNotSupportedComponent
   ],
   exports :[
     RouterModule,

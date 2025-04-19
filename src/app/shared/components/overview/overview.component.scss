@@ -1,0 +1,26 @@
+@import './../../../app.component.scss';
+.card {
+    border-radius: 23px;
+    width: 18rem;
+    padding:0px;
+    margin: 23px;
+}
+.card-title {
+    display: inline-flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 14px;
+    color: $background-color;
+    font-weight:bolder;
+    background: $primary-color;
+    border-top-left-radius: 23px;
+    border-top-right-radius: 23px;
+}
+.card-body {
+    display:block;
+}
+.card-text {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+}

@@ -5,6 +5,8 @@ import RouteUrl from 'app/shared/constants/router-url.enum';
 import { AuthService } from 'app/shared/services/auth.service';
 import { LocalStorageService } from 'app/shared/services/local-service';
 import { AuthValidationService } from 'app/shared/services/auth-validation-service'
+import { NavigationTrackerService } from 'app/shared/services/navigration-tracking.service';
+import { DeviceDetectorService } from 'app/shared/services/device-detector.service';
 @Component({
   selector: 'app-login',
   templateUrl: './app-login.component.html',
@@ -18,7 +20,8 @@ export class AppLoginComponent implements OnInit {
   @ViewChild('retypePasswordInput') retypePasswordInputRef!: ElementRef;
   @ViewChild('otpInput') otpInputRef!: ElementRef;
 
-  state: string = AuthStateConstants.LOGIN_STATE;
+  loading:boolean = false;
+  state: string = null;
   username:string = "";
   password: String = null;
   errorMsg = "";
@@ -30,20 +33,36 @@ export class AppLoginComponent implements OnInit {
   loginState:string = AuthStateConstants.LOGIN_STATE;
   forgotPasswordState:string = AuthStateConstants.FORGOT_PASSWORD_STATE;
   verifyOTPAndResetPasswordState:string = AuthStateConstants.VERIFY_OTP_STATE;
-  
+  isMobile:boolean = false;
   AuthStateConstants: any = AuthStateConstants;
   
-  constructor(private route: ActivatedRoute,private router: Router,private validationService:AuthValidationService,private authService: AuthService,private localService : LocalStorageService) { }
+  constructor(private deviceDetector : DeviceDetectorService,private route: ActivatedRoute,private router: Router,private validationService:AuthValidationService,private authService: AuthService,private localService : LocalStorageService) { }
 
   ngOnInit(): void {
-    this.username = "";
-    this.state = AuthStateConstants.LOGIN_STATE;
-    this.localService.clearData();
-    this.route.queryParams.subscribe(params => {
-      if (params['reason'] === 'session_expired') {
-        this.errorMsg = 'Your session has expired. Please login again.';
+    this.isMobile = this.deviceDetector.isMobileDevice();
+    if(!this.isMobile) {
+      this.username = "";
+      this.loading = true;
+      if(this.authService.getToken()!=null) {
+        this.authService.ping().then(()=>{
+          this.router.navigate(['/home'])
+        }).catch(err=>{
+          this.state = AuthStateConstants.LOGIN_STATE;
+        }).finally(()=>{
+          this.loading = false;
+        });
+      } else {
+        this.loading = false;
+        this.state = AuthStateConstants.LOGIN_STATE;
       }
-    });
+      this.route.queryParams.subscribe(params => {
+        if (params['reason'] === 'session_expired') {
+          this.errorMsg = 'Your session has expired. Please login again.';
+        }
+      });
+    } else {
+      this.loading = false;
+    }
   }
 
   updateStateToForgotPassword() {

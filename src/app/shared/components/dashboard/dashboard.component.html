@@ -1,8 +1,13 @@
-<app-spinner [isLoading]="loading"></app-spinner>
-<div class="dashboard">
-    <app-header></app-header>
-    <div class="body-content">
-        <router-outlet></router-outlet>
-    </div>
-    <app-footer></app-footer>
+<div *ngIf="isMobile;else content">
+    <app-browser-not-supported></app-browser-not-supported>
 </div>
+<ng-template #content>
+    <app-spinner [isLoading]="isLoading"></app-spinner>
+    <div class="dashboard">
+        <app-header></app-header>
+        <div class="body-content">
+            <router-outlet></router-outlet>
+        </div>
+        <app-footer></app-footer>
+    </div>
+</ng-template>

@@ -1,4 +1,7 @@
 @import './../../../app.component.scss';
 .body-content {
-    overflow: scroll;
+    overflow: hidden;
+    background: $background-color;
+    height:100vh;
+    max-height: 100vh;
 }

@@ -1,13 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CategoriesModule } from 'app/modules/categories/categories.module';
-import { Popover } from 'bootstrap';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports:[CategoriesModule,RouterModule,CommonModule],
+  imports:[CategoriesModule,RouterModule,CommonModule,MatToolbarModule,MatIconModule,MatMenuModule,MatButtonModule,MatSidenavModule,MatListModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })

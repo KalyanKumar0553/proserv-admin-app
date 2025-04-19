@@ -1,12 +1,16 @@
+@import './../../../app.component.scss';
+
 footer {
     position: absolute;
     bottom: 0;
     width: 100%;
+    position:sticky;
 }
 
 .footer-border {
     box-shadow: var(--bs-box-shadow-sm) !important;
     border-top: 1px;
+    background: $background-color;
     border-style: outset;
     padding-top: 14px;
 }

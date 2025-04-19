@@ -1,5 +1,5 @@
 <header class="d-flex justify-content-between align-items-center px-4 py-2 header-bg text-white shadow-sm">
-    <!-- Left Section -->
+    
     <div class="d-flex align-items-center gap-4">
         <div class="header-container">
             <img src="./../../../../assets/images/logo.png" alt="Logo" class="header-logo" />
@@ -13,23 +13,39 @@
                     </span>
                 </a>
             </div>
-            <div class="nav-item-wrapper" tabindex="0" (mouseenter)="setHover('categories')" (mouseleave)="setHover(null)">
+            <div class="nav-item-wrapper" tabindex="1" (mouseenter)="setHover('categories')" (mouseleave)="setHover(null)">
                 <a routerLink="/categories" (click)="setActive('categories')">
                     <span class="nav-item" [class.active]="isActive('categories')" (click)="setActive('categories')">
-                        Categories
+                        <i class="bi bi-gear"></i>
+                        Configuration
+                    </span>
+                </a>
+            </div>
+            <div class="nav-item-wrapper" tabindex="2" (mouseenter)="setHover('categories')" (mouseleave)="setHover(null)">
+                <a routerLink="/categories" (click)="setActive('categories')">
+                    <span class="nav-item" [class.active]="isActive('categories')" (click)="setActive('categories')">
+                        Bookings
+                    </span>
+                </a>
+            </div>
+            <div class="nav-item-wrapper" tabindex="3" (mouseenter)="setHover('categories')" (mouseleave)="setHover(null)">
+                <a routerLink="/categories" (click)="setActive('categories')">
+                    <span class="nav-item" [class.active]="isActive('categories')" (click)="setActive('categories')">
+                        <i class="bi bi-receipt"></i>
+                        Billing
                     </span>
                 </a>
             </div>
         </nav>
     </div>
-
-    <!-- Profile Section -->
-    <div>
-        <div class="d-flex align-items-center position-relative nav-item-wrapper">
-            <div class="profile-icon-wrapper d-flex align-items-center justify-content-center" tabindex="0"
-                role="button" id="profilePopover" data-bs-toggle="popover" data-bs-placement="bottom"
-                data-bs-html="true" data-bs-trigger="focus" data-bs-content="">
+    <div class="nav-item-main">
+        <div class="d-flex align-items-center position-relative nav-item-wrapper nav-item-wrapper"  (mouseenter)="setHover('profile')" (mouseleave)="setHover(null)">
+            <div class="profile-icon-wrapper d-flex align-items-center justify-content-center nav-item">
                 <i class="bi bi-person-fill profile-icon"></i>
+                <div class="profile-submenu" [class.visible]="isHovered('profile')">
+                    <a class="submenu-item">Settings</a>
+                    <a class="submenu-item">Logout</a>
+                </div>
             </div>
         </div>
     </div>

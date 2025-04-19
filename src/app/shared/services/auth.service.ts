@@ -19,7 +19,6 @@ export class AuthService {
 
   constructor(private apiService:ProServApiService,private router: Router,private localService: LocalStorageService){
     this.restoreSession();
-    setInterval(() => this.autoLogoutIfExpired(), this.checkInterval);
   }
 
   async logoutUser() {
@@ -45,6 +44,10 @@ export class AuthService {
 
   async fetchRoles() {
     return this.apiService.get(ApiUrls.ROLES).toPromise();
+  }
+
+  async ping() {
+    return this.apiService.get(ApiUrls.PING).toPromise();
   }
 
   clearTimer() {
@@ -94,17 +97,4 @@ export class AuthService {
     }
   }
 
-  private autoLogoutIfExpired() {
-    if (this.currentUser && this.isTokenExpired()) {
-      this.router.navigate(['/login'], {
-        queryParams: { reason: 'session_expired' }
-      });
-    }
-  }
-
-  private isTokenExpired(): boolean {
-    if (!this.currentUser) return true;
-    const now = Math.floor(Date.now() / 1000); // current time in seconds
-    return this.currentUser.exp < now;
-  }
 }

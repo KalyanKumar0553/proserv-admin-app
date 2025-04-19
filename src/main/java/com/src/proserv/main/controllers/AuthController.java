@@ -87,12 +87,6 @@ public class AuthController {
 		Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 		String token = tokenProvider.generateToken(authentication, user.getUUID());
 		SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-		Cookie jwtCookie = new Cookie("token", token);
-		jwtCookie.setHttpOnly(true);
-		jwtCookie.setSecure(true);
-		jwtCookie.setPath("/");
-		jwtCookie.setMaxAge(86400);
-		response.setHeader("Set-Cookie","token=" + token + "; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400");
 		return ResponseEntity.ok(AppUtils.getJSONObject(new JwtAuthenticationResponseDTO(token)));
 	}
 
@@ -123,9 +117,16 @@ public class AuthController {
 	}
 
 	@GetMapping("/roles")
-	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
+	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER','AGENT')")
 	public ResponseEntity<JSONResponseDTO<?>> getRoles(Authentication authentication) throws MessagingException {
 		return ResponseEntity.ok(AppUtils.getJSONObject(authentication.getAuthorities()));
+	}
+	
+	
+	@GetMapping("/ping")
+	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER','AGENT')")
+	public ResponseEntity<JSONResponseDTO<?>> getRoles() throws MessagingException {
+		return ResponseEntity.ok(AppUtils.getJSONObject("pong"));
 	}
 
 	@PostMapping("/reset_password_with_otp")

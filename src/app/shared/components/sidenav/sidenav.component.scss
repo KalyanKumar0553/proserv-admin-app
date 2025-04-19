@@ -1,15 +1,15 @@
 @import './../../../app.component.scss';
 .nav-container {
-  height: calc(100vh - 146px);
+  height: calc(100vh);
   box-shadow: 0 0 15px 0px #e9eae9 !important;
+  background: $background-color;
 }
 .sidenav {
-  background-color: $background-color;
+  padding-right:23px;
   padding: 6px;
+  background-color: $background-color;
   padding-bottom: 0px;
-  // border-right: 1px solid #ccc;
-  white-space: nowrap; // prevents wrapping of nav items
-  overflow:scroll;
+  white-space: nowrap;
   .nav-link {
     padding: 10px 20px;
     color: $primary-color;
@@ -39,7 +39,6 @@
   color: white;
   padding-top: 6px;
   font-weight: 700;
-  transform: scale(1.1);
 }
 .content-area {
   padding: 30px;
@@ -55,8 +54,8 @@
   display: inline-block;
 }
 .title-icon {
-  position: absolute;
-  right: 6px;
+  display: inline;
+  float: right;
 }
 .title-icon-img {
   font-size: 25px;
