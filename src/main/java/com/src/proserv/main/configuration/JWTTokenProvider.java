@@ -36,18 +36,6 @@ public class JWTTokenProvider {
     private final InvalidatedTokenRepository tokenRepository;
 
 
-
-	public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
-    }
-
-    private String createToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
-                .signWith(SignatureAlgorithm.HS512, JWT_SECRET).compact();
-    }
-
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -89,8 +77,7 @@ public class JWTTokenProvider {
     
     public String generateToken(Authentication authentication, String string) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
+        Date expiryDate = new Date(System.currentTimeMillis() + JWT_EXPIRATION);
         List<String> roles = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -99,6 +86,7 @@ public class JWTTokenProvider {
                 .setSubject(userDetails.getUsername())
                 .claim("userUUID", string)
                 .claim("roles", roles)
+                .claim(Claims.EXPIRATION, expiryDate)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)

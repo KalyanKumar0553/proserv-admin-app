@@ -6,9 +6,17 @@ body {
     overflow: scroll;
     background-color: $background-color;
 }
-.btn-primary {
+.btn-primary{
     background-color: $primary-color;
     border-color: $primary-color;
+}
+.spinner-border {
+    color:$primary-color;
+}
+.btn-outline-primary {
+    background-color: $background-color;
+    border-color: $primary-color;
+    color:$primary-color;
 }
 a.text-primary {
     color: $primary-color !important;

@@ -35,7 +35,7 @@ export class AppLoginComponent implements OnInit {
   verifyOTPAndResetPasswordState:string = AuthStateConstants.VERIFY_OTP_STATE;
   isMobile:boolean = false;
   AuthStateConstants: any = AuthStateConstants;
-  
+  requestProgress:boolean = false;
   constructor(private deviceDetector : DeviceDetectorService,private route: ActivatedRoute,private router: Router,private validationService:AuthValidationService,private authService: AuthService,private localService : LocalStorageService) { }
 
   ngOnInit(): void {
@@ -83,10 +83,13 @@ export class AppLoginComponent implements OnInit {
     this.alertType = AlertTypes.ERROR;
     this.errorMsg = "";
     this.validationService.validateSendOTPRequest(this);
+    this.requestProgress = true;
     this.authService.sendOTP({"username":this.username}).then(res=>{
       this.state = this.verifyOTPAndResetPasswordState;
     }).catch(err=>{
       this.errorMsg = err?.message || "Unable To Send OTP.";
+    }).finally(()=>{
+      this.requestProgress = false;
     });
   }
 
@@ -95,13 +98,15 @@ export class AppLoginComponent implements OnInit {
     if(!this.validationService.validateResetPasswordWithOTPRequest(this)) {
         return;
     } else {
+      this.requestProgress = true;
       this.authService.resetPasswordWithOTP({"username":this.username,"password":this.password,"retypePassword":this.retypePassword,"otp":this.otp}).then(res=>{
         this.validationService.resetFields(this,['username','password','retypePassword','otp','errorMsg']);
-        // this.state = this.loginState;
         this.errorMsg = "Password Succesfullt Updated. Please try login."
         this.alertType = AlertTypes.SUCCESS;
       }).catch(err=>{
         this.errorMsg = err?.message || "Unable To Reset Password.";
+      }).finally(()=>{
+        this.requestProgress = false;
       })
     }
   }
@@ -117,11 +122,13 @@ export class AppLoginComponent implements OnInit {
   }
 
   login(event:any) {
+    this.localService.clearData();
     this.alertType = AlertTypes.ERROR;
     if(!this.validationService.validateLoginRequest(this)) {
       return;
     }
     this.errorMsg = '';
+    this.requestProgress = true;
     this.authService.loginUser({"username":this.username,"password":this.password}).then(res=>{
       let token = res?.statusMsg?.accessToken;
       if(res?.statusMsg?.accessToken) {
@@ -130,6 +137,8 @@ export class AppLoginComponent implements OnInit {
       }
     }).catch(err=>{
       this.errorMsg = err?.message || "Unable To login with credentials !";
-    }); 
+    }).finally(()=>{
+      this.requestProgress = false;
+    });
   }
 }
