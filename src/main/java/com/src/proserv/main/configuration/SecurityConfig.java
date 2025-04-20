@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
         http.cors(withDefaults()).csrf(csrf -> csrf.disable()).authorizeRequests(requests -> requests
-                .antMatchers("/assets/**", "/*.css", "/*.js,/canvaskit/**", "/icons/*.png", "/index.html", "/*.js", "/*.json", "/*.png", "/", "/*.woff2", LOGOUT_URL, "/actuator/health")
+                .antMatchers("/assets/**", "/*.css", "/*.js,/canvaskit/**", "/icons/*.png", "/icons/*.jpg","/index.html", "/*.js", "/*.json", "/*.png","/*.jpg", "/", "/*.woff2", LOGOUT_URL, "/actuator/health")
                 .permitAll().antMatchers("/api/auth/**").permitAll().antMatchers("/api/user/**").hasRole("USER")
                 .antMatchers("/api/admin/**").hasRole("ADMIN").anyRequest().authenticated()).logout(logout -> logout
                 .logoutUrl(LOGOUT_URL)

@@ -12,7 +12,7 @@ export class ComponentConfigService {
 
   constructor(private http: HttpClient) {}
 
-  async loadConfig(name: string): Promise<any> {
+  async loadConfigFile(name: string): Promise<any> {
     const url = `/assets/configuration/${name}.json`;
     try {
       return await firstValueFrom(this.http.get<any>(url));
@@ -20,10 +20,6 @@ export class ComponentConfigService {
       console.error(`Failed to load config for ${name}:`, error);
       return null;
     }
-  }
-
-  async loadConfigBasedOnRoute(route: string): Promise<any> {
-    return this.loadConfig(this.fileConfig[route]);
   }
 
   getFileConfig() {

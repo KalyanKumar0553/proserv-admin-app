@@ -20,17 +20,17 @@ public class WebMvcConfig {
 			}
 		};
 	}
-//
-//	@Bean
-//	public WebMvcConfigurer corsConfigurer() {
-//		return new WebMvcConfigurer() {
-//			@Override
-//			public void addCorsMappings(CorsRegistry registry) {
-//				registry.addMapping("/api/**").allowedOrigins("http://localhost:4200").allowedMethods("*")
-//						.allowCredentials(true);
-//				;
-//			}
-//		};
-//	}
+
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/api/**").allowedOrigins("http://localhost:4200").allowedMethods("*")
+						.allowCredentials(true);
+				;
+			}
+		};
+	}
 
 }

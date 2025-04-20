@@ -5,7 +5,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app.routing';
 import { AppComponent } from './app.component';
-import { CategoriesModule } from './modules/categories/categories.module';
+import { ConfigurationModule } from './modules/categories/configuration.module';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { AuthInterceptor } from './shared/services/auth.interceptor';
 import { CredentialsInterceptor } from './shared/services/credentials-interceptor';
@@ -20,7 +20,7 @@ import { initializeApp } from './app-init';
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule,
-    CategoriesModule,
+    ConfigurationModule,
     AppRoutingModule,
     SpinnerComponent
 ],

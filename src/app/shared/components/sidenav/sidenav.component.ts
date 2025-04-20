@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { ComponentLoaderService } from 'app/shared/services/compinent-loader.service';
-import { MenuService } from 'app/shared/services/menu.service';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import RouteUrl from 'app/shared/constants/router-url.enum';
+import { MenuItem } from 'app/shared/models/menu-item.model';
+import { AppUtilsService } from 'app/shared/services/app-utils.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -11,35 +12,42 @@ import { Observable } from 'rxjs';
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss'
 })
-export class SidenavComponent implements OnInit {
+export class SidenavComponent implements OnInit,OnChanges {
   
-  menuService = inject(MenuService);
-  componentLoaderService = inject(ComponentLoaderService);
+  @Input()
+  sideNavMenu:MenuItem[] = [];
 
-  navMenu = [];
+  @Input()
+  updateSignal!:number;
 
-  constructor(private changeDetecion : ChangeDetectorRef){
+  @Output() componentChangeEvent = new EventEmitter<string>();
+
+  private router = inject(Router);
+
+  constructor(private changeDetector : ChangeDetectorRef,private appUtils:AppUtilsService){
   }
   
-  ngOnInit(): void {
-    this.menuService.menuItems$.subscribe(data => {
-      this.navMenu = data;
-    })
+  ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes['updateSignal']) {
+      this.changeDetector.detectChanges();
+    }
   }
 
   toggleExpansion(navItem:any= {}) {
-    this.navMenu.forEach(element => {
+    this.sideNavMenu.forEach(element => {
       if(navItem.label!=element.label) {
         element.active = false;
       }
     });
     navItem.active = !navItem.active;
-    this.changeDetecion.detectChanges();
+    this.changeDetector.detectChanges();
   }
 
   setActiveLabel(navItem:any={}) {
     let prevActiveRoute = '';
-    this.navMenu.forEach(element => {
+    this.sideNavMenu.forEach(element => {
       element.children.forEach(item=>{
         if(item.active) {
           prevActiveRoute = item.route;
@@ -49,7 +57,7 @@ export class SidenavComponent implements OnInit {
     });
     navItem.active=true;
     if(navItem.route != prevActiveRoute) {
-      this.componentLoaderService.setComponent(navItem.route);
+      this.componentChangeEvent.emit(navItem.route);
     }
   }
 }

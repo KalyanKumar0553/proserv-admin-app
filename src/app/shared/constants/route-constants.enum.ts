@@ -1,3 +1,4 @@
+import { MenuItem } from "../models/menu-item.model";
 import { RouteInfo } from "../models/route-info-dto";
 
 export const dashboardRoute:RouteInfo = { path: '/admin/dashboard', title: 'Dashboard',  icon: 'dashboard', class: ''};
@@ -53,4 +54,3 @@ export const ROUTES: RouteInfo[] = [
   ...facilitiesRoute,
   inventoryRoute
 ]
-  

@@ -1,37 +1,44 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { CategoriesModule } from 'app/modules/categories/categories.module';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { MenuService } from 'app/shared/services/menu.service';
 import { AuthService } from 'app/shared/services/auth.service';
 import { LocalStorageService } from 'app/shared/services/local-service';
 import RouteUrl from 'app/shared/constants/router-url.enum';
+import { MenuItem } from 'app/shared/models/menu-item.model';
+import { AppUtilsService } from 'app/shared/services/app-utils.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports:[CategoriesModule,RouterModule,CommonModule,MatToolbarModule,MatIconModule,MatMenuModule,MatButtonModule,MatSidenavModule,MatListModule],
+  imports:[RouterModule,CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit,OnChanges {
 
-  menuService = inject(MenuService);
   authService= inject(AuthService);
   localService = inject(LocalStorageService);
-
+  changeDetector = inject(ChangeDetectorRef);
+  appUtils = inject(AppUtilsService);
   hovered: string | null = null;
   activeNav: string = null;
   router = inject(Router);
 
+  @Input()
+  sideNavMenu:MenuItem[] = [];
+
+  @Input()
+  updateSignal!:number;
 
   constructor() {}
+
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes['updateSignal']) {
+        this.changeDetector.detectChanges();
+        this.activeNav = this.appUtils.fetchActiveHeader(this.sideNavMenu);
+    }
+  }
 
   ngOnInit(): void {
     this.activeNav = 'home';

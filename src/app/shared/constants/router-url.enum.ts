@@ -2,6 +2,6 @@ export enum RouteUrl {
     LOGIN = '/login',
     HOME='/home',
     UNAUTHORIZED = '/unauthorized',
-    CATEGORIES = '/categories',
+    CONFIGURATION = '/configuration',
 }
 export default RouteUrl;

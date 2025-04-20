@@ -28,9 +28,9 @@ export class OverviewComponent implements OnInit {
   }
 
   navigateToCategories(component: string) {
-    this.router.navigate([RouteUrl.CATEGORIES],{
+    this.router.navigate([RouteUrl.CONFIGURATION],{
       state : {
-        activeLabel : component
+        activeComponent : component
       }
     });
   }

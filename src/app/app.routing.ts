@@ -7,7 +7,7 @@ import { AppLoginComponent } from './modules/auth/app-login/app-login.component'
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { ListCategoryComponent } from './modules/categories/list-category/list-category.component';
 import { OverviewComponent } from './shared/components/overview/overview.component';
-import { CategoriesComponent } from './modules/categories/categories.component';
+import { ConfigurationComponent } from './modules/categories/configuration.component';
 import { RoleGuard } from './shared/services/role-guard';
 import { Roles } from './shared/models/roles.enum';
 import { UnauthorizedComponent } from './shared/components/unauthorized/unauthorized.component';
@@ -18,8 +18,8 @@ const routes: Routes =[
     component: DashboardComponent,
     children: [
       {
-        path: 'categories',
-        component: CategoriesComponent,
+        path: 'configuration',
+        component: ConfigurationComponent,
         canActivate: [RoleGuard],
         data: { roles: [Roles.ADMIN,Roles.USER] },
       },
