@@ -1,7 +1,7 @@
 <div class="container-fluid" *ngIf="authService.hasAnyRole([roles.ADMIN,roles.AGENT,roles.USER]);else unauhtorized">
   <div class="row">
     <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2">
-      <app-sidenav [navItems]="navItems" (componentChangeEvent)="updateComponent($event)"></app-sidenav>
+      <app-sidenav></app-sidenav>
     </div>
     <div class="col-md-9 content-area">
       <app-list-category *ngIf="activeLabel=='list-categories'"></app-list-category>

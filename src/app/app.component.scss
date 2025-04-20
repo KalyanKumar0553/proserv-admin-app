@@ -27,3 +27,19 @@ a {
 .row {
     padding:0px !important;
 }
+.status-spinner {
+    background-color: $background-color;
+    color: $primary-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+.text-primary {
+    color:$primary-color !important;
+}
+.loading-label {
+    margin-left: 8px;
+    font-family: sans-serif;
+    color:$primary-color;
+}

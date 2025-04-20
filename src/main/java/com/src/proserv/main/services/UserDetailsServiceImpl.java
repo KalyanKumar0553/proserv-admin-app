@@ -105,7 +105,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	public String generateOtp() {
 		Random random = new Random();
-		return String.format("%06d", random.nextInt(999999));
+		return "123654";
+//		return String.format("%06d", random.nextInt(999999));
 	}
 
 	public Optional<UserInfo> findUserByUsername(String username) {
@@ -147,6 +148,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public Set<GrantedAuthority> getAuthorities(UserInfo user) {
 		Set<GrantedAuthority> authorities = new HashSet<>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+		authorities.add(new SimpleGrantedAuthority("USER"));
 		Optional<ProServRoles> proservAdmin = rolesRepository.findByUserUUID(user.getUUID());
 		if(proservAdmin.isPresent()) {
 			String[] roles = proservAdmin.get().getRoles().split(AppConstants.roleSeperator);

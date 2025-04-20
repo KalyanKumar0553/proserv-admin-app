@@ -15,4 +15,8 @@ export class OverviewService {
   async getOverviewData() {
     return this.apiService.get(ApiUrls.OVERVIEW).toPromise();
   }
+
+  async getSideNavMenu() {
+    
+  }
 }

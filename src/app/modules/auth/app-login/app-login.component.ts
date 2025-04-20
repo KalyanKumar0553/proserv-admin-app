@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AlertTypes, AuthStateConstants, LocalStorageKeys } from 'app/shared/constants/constants.enum';
 import RouteUrl from 'app/shared/constants/router-url.enum';
 import { AuthService } from 'app/shared/services/auth.service';
@@ -7,6 +7,7 @@ import { LocalStorageService } from 'app/shared/services/local-service';
 import { AuthValidationService } from 'app/shared/services/auth-validation-service'
 import { NavigationTrackerService } from 'app/shared/services/navigration-tracking.service';
 import { DeviceDetectorService } from 'app/shared/services/device-detector.service';
+import { filter } from 'rxjs';
 @Component({
   selector: 'app-login',
   templateUrl: './app-login.component.html',
@@ -45,7 +46,7 @@ export class AppLoginComponent implements OnInit {
       this.loading = true;
       if(this.authService.getToken()!=null) {
         this.authService.ping().then(()=>{
-          this.router.navigate(['/home'])
+          this.router.navigateByUrl(RouteUrl.HOME);
         }).catch(err=>{
           this.state = AuthStateConstants.LOGIN_STATE;
         }).finally(()=>{
@@ -133,7 +134,7 @@ export class AppLoginComponent implements OnInit {
       let token = res?.statusMsg?.accessToken;
       if(res?.statusMsg?.accessToken) {
         this.authService.setUserSession(res?.statusMsg?.accessToken);
-        this.router.navigateByUrl(RouteUrl.ROUTE_SEPARATOR+RouteUrl.HOME);
+        this.router.navigateByUrl(RouteUrl.HOME);
       }
     }).catch(err=>{
       this.errorMsg = err?.message || "Unable To login with credentials !";

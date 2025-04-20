@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ComponentLoaderService } from 'app/shared/services/compinent-loader.service';
+import { MenuService } from 'app/shared/services/menu.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-sidenav',
@@ -8,30 +11,36 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, S
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss'
 })
-export class SidenavComponent {
+export class SidenavComponent implements OnInit {
   
-  @Input()
-  navItems = [];
+  menuService = inject(MenuService);
+  componentLoaderService = inject(ComponentLoaderService);
 
-  @Output() componentChangeEvent = new EventEmitter<string>();
+  navMenu = [];
 
   constructor(private changeDetecion : ChangeDetectorRef){
   }
+  
+  ngOnInit(): void {
+    this.menuService.menuItems$.subscribe(data => {
+      this.navMenu = data;
+    })
+  }
 
   toggleExpansion(navItem:any= {}) {
-    this.navItems.forEach(element => {
+    this.navMenu.forEach(element => {
       if(navItem.label!=element.label) {
-        element.expanded = false;
+        element.active = false;
       }
     });
-    navItem.expanded = !navItem.expanded;
+    navItem.active = !navItem.active;
     this.changeDetecion.detectChanges();
   }
 
   setActiveLabel(navItem:any={}) {
     let prevActiveRoute = '';
-    this.navItems.forEach(element => {
-      element.child.forEach(item=>{
+    this.navMenu.forEach(element => {
+      element.children.forEach(item=>{
         if(item.active) {
           prevActiveRoute = item.route;
         }
@@ -40,7 +49,7 @@ export class SidenavComponent {
     });
     navItem.active=true;
     if(navItem.route != prevActiveRoute) {
-      this.componentChangeEvent.emit(navItem.route);
+      this.componentLoaderService.setComponent(navItem.route);
     }
   }
 }

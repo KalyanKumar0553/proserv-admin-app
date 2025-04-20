@@ -122,12 +122,6 @@ public class AuthController {
 		return ResponseEntity.ok(AppUtils.getJSONObject(authentication.getAuthorities()));
 	}
 	
-	
-	@GetMapping("/ping")
-	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER','AGENT')")
-	public ResponseEntity<JSONResponseDTO<?>> getRoles() throws MessagingException {
-		return ResponseEntity.ok(AppUtils.getJSONObject("pong"));
-	}
 
 	@PostMapping("/reset_password_with_otp")
 	public ResponseEntity<JSONResponseDTO<?>> resetPasswordWithOTP(

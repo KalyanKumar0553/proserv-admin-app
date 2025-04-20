@@ -1,19 +1,19 @@
 <div class="nav-container">
-  <div class="sidenav" *ngFor="let navItem of navItems">
+  <div class="sidenav" *ngFor="let navItem of navMenu">
     <div class="nav-main-title">
-      <span class="title-text" (click)="setActiveLabel(item)" *ngIf="!navItem.expanded">
+      <span class="title-text" (click)="setActiveLabel(item)" *ngIf="!navItem.active">
         {{navItem.label}}
       </span>
-      <span class="title-text" *ngIf="navItem.expanded">
+      <span class="title-text" *ngIf="navItem.active">
         {{navItem.label}}
       </span>
-      <span *ngIf="navItem?.child?.length>0" class="title-icon">
-        <i class="bi bi-plus title-icon-img" *ngIf="!navItem.expanded" (click)="toggleExpansion(navItem)"></i>
-        <i class="bi bi-dash title-icon-img" *ngIf="navItem.expanded" (click)="toggleExpansion(navItem)"></i>
+      <span *ngIf="navItem?.children?.length>0" class="title-icon">
+        <i class="bi bi-plus title-icon-img" *ngIf="!navItem.active" (click)="toggleExpansion(navItem)"></i>
+        <i class="bi bi-dash title-icon-img" *ngIf="navItem.active" (click)="toggleExpansion(navItem)"></i>
       </span>
     </div>
-    <ul class="nav flex-column" *ngIf="navItem.expanded">
-      <li class="nav-item" [class.active-item]="item.active" *ngFor="let item of navItem.child" (click)="setActiveLabel(item)">
+    <ul class="nav flex-column" *ngIf="navItem.active">
+      <li class="nav-item" [class.active-item]="item.active" *ngFor="let item of navItem.children" (click)="setActiveLabel(item)">
         <a class="nav-link">
           {{ item.label }}
         </a>

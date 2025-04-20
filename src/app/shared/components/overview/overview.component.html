@@ -1,4 +1,9 @@
 <div class="over-view-container">
+    <div class="status-spinner"  *ngIf="overviewRequestInProgres">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <span class="loading-label">Loading Overview...</span>
+    </div>
     <div *ngIf="!overviewRequestInProgres">
         <div class="row gap-4">
             <div class="col-sm-12 col-md-1 col-lg-1 col-xl-1">
@@ -8,7 +13,7 @@
                     <div class="card-title">Service Categories</div>
                     <p class="card-text">{{categoriesCount}}</p>
                     <div class="card-footer">
-                      <a class="text-primary small update-link">View /Update</a>
+                      <a class="text-primary small update-link" (click)="navigateToCategories('add-update-category')">View /Update</a>
                     </div>
                 </div>
             </div>

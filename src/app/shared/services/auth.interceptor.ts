@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { LocalStorageKeys } from '../constants/constants.enum';
 import { LocalStorageService } from './local-service';
 import { AuthService } from './auth.service';
+import RouteUrl from '../constants/router-url.enum';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -30,7 +31,11 @@ export class AuthInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
           this.localService.clearData();
-          this.router.navigate(['/login']);
+          this.router.navigate([RouteUrl.LOGIN],{
+            state :{
+              msg : 'Unauthorized'
+            }
+          });
         }
         return throwError(() => error);
       })

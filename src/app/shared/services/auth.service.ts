@@ -23,7 +23,7 @@ export class AuthService {
 
   async logoutUser() {
     this.clearTimer();
-    return this.apiService.update(ApiUrls.LOGOUT,{}).toPromise();
+    return this.apiService.save(ApiUrls.LOGOUT,{}).toPromise();
   }
 
   async loginUser(payload:any={}) {

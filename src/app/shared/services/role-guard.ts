@@ -8,6 +8,7 @@ import {
 } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Roles } from '../models/roles.enum';
+import RouteUrl from '../constants/router-url.enum';
 
 @Injectable({ providedIn: 'root' })
 export class RoleGuard implements CanActivate {
@@ -21,10 +22,10 @@ export class RoleGuard implements CanActivate {
   }
   
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    return this.hasAccess(route) || (this.router.navigate(['/unauthorized']), false);
+    return this.hasAccess(route) || (this.router.navigate([RouteUrl.UNAUTHORIZED]), false);
   }
   
   canActivateChild(childRoute: ActivatedRouteSnapshot): boolean {
-    return this.hasAccess(childRoute) || (this.router.navigate(['/unauthorized']), false);
+    return this.hasAccess(childRoute) || (this.router.navigate([RouteUrl.UNAUTHORIZED]), false);
   }
 }

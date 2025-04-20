@@ -1,6 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { MenuItem } from 'app/shared/models/menu-item.model';
 import { Roles } from 'app/shared/models/roles.enum';
 import { AuthService } from 'app/shared/services/auth.service';
+import { ComponentLoaderService } from 'app/shared/services/compinent-loader.service';
+import { MenuService } from 'app/shared/services/menu.service';
 
 @Component({
   selector: 'app-categories',
@@ -10,32 +13,32 @@ import { AuthService } from 'app/shared/services/auth.service';
 })
 export class CategoriesComponent implements OnInit, OnDestroy{
   
+  public authService=inject(AuthService);
+  private componentLoaderService=inject(ComponentLoaderService);
+  private menuService=inject(MenuService);
+
   activeLabel:string = 'list-categories';
   roles = Roles;
+  menuItems: MenuItem[] = [];
 
-  ngOnInit(): void {
-    this.activeLabel = 'list-categories';
+  constructor() {}
+
+  async ngOnInit() {
+    this.menuService.menuItems$.subscribe(menu=>{
+      menu.forEach(m=>{
+        m.children.forEach(c=>{
+          if(c.active) {
+            this.activeLabel = c.route;
+          }
+        })
+      });
+    })
+    this.componentLoaderService.component$.subscribe(component=>{
+      this.activeLabel = component || 'list-categories';
+    });
   }
-
-  constructor(public authService: AuthService) {}
 
   ngOnDestroy(): void {
     this.activeLabel = '';
-  }
-  
-  navItems : any = [
-    {
-      label: 'Categories',
-      expanded: true,
-      child:  [
-          { label: 'List Categories', route: 'list-categories', active:true },
-          { label: 'Add / Update', route: 'add-update-category' },
-          { label: 'Delete Categories', route: 'delete-category' },
-        ]
-    },
-  ];
-
-  updateComponent(event:any) {
-    this.activeLabel = event;
   }
 }

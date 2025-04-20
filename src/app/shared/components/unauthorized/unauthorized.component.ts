@@ -11,7 +11,7 @@ import { NavigationTrackerService } from 'app/shared/services/navigration-tracki
 export class UnauthorizedComponent {
 
   @Input()
-  hideHome: boolean = false;
+  hideHome: boolean = true;
 
   constructor(private router: Router,private navigationTracker: NavigationTrackerService) {}
 

@@ -72,12 +72,6 @@ public class OTPService {
 		}
 	}
 
-	public String generateOtp() {
-		Random random = new Random();
-		int otp = 100000 + random.nextInt(900000);
-		return String.valueOf(otp);
-	}
-
 	public void saveOtp(String username, String otp) {
 		Otp otpEntity = new Otp();
 		otpEntity.setUsername(username);

@@ -27,7 +27,7 @@ public class InvalidatedToken {
 
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,length = 1024)
     private String token;
 
     @Column(nullable = false)

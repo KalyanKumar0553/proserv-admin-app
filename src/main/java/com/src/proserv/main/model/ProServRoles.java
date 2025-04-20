@@ -1,7 +1,5 @@
 package com.src.proserv.main.model;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,4 +19,5 @@ public class ProServRoles  extends Auditable {
 
     private String roles;
 
+    private long locationID;
 }

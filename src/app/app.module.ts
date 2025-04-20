@@ -1,5 +1,5 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -10,6 +10,8 @@ import { DashboardComponent } from './shared/components/dashboard/dashboard.comp
 import { AuthInterceptor } from './shared/services/auth.interceptor';
 import { CredentialsInterceptor } from './shared/services/credentials-interceptor';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
+import { ConfigService } from './shared/services/config.service';
+import { initializeApp } from './app-init';
 
 @NgModule({
   imports: [
@@ -38,6 +40,13 @@ import { SpinnerComponent } from './shared/components/spinner/spinner.component'
     {
       provide: HTTP_INTERCEPTORS,
       useClass: CredentialsInterceptor,
+      multi: true
+    },
+    ConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [ConfigService],
       multi: true
     }
   ],
