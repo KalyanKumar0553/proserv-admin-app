@@ -33,6 +33,9 @@ public class AppValidators {
 		if (password.length() < 8) {
             throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Password must be at least 8 characters long.");
         }
+		if (password.length() > 30) {
+            throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Password should have maximum Length of 30");
+        }
         if (!password.matches(".*[A-Z].*")) {
         	throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(),"Password must contain at least one uppercase letter.");
         }

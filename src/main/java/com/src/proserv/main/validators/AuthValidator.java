@@ -31,6 +31,9 @@ public class AuthValidator {
 			throw new InvalidRequestException(RequestStatus.LOGIN_REQUEST_PASSWORD_REQUIRED_ERROR);
 		}
 		if (AppValidators.isEmail(username.get())) {
+			if(username.get().length()>30) {
+				throw new InvalidRequestException(RequestStatus.LOGIN_REQUEST_USERNAME_MAX_LENGTH_ERROR);	
+			}
 			signupRequest.setEmail(username.get());
 		} else if (AppValidators.isMobile(username.get())) {
 			signupRequest.setMobile(username.get());
@@ -53,12 +56,16 @@ public class AuthValidator {
 			throw new InvalidRequestException(RequestStatus.LOGIN_REQUEST_PASSWORD_REQUIRED_ERROR);
 		}
 		if (AppValidators.isEmail(username.get())) {
+			if(username.get().length()>30) {
+				throw new InvalidRequestException(RequestStatus.LOGIN_REQUEST_USERNAME_MAX_LENGTH_ERROR);	
+			}
 			loginRequest.setEmail(username.get());
 		} else if (AppValidators.isMobile(username.get())) {
 			loginRequest.setMobile(username.get());
 		} else {
 			throw new InvalidRequestException(RequestStatus.LOGIN_REQUEST_INVALID_USERNAME_ERROR);
 		}
+		AppValidators.validatePassword(password.get());
 	}
 
 	public void validateOTPVerificationRequest(OTPVerificationRequestDTO otpVerificationRequest) {
@@ -76,6 +83,9 @@ public class AuthValidator {
 			throw new InvalidRequestException(RequestStatus.VERIFICATION_REQUEST_OTP_ERROR);
 		}
 		if (AppValidators.isEmail(username.get())) {
+			if(username.get().length()>30) {
+				throw new InvalidRequestException(RequestStatus.LOGIN_REQUEST_USERNAME_MAX_LENGTH_ERROR);	
+			}
 			otpVerificationRequest.setEmail(username.get());
 		} else if (AppValidators.isMobile(username.get())) {
 			otpVerificationRequest.setMobile(username.get());
@@ -92,6 +102,9 @@ public class AuthValidator {
 			throw new InvalidRequestException(RequestStatus.SENDOTP_ERROR_USERNAME_REQUIRED_ERROR);
 		}
 		if (AppValidators.isEmail(username.get())) {
+			if(username.get().length()>30) {
+				throw new InvalidRequestException(RequestStatus.LOGIN_REQUEST_USERNAME_MAX_LENGTH_ERROR);	
+			}
 			sendOTPRequest.setEmail(username.get());
 		} else if (AppValidators.isMobile(username.get())) {
 			sendOTPRequest.setMobile(username.get());
@@ -123,6 +136,9 @@ public class AuthValidator {
 			throw new InvalidRequestException(RequestStatus.RESET_PASSWORD_ERROR_PASSWORD_NOT_MATCH);
 		}
 		if (AppValidators.isEmail(username.get())) {
+			if(username.get().length()>30) {
+				throw new InvalidRequestException(RequestStatus.LOGIN_REQUEST_USERNAME_MAX_LENGTH_ERROR);	
+			}
 			resetPasswordRequest.setEmail(username.get());
 		} else if (AppValidators.isMobile(username.get())) {
 			resetPasswordRequest.setMobile(username.get());
@@ -148,6 +164,9 @@ public class AuthValidator {
 			throw new InvalidRequestException(RequestStatus.RESET_PASSWORD_ERROR_PASSWORD_NOT_MATCH);
 		}
 		if (AppValidators.isEmail(username)) {
+			if(username.length()>30) {
+				throw new InvalidRequestException(RequestStatus.LOGIN_REQUEST_USERNAME_MAX_LENGTH_ERROR);	
+			}
 			resetPasswordRequest.setEmail(username);
 		} else if (AppValidators.isMobile(username)) {
 			resetPasswordRequest.setMobile(username);
