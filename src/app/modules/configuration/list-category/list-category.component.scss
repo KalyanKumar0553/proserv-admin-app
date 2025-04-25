@@ -20,14 +20,11 @@
   }
   
   .breadcrumb-hover:hover {
-    background-color: $primary-color;
-    color: $background-color;
     transition: background-color 0.3s ease;
     transform: scale(1.05);
   }
   
   .breadcrumb-icon {
-    margin-left: 6px;
     font-weight: bold;
     color: $primary-color;
   }
@@ -36,6 +33,7 @@
     text-decoration: underline;
     font-weight: 500;
     color: $primary-color;
+    cursor: pointer;
   }
   
   .table-row-hover:hover {
@@ -43,4 +41,11 @@
     color: $primary-color;
     cursor: pointer;
     transition: all 0.2s ease;
+  }
+  .breadcrumb-item {
+    color: $primary-color;
+  }
+
+  .status-spinner {
+    margin-top: 9rem;
   }

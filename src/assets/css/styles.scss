@@ -1,3 +1,19 @@
 
-html, body { }
+html, body { 
+    color: #1f5779;
+}
+.table > :not(caption) > * > * {
+    color : #204153;
+    text-align: center;
+}
+table th {
+    text-decoration: underline;
+}
+.fit-content {
+    max-width: fit-content;
+}
+.animate-card:hover {
+    transform: scale(1.04);
+    transition: all 0.3s ease;
+}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
