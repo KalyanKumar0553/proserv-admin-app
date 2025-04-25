@@ -85,6 +85,8 @@ public class OptionService {
 		ServiceOption serviceOption = existingServiceOption.get();
 		serviceOption.setName(serviceOptionRequest.getName());
 		serviceOption.setDescription(serviceOptionRequest.getDescription());
+		serviceOption.setInclusions(serviceOptionRequest.getInclusions());
+		serviceOption.setExclusions(serviceOptionRequest.getExclusions());
 		optionRepository.save(serviceOption);
 		return "Service Option Updated Succesfully";
 	}

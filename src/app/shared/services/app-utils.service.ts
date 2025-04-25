@@ -10,39 +10,70 @@ export class AppUtilsService {
     fetchActiveHeader(navItems: MenuItem[]): string {
         let activeHeader = 'home';
         for (let i = 0; i < navItems.length; i++) {
-            let curNav = navItems[i];
-            let currNavChild = curNav.children;
+            let currNav = navItems[i];
+            let currNavChild = currNav?.children || [];
+            if(currNavChild.length == 0 && currNav.active) {
+                activeHeader = currNav.label;
+                break;
+            }
             for (let j = 0; j < currNavChild.length; j++) {
                 let currMenuItem = currNavChild[j];
                 if(currMenuItem.active) {
-                    activeHeader = curNav.label;
+                    activeHeader = currNav.label;
                 }
             }
         }
         return activeHeader;
     }
 
-    fetchActiveComponentFromMenu(navItems: MenuItem[],defaultComponent: string): string {
+    fetchActiveComponentFromMenu(navItems: MenuItem[],defaultComponent: string=''): string {
         let component = defaultComponent;
+        let firstComponent = this.fetchDefaultComponentFromMenu(navItems);
         for (let i = 0; i < navItems.length; i++) {
-            let curNav = navItems[i];
-            let currNavChild = curNav.children;
+            let currNav = navItems[i];
+            let currNavChild = currNav?.children || [];
+            if(currNavChild.length == 0 && currNav.active) {
+                component = currNav.route;
+                break;
+            }
             for (let j = 0; j < currNavChild.length; j++) {
                 let currMenuItem = currNavChild[j];
                 if(currMenuItem.active) {
-                    component = curNav.route;
+                    component = currNav.route;
                 }
+            }
+        }
+        return component || firstComponent;
+    }
+
+    fetchDefaultComponentFromMenu(navItems: MenuItem[]) : string {
+        let component = '';
+        for (let i = 0; i < navItems.length; i++) {
+            let currNav = navItems[i];
+            let currNavChild = currNav?.children || [];
+            if(currNavChild.length == 0 && currNav.active) {
+                component = currNav.route;
+                break;
+            }
+            if(currNavChild?.length>0) {
+                component = currNavChild[0].route;
             }
         }
         return component;
     }
+
 
     updateMenuExpansion(navItems: MenuItem[], activeLabel: string) {
         let isExpanded = false;
         for (let i = 0; i < navItems.length; i++) {
             let currNav = navItems[i];
             currNav.active = false;
-            let currNavChild = navItems[i].children;
+            let currNavChild = navItems[i]?.children || [];
+            if(currNavChild.length == 0 && currNav.route==activeLabel) {
+                isExpanded = true;
+                currNav.active = true;
+                break;
+            }
             for (let j = 0; j < currNavChild.length; j++) {
                 let currMenuItem = currNavChild[j];
                 currMenuItem.active = false;
@@ -50,7 +81,11 @@ export class AppUtilsService {
                     isExpanded = true;
                     currMenuItem.active = true;
                     currNav.active = true;
+                    break;
                 }
+            }
+            if(isExpanded) {
+                break;
             }
         }
         if ((!isExpanded) && navItems.length > 0) {

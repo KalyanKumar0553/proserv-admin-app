@@ -20,10 +20,6 @@ public class ServiceTaskRequestDTO {
 
     private Long bookingAmount;
 
-    private String inclusions;
-
-    private String exclusions;
-
     private String displayURL;
 
 	public static ServiceTask toEntityFromTaskRequestDTO(ServiceTaskRequestDTO requestDTO) {
@@ -33,8 +29,6 @@ public class ServiceTaskRequestDTO {
 				.serviceOperationID(requestDTO.getServiceOperationID())
 				.serviceCategoryID(requestDTO.getServiceCategoryID())
 				.bookingAmount(requestDTO.getBookingAmount())
-				.inclusions(requestDTO.getInclusions())
-				.exclusions(requestDTO.getExclusions())
 				.build();
 	}
 

@@ -1,0 +1,50 @@
+<div class="container status-spinner"  *ngIf="apiLoading">
+    <div class="spinner-border text-primary" role="status">
+    </div>
+    <span class="loading-label">Loading Categories...</span>
+</div>
+<div class="container mt-4"   *ngIf="!apiLoading">
+    <nav aria-label="breadcrumb" class="custom-breadcrumb">
+      <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item breadcrumb-hover">
+          <a href="#" (click)="goToDashboard()">Home <span class="breadcrumb-icon">&gt;</span></a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-hover">
+          <span>Categories <span class="breadcrumb-icon">&gt;</span></span>
+        </li>
+        <li class="breadcrumb-item active breadcrumb-hover" aria-current="page">
+          <span class="active-link">View Categories</span>
+        </li>
+      </ol>
+    </nav>
+  
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4>Categories Management</h4>
+      <button class="btn btn-primary" (click)="addNewCategory()">Add New Category</button>
+    </div>
+  
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Providers</th>
+          <th>Locations</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let category of categories" class="table-row-hover">
+          <td>{{ category.id }}</td>
+          <td>{{ category.name }}</td>
+          <td>{{ category.providers }}</td>
+          <td>{{ category.locations }}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary" (click)="editCategory(category.id)">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

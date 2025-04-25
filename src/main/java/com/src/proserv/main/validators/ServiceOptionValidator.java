@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.src.proserv.main.exceptions.AbstractRuntimeException;
-import com.src.proserv.main.request.dto.ServiceCategoryRequestDTO;
 import com.src.proserv.main.request.dto.ServiceOptionRequestDTO;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +19,14 @@ public class ServiceOptionValidator {
 		Optional<String> name = Optional.ofNullable(optionRequest.getName());
 		Optional<Long> operationID = Optional.ofNullable(optionRequest.getServiceOperationID());
 		Optional<Long> categoryID = Optional.ofNullable(optionRequest.getServiceCategoryID());
+		Optional<String> inclusions = Optional.ofNullable(optionRequest.getInclusions());
+		Optional<String> exclusions = Optional.ofNullable(optionRequest.getExclusions());
+		if (inclusions.isEmpty() || inclusions.get().isEmpty()) {
+			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Inclusion Details are Mandatory");
+		}
+		if (exclusions.isEmpty() || exclusions.get().isEmpty()) {
+			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Exclusion Details are Mandatory");
+		}
 		if (name.isEmpty() || name.get().isEmpty()) {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Option Name Cannot be Empty");
 		}

@@ -1,7 +1,5 @@
 package com.src.proserv.main.model;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,7 +29,4 @@ public class ServiceTask extends Auditable {
 
     private Long bookingAmount;
     
-    private String inclusions;
-    
-    private String exclusions;
 }

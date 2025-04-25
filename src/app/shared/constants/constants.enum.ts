@@ -16,6 +16,7 @@ export enum ApiUrls {
   ROLES = '/auth/roles',
   PING = '/ping',
   OVERVIEW = '/overview',
+  LIST_CATEGORY = '/service/categories',
 }
 export enum LocalStorageKeys {
    USER_TOKEN = 'TOKEN'

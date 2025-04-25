@@ -1,0 +1,46 @@
+@import './../../../app.component.scss';
+.container {
+    max-width: 900px;
+  }
+  
+  .custom-breadcrumb .breadcrumb {
+    background-color: transparent;
+    padding-left: 0;
+  }
+  
+  .custom-breadcrumb a {
+    color: $primary-color;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .custom-breadcrumb a:hover {
+    text-decoration: underline;
+    color: $primary-color;
+  }
+  
+  .breadcrumb-hover:hover {
+    background-color: $primary-color;
+    color: $background-color;
+    transition: background-color 0.3s ease;
+    transform: scale(1.05);
+  }
+  
+  .breadcrumb-icon {
+    margin-left: 6px;
+    font-weight: bold;
+    color: $primary-color;
+  }
+  
+  .active-link {
+    text-decoration: underline;
+    font-weight: 500;
+    color: $primary-color;
+  }
+  
+  .table-row-hover:hover {
+    background-color: #f0f8ff;
+    color: $primary-color;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }

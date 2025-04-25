@@ -7,6 +7,7 @@ import { SidenavComponent } from 'app/shared/components/sidenav/sidenav.componen
 import { DeleteCategoryComponent } from './delete-category/delete-category.component';
 import { AddUpdateCategoryComponent } from './add-update-category/add-update-category.component';
 import { UnauthorizedComponent } from 'app/shared/components/unauthorized/unauthorized.component';
+import { SettingsComponent } from './settings/settings.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { UnauthorizedComponent } from 'app/shared/components/unauthorized/unauth
     ListCategoryComponent,
     ConfigurationComponent,
     DeleteCategoryComponent,
-    AddUpdateCategoryComponent
+    AddUpdateCategoryComponent,
+    SettingsComponent
   ],
   imports: [
     CommonModule,

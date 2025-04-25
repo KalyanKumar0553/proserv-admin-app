@@ -38,8 +38,6 @@ public class ServiceTaskResponseDTO {
 				.serviceOperationID(taskEntity.getServiceOperationID())
 				.serviceCategoryID(taskEntity.getServiceCategoryID())
 				.bookingAmount(taskEntity.getBookingAmount())
-				.inclusions(taskEntity.getInclusions())
-				.exclusions(taskEntity.getExclusions())
 				.build();
     }
 }

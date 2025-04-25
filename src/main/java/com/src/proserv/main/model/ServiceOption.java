@@ -24,6 +24,14 @@ public class ServiceOption extends Auditable {
     private Long serviceOperationID;
 
     private String description;
+    
+    private String displayURL;
 
     private Long serviceCategoryID;
+    
+    private String inclusions;
+    
+    private String exclusions;
+    
+    private String note;
 }

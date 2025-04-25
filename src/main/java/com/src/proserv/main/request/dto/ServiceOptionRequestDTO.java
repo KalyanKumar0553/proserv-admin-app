@@ -1,6 +1,5 @@
 package com.src.proserv.main.request.dto;
 
-import com.src.proserv.main.model.ServiceOperation;
 import com.src.proserv.main.model.ServiceOption;
 
 import lombok.Data;
@@ -17,6 +16,11 @@ public class ServiceOptionRequestDTO {
     private String description;
 
     private Long serviceCategoryID;
+    
+    private String inclusions;
+
+    private String exclusions;
+
 
 	public static ServiceOption toEntityFromOperationRequestDTO(ServiceOptionRequestDTO requestDTO) {
 		return ServiceOption.builder()
@@ -24,6 +28,8 @@ public class ServiceOptionRequestDTO {
 				.serviceOperationID(requestDTO.getServiceOperationID())
 	            .name(requestDTO.getName())
 	            .description(requestDTO.getDescription())
+	            .inclusions(requestDTO.getInclusions())
+	            .exclusions(requestDTO.getExclusions())
 	            .build();
 	}
 

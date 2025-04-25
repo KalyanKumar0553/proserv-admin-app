@@ -102,7 +102,7 @@ export class AppLoginComponent implements OnInit {
       this.requestProgress = true;
       this.authService.resetPasswordWithOTP({"username":this.username,"password":this.password,"retypePassword":this.retypePassword,"otp":this.otp}).then(res=>{
         this.validationService.resetFields(this,['username','password','retypePassword','otp','errorMsg']);
-        this.errorMsg = "Password Succesfullt Updated. Please try login."
+        this.errorMsg = "Password Succesfully Updated. Please try login."
         this.alertType = AlertTypes.SUCCESS;
       }).catch(err=>{
         this.errorMsg = err?.message || "Unable To Reset Password.";

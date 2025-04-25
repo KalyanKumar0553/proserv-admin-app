@@ -37,7 +37,7 @@ export class SidenavComponent implements OnInit,OnChanges {
 
   toggleExpansion(navItem:any= {}) {
     this.sideNavMenu.forEach(element => {
-      if(navItem.label!=element.label) {
+      if(navItem.labelText!=element.labelText) {
         element.active = false;
       }
     });
@@ -45,18 +45,21 @@ export class SidenavComponent implements OnInit,OnChanges {
     this.changeDetector.detectChanges();
   }
 
-  setActiveLabel(navItem:any={}) {
-    let prevActiveRoute = '';
+  setActiveLabel(navItem:MenuItem) {
+    let prevActiveComponent = this.appUtils.fetchActiveComponentFromMenu(this.sideNavMenu);
     this.sideNavMenu.forEach(element => {
-      element.children.forEach(item=>{
-        if(item.active) {
-          prevActiveRoute = item.route;
+      element.active = false;
+      (element?.children || []).forEach(item=>{
+        if(item.route == navItem.route) {
+          element.active = true;
+          item.active = true;
+        } else {
+          item.active=false;
         }
-        item.active=false;
       });
     });
     navItem.active=true;
-    if(navItem.route != prevActiveRoute) {
+    if(navItem.route != prevActiveComponent) {
       this.componentChangeEvent.emit(navItem.route);
     }
   }

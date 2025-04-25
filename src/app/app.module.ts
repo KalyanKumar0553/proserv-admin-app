@@ -5,7 +5,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app.routing';
 import { AppComponent } from './app.component';
-import { ConfigurationModule } from './modules/categories/configuration.module';
+import { ConfigurationModule } from './modules/configuration/configuration.module';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { AuthInterceptor } from './shared/services/auth.interceptor';
 import { CredentialsInterceptor } from './shared/services/credentials-interceptor';

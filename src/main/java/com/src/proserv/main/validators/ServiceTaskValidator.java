@@ -18,8 +18,6 @@ public class ServiceTaskValidator {
 	public void validateCreateTaskRequest(ServiceTaskRequestDTO taskRequest) {
 		Optional<String> name = Optional.ofNullable(taskRequest.getName());
 		Optional<Long> bookingAmount = Optional.ofNullable(taskRequest.getBookingAmount());
-		Optional<String> inclusions = Optional.ofNullable(taskRequest.getInclusions());
-		Optional<String> exclusions = Optional.ofNullable(taskRequest.getExclusions());
 		Optional<Long> serviceOptionID = Optional.ofNullable(taskRequest.getServiceOptionID());
 		Optional<Long> serviceOperationID = Optional.ofNullable(taskRequest.getServiceOperationID());
 		Optional<Long> serviceCategoryID = Optional.ofNullable(taskRequest.getServiceCategoryID());
@@ -28,12 +26,6 @@ public class ServiceTaskValidator {
 		}
 		if (bookingAmount.isEmpty() || bookingAmount.get()<=0) {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Invalid Booking amount");
-		}
-		if (inclusions.isEmpty() || inclusions.get().isEmpty()) {
-			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Inclusion Details are Mandatory");
-		}
-		if (exclusions.isEmpty() || exclusions.get().isEmpty()) {
-			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Exclusion Details are Mandatory");
 		}
 		if (serviceOptionID.isEmpty() || serviceOptionID.get()<=0) {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Invalid Option ID");

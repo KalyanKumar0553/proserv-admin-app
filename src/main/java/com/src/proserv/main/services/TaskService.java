@@ -89,8 +89,6 @@ public class TaskService {
 		serviceTask.setServiceOperationID(serviceTaskRequest.getServiceOperationID());
 		serviceTask.setServiceCategoryID(serviceTaskRequest.getServiceCategoryID());
 		serviceTask.setBookingAmount(serviceTaskRequest.getBookingAmount());
-		serviceTask.setInclusions(serviceTaskRequest.getInclusions());
-		serviceTask.setExclusions(serviceTaskRequest.getExclusions());
 		taskRepository.save(serviceTask);
 		return "Service Task Updated Succesfully";
 	}

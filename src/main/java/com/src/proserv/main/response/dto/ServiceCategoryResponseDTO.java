@@ -16,6 +16,8 @@ public class ServiceCategoryResponseDTO {
 	Long id;
 	private String name;
     private String displayURL;
+    private long providerCount;
+    private long locationsCount;
 
 
     public static ServiceCategoryResponseDTO fromEntityToFetchCategoryResponse(ServiceCategory category) {

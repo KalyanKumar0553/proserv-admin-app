@@ -1,7 +1,6 @@
 
 package com.src.proserv.main.response.dto;
 
-import com.src.proserv.main.model.ServiceOperation;
 import com.src.proserv.main.model.ServiceOption;
 
 import lombok.AllArgsConstructor;
@@ -20,12 +19,19 @@ public class ServiceOptionResponseDTO {
     private String name;
 
     private String description;
+    
+    private String inclusions;
+    
+    private String exclusions;
 
+	
     public static ServiceOptionResponseDTO fromEntityToFetchOptionResponse(ServiceOption option) {
         return ServiceOptionResponseDTO.builder()
                 .id(option.getId())
                 .name(option.getName())
                 .description(option.getDescription())
+                .inclusions(option.getInclusions())
+            	.exclusions(option.getExclusions())
                 .build();
     }
 }
