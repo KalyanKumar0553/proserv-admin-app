@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AlertTypes, AuthStateConstants, LocalStorageKeys } from 'app/shared/constants/constants.enum';
 import RouteUrl from 'app/shared/constants/router-url.enum';
@@ -7,14 +7,15 @@ import { LocalStorageService } from 'app/shared/services/local-service';
 import { AuthValidationService } from 'app/shared/services/auth-validation-service'
 import { NavigationTrackerService } from 'app/shared/services/navigration-tracking.service';
 import { DeviceDetectorService } from 'app/shared/services/device-detector.service';
-import { filter } from 'rxjs';
+import { filter, Subject, Subscription } from 'rxjs';
+import { AppUtilsService } from 'app/shared/services/app-utils.service';
 @Component({
   selector: 'app-login',
   templateUrl: './app-login.component.html',
   standalone: false,
   styleUrls: ['./app-login.component.scss']
 })
-export class AppLoginComponent implements OnInit {
+export class AppLoginComponent implements OnInit, OnDestroy {
 
   @ViewChild('usernameInput') usernameInputRef!: ElementRef;
   @ViewChild('passwordInput') passwordInputRef!: ElementRef;
@@ -37,7 +38,19 @@ export class AppLoginComponent implements OnInit {
   isMobile:boolean = false;
   AuthStateConstants: any = AuthStateConstants;
   requestProgress:boolean = false;
-  constructor(private deviceDetector : DeviceDetectorService,private route: ActivatedRoute,private router: Router,private validationService:AuthValidationService,private authService: AuthService,private localService : LocalStorageService) { }
+
+  private pingSubscription? : Subscription;
+  private sendOTPSubscription? : Subscription;
+  private resetOTPSubscription? : Subscription;
+  private loginSubscription? : Subscription;
+
+  constructor(private utils: AppUtilsService,private deviceDetector : DeviceDetectorService,private route: ActivatedRoute,private router: Router,private validationService:AuthValidationService,private authService: AuthService,private localService : LocalStorageService) { }
+  
+  ngOnDestroy(): void {
+    this.utils.unsubscribeData([this.pingSubscription,this.sendOTPSubscription,this.resetOTPSubscription,this.loginSubscription]);
+  }
+
+  
 
   ngOnInit(): void {
     this.isMobile = this.deviceDetector.isMobileDevice();
@@ -45,12 +58,12 @@ export class AppLoginComponent implements OnInit {
       this.username = "";
       this.loading = true;
       if(this.authService.getToken()!=null) {
-        this.authService.ping().then(()=>{
-          this.router.navigateByUrl(RouteUrl.HOME);
-        }).catch(err=>{
-          this.state = AuthStateConstants.LOGIN_STATE;
-        }).finally(()=>{
+        this.pingSubscription = this.authService.ping().subscribe((data)=>{
           this.loading = false;
+          this.router.navigateByUrl(RouteUrl.HOME);
+        },(err)=>{
+          this.loading = false;
+          this.state = AuthStateConstants.LOGIN_STATE;
         });
       } else {
         this.loading = false;
@@ -85,11 +98,11 @@ export class AppLoginComponent implements OnInit {
     this.errorMsg = "";
     this.validationService.validateSendOTPRequest(this);
     this.requestProgress = true;
-    this.authService.sendOTP({"username":this.username}).then(res=>{
+    this.sendOTPSubscription = this.authService.sendOTP({"username":this.username}).subscribe(res=>{
       this.state = this.verifyOTPAndResetPasswordState;
-    }).catch(err=>{
+      this.requestProgress = false;
+    },(err)=>{
       this.errorMsg = err?.message || "Unable To Send OTP.";
-    }).finally(()=>{
       this.requestProgress = false;
     });
   }
@@ -100,15 +113,15 @@ export class AppLoginComponent implements OnInit {
         return;
     } else {
       this.requestProgress = true;
-      this.authService.resetPasswordWithOTP({"username":this.username,"password":this.password,"retypePassword":this.retypePassword,"otp":this.otp}).then(res=>{
+      this.resetOTPSubscription = this.authService.resetPasswordWithOTP({"username":this.username,"password":this.password,"retypePassword":this.retypePassword,"otp":this.otp}).subscribe(res=>{
         this.validationService.resetFields(this,['username','password','retypePassword','otp','errorMsg']);
         this.errorMsg = "Password Succesfully Updated. Please try login."
         this.alertType = AlertTypes.SUCCESS;
-      }).catch(err=>{
-        this.errorMsg = err?.message || "Unable To Reset Password.";
-      }).finally(()=>{
         this.requestProgress = false;
-      })
+      },(err=>{
+        this.errorMsg = err?.message || "Unable To Reset Password.";
+        this.requestProgress = false;
+      }));
     }
   }
 
@@ -130,16 +143,16 @@ export class AppLoginComponent implements OnInit {
     }
     this.errorMsg = '';
     this.requestProgress = true;
-    this.authService.loginUser({"username":this.username,"password":this.password}).then(res=>{
+    this.loginSubscription = this.authService.loginUser({"username":this.username,"password":this.password}).subscribe(res=>{
       let token = res?.statusMsg?.accessToken;
       if(res?.statusMsg?.accessToken) {
         this.authService.setUserSession(res?.statusMsg?.accessToken);
         this.router.navigateByUrl(RouteUrl.HOME);
       }
-    }).catch(err=>{
-      this.errorMsg = err?.message || "Unable To login with credentials !";
-    }).finally(()=>{
       this.requestProgress = false;
-    });
+    },(err=>{
+      this.errorMsg = err?.message || "Unable To login with credentials !";
+      this.requestProgress = false;
+    }));
   }
 }

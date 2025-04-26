@@ -1,6 +1,7 @@
 
 html, body { 
     color: #1f5779;
+    background:#f7f8f7;
 }
 .table > :not(caption) > * > * {
     color : #204153;
@@ -11,6 +12,7 @@ table th {
 }
 .fit-content {
     max-width: fit-content;
+    min-width:fit-content;
 }
 .animate-card:hover {
     transform: scale(1.04);

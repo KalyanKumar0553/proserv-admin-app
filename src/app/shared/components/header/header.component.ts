@@ -61,7 +61,7 @@ export class HeaderComponent implements OnInit,OnChanges {
   }
 
   logout() {
-    this.authService.logoutUser().then(()=>{
+    this.authService.logoutUser().subscribe(()=>{
       this.localService.clearData();
       this.router.navigateByUrl(RouteUrl.LOGIN);
     })

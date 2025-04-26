@@ -85,11 +85,11 @@ export class DashboardComponent implements OnInit,OnDestroy {
       this.isLoading = false;
     } else {
       if (this.authService.getToken() != null) {
-        this.authService.ping().then(() => {
+        this.authService.ping().subscribe(() => {
           this.router.navigate([RouteUrl.HOME])
-        }).catch(err => {
+          this.isLoading = false;
+        }),(err => {
           this.router.navigate([RouteUrl.LOGIN]);
-        }).finally(() => {
           this.isLoading = false;
         });
       } else {

@@ -21,7 +21,6 @@ export class CategoryService {
   }
 
   listCategories() {
-    return this.apiService.get(ApiUrls.LIST_CATEGORY).toPromise();
+    return this.apiService.get(ApiUrls.LIST_CATEGORY);
   }
-
 }

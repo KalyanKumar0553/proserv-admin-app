@@ -8,6 +8,7 @@ import { DeleteCategoryComponent } from './delete-category/delete-category.compo
 import { AddUpdateCategoryComponent } from './add-update-category/add-update-category.component';
 import { UnauthorizedComponent } from 'app/shared/components/unauthorized/unauthorized.component';
 import { SettingsComponent } from './settings/settings.component';
+import { DataGridComponent } from 'app/shared/components/data-grid/data-grid.component';
 
 
 @NgModule({
@@ -16,13 +17,14 @@ import { SettingsComponent } from './settings/settings.component';
     ConfigurationComponent,
     DeleteCategoryComponent,
     AddUpdateCategoryComponent,
-    SettingsComponent
+    SettingsComponent,
   ],
   imports: [
     CommonModule,
     ConfigurationRoutingModule,
     SidenavComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    DataGridComponent
   ]
 })
 export class ConfigurationModule { }

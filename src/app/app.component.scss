@@ -10,6 +10,12 @@ body {
     background-color: $primary-color;
     border-color: $primary-color;
 }
+.btn-primary:active{
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+    background-color: $primary-color;
+    border-color: $primary-color;
+}
 .spinner-border {
     color:$primary-color;
 }

@@ -12,11 +12,11 @@ export class OverviewService {
   constructor(private apiService:ProServApiService,private router: Router,private localService: LocalStorageService){
   }
   
-  async getOverviewData() {
-    return this.apiService.get(ApiUrls.OVERVIEW).toPromise();
+  getOverviewData() {
+    return this.apiService.get(ApiUrls.OVERVIEW);
   }
 
-  async getSideNavMenu() {
+  getSideNavMenu() {
     
   }
 }

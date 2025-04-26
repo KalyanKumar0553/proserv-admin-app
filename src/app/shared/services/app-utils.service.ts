@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AppLoginComponent } from 'app/modules/auth/app-login/app-login.component';
 import { MenuItem } from '../models/menu-item.model';
+import { Subscription } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -94,5 +95,13 @@ export class AppUtilsService {
                 navItems[0].children[0].active = true;
             }
         }
+    }
+
+    unsubscribeData(subscriptions:Subscription[]) {
+        subscriptions.forEach((sub)=>{
+          if(sub) {
+            sub.unsubscribe();
+          }
+        })
     }
 }

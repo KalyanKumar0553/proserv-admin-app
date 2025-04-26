@@ -1,0 +1,73 @@
+@import './../../../app.component.scss';
+
+.table {
+  margin-top: 1rem;
+  color: #1f5779;
+  table-layout: fixed;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+}
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.label-sort-container {
+  display: flex;
+  align-items: center; /* center vertically */
+  justify-content: center; /* center horizontally */
+  gap: 4px; /* spacing between title and sort arrow */
+  flex-grow: 1; /* take remaining width */
+}
+
+.filter-icon {
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.filter-container {
+  width: 100%;
+}
+
+input.form-control-sm {
+  font-size: 12px;
+  margin-top: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+th {
+  user-select: none;
+  text-align: center;
+}
+
+th:hover {
+  background-color: #f0f8ff;
+}
+
+.pagination .page-link {
+  cursor: pointer;
+}
+
+.pagination .page-item.disabled .page-link {
+  pointer-events: none;
+  color: #ccc;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #1f5779;
+  border-color: #1f5779;
+  color: white;
+}
+.page-link {
+  color: $primary-color;
+}

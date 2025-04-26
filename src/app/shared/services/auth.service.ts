@@ -6,6 +6,7 @@ import { ProServApiService } from './proserv-api.service';
 import {jwtDecode} from 'jwt-decode';
 import { JwtPayload } from '../models/jwt-payload.model';
 import { Roles } from '../models/roles.enum';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,33 +22,33 @@ export class AuthService {
     this.restoreSession();
   }
 
-  async logoutUser() {
+  logoutUser() {
     this.clearTimer();
-    return this.apiService.save(ApiUrls.LOGOUT,{}).toPromise();
+    return this.apiService.save(ApiUrls.LOGOUT,{});
   }
 
-  async loginUser(payload:any={}) {
-    return this.apiService.save(ApiUrls.LOGIN,payload).toPromise();
+  loginUser(payload:any={}) {
+    return this.apiService.save(ApiUrls.LOGIN,payload);
   }
 
-  async resetPasswordWithoutOTP(payload:any={}) {
-    return this.apiService.save(ApiUrls.RESET_PASSWORD_WITHOOUT_OTP,payload).toPromise();
+  resetPasswordWithoutOTP(payload:any={}) {
+    return this.apiService.save(ApiUrls.RESET_PASSWORD_WITHOOUT_OTP,payload);
   }
 
-  async resetPasswordWithOTP(payload:any={}) {
-    return this.apiService.save(ApiUrls.RESET_PASSWORD_WITH_OTP,payload).toPromise();
+  resetPasswordWithOTP(payload:any={}) {
+    return this.apiService.save(ApiUrls.RESET_PASSWORD_WITH_OTP,payload);
   }
 
-  async sendOTP(payload:any={}) {
-    return this.apiService.save(ApiUrls.SEND_OTP,payload).toPromise();
+  sendOTP(payload:any={}) {
+    return this.apiService.save(ApiUrls.SEND_OTP,payload);
   }
 
-  async fetchRoles() {
-    return this.apiService.get(ApiUrls.ROLES).toPromise();
+  fetchRoles() {
+    return this.apiService.get(ApiUrls.ROLES);
   }
 
-  async ping() {
-    return this.apiService.get(ApiUrls.PING).toPromise();
+  ping(): Observable<any>  {
+    return this.apiService.get(ApiUrls.PING);
   }
 
   clearTimer() {

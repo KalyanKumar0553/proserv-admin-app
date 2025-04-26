@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import RouteUrl from 'app/shared/constants/router-url.enum';
+import { AppUtilsService } from 'app/shared/services/app-utils.service';
 import { OverviewService } from 'app/shared/services/overview.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-overview',
@@ -10,29 +12,33 @@ import { OverviewService } from 'app/shared/services/overview.service';
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss'
 })
-export class OverviewComponent implements OnInit {
+export class OverviewComponent implements OnInit,OnDestroy {
 
   categoriesCount = 0;
   overviewRequestInProgress: boolean = false;
+  overviewSubscription: Subscription;
 
-  constructor(private overviewService : OverviewService,private router: Router) {}
+  constructor(private overviewService : OverviewService,private router: Router,private utils:AppUtilsService) {}
   
   ngOnInit(): void {
     this.overviewRequestInProgress = true;
-    this.overviewService.getOverviewData().then(res=>{
-        this.categoriesCount =  res?.statusMsg?.categoriesCount;
-    }).catch(err=>{
-    }).finally(()=>{
+    this.overviewSubscription = this.overviewService.getOverviewData().subscribe(res=>{
+      this.categoriesCount =  res?.statusMsg?.categoriesCount;
+      this.overviewRequestInProgress = false;
+    }),(err=>{
       this.overviewRequestInProgress = false;
     });
   }
 
   navigateToComponent(component: string) {
-    
     this.router.navigate([RouteUrl.CONFIGURATION],{
       state : {
         activeComponent : component
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.utils.unsubscribeData([this.overviewSubscription]);
   }
 }
