@@ -1,25 +1,29 @@
 import { Injectable } from '@angular/core';
 import { AppLoginComponent } from 'app/modules/auth/app-login/app-login.component';
 import { MenuItem } from '../models/menu-item.model';
-import { Subscription } from 'rxjs';
-
+import { filter, Subscription } from 'rxjs';
+import RouteUrl from '../constants/router-url.enum';
+import { NavigationEnd, Router } from '@angular/router';
+import { appConfig } from 'app/shared/constants/app-config.enum';
 @Injectable({
     providedIn: 'root'
 })
 export class AppUtilsService {
-    
+
+    constructor(private router: Router) { }
+
     fetchActiveHeader(navItems: MenuItem[]): string {
         let activeHeader = 'home';
         for (let i = 0; i < navItems.length; i++) {
             let currNav = navItems[i];
             let currNavChild = currNav?.children || [];
-            if(currNavChild.length == 0 && currNav.active) {
+            if (currNavChild.length == 0 && currNav.active) {
                 activeHeader = currNav.label;
                 break;
             }
             for (let j = 0; j < currNavChild.length; j++) {
                 let currMenuItem = currNavChild[j];
-                if(currMenuItem.active) {
+                if (currMenuItem.active) {
                     activeHeader = currNav.label;
                 }
             }
@@ -27,19 +31,19 @@ export class AppUtilsService {
         return activeHeader;
     }
 
-    fetchActiveComponentFromMenu(navItems: MenuItem[],defaultComponent: string=''): string {
+    fetchActiveComponentFromMenu(navItems: MenuItem[], defaultComponent: string = ''): string {
         let component = defaultComponent;
         let firstComponent = this.fetchDefaultComponentFromMenu(navItems);
         for (let i = 0; i < navItems.length; i++) {
             let currNav = navItems[i];
             let currNavChild = currNav?.children || [];
-            if(currNavChild.length == 0 && currNav.active) {
+            if (currNavChild.length == 0 && currNav.active) {
                 component = currNav.route;
                 break;
             }
             for (let j = 0; j < currNavChild.length; j++) {
                 let currMenuItem = currNavChild[j];
-                if(currMenuItem.active) {
+                if (currMenuItem.active) {
                     component = currNav.route;
                 }
             }
@@ -47,16 +51,16 @@ export class AppUtilsService {
         return component || firstComponent;
     }
 
-    fetchDefaultComponentFromMenu(navItems: MenuItem[]) : string {
+    fetchDefaultComponentFromMenu(navItems: MenuItem[]): string {
         let component = '';
         for (let i = 0; i < navItems.length; i++) {
             let currNav = navItems[i];
             let currNavChild = currNav?.children || [];
-            if(currNavChild.length == 0 && currNav.active) {
+            if (currNavChild.length == 0 && currNav.active) {
                 component = currNav.route;
                 break;
             }
-            if(currNavChild?.length>0) {
+            if (currNavChild?.length > 0) {
                 component = currNavChild[0].route;
             }
         }
@@ -70,7 +74,7 @@ export class AppUtilsService {
             let currNav = navItems[i];
             currNav.active = false;
             let currNavChild = navItems[i]?.children || [];
-            if(currNavChild.length == 0 && currNav.route==activeLabel) {
+            if (currNavChild.length == 0 && currNav.route == activeLabel) {
                 isExpanded = true;
                 currNav.active = true;
                 break;
@@ -85,7 +89,7 @@ export class AppUtilsService {
                     break;
                 }
             }
-            if(isExpanded) {
+            if (isExpanded) {
                 break;
             }
         }
@@ -97,11 +101,47 @@ export class AppUtilsService {
         }
     }
 
-    unsubscribeData(subscriptions:Subscription[]) {
-        subscriptions.forEach((sub)=>{
-          if(sub) {
-            sub.unsubscribe();
-          }
+    unsubscribeData(subscriptions: Subscription[]) {
+        subscriptions.forEach((sub) => {
+            if (sub) {
+                sub.unsubscribe();
+            }
         })
+    }
+
+    navigateToComponent(route: string, component: string) {
+        this.router.navigate([route], {
+            state: {
+                activeComponent: component
+            }
+        });
+    }
+
+    updateMenuOnRouteChange(context: any) {
+        context.routerSubscription = this.router.events
+            .pipe(filter(event => event instanceof NavigationEnd))
+            .subscribe(() => {
+                const state = context.location.getState() as {
+                    activeComponent: string
+                };
+                context.activeComponent = state?.activeComponent ?? 'list-categories';
+                this.loadMenuBasedOnRoute(context,context.router.url);
+        });
+    }
+
+    loadMenuBasedOnRoute(context: any,route: string) {
+        if (route.length > 1) {
+            route = route.indexOf("/") == -1 ? route : route.substring(route.indexOf("/") + 1);
+            if (appConfig[route]) {
+                let configData = appConfig[route];
+                let navItems = configData.sideNavMenu;
+                this.updateMenuExpansion(navItems, context.activeComponent);
+                context.sideNavMenu = navItems;
+                context.updateSignal++;
+            } else {
+                context.sideNavMenu = [];
+                context.updateSignal++;
+            }
+        }
     }
 }

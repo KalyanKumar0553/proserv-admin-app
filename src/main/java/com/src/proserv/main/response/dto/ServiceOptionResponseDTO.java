@@ -1,7 +1,7 @@
 
 package com.src.proserv.main.response.dto;
 
-import com.src.proserv.main.model.ServiceOption;
+import com.src.proserv.main.model.ServiceTaskOption;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,19 +19,22 @@ public class ServiceOptionResponseDTO {
     private String name;
 
     private String description;
+
+    private Long serviceCategoryID;
     
-    private String inclusions;
+    private Long serviceTaskID;
     
-    private String exclusions;
+    private Long defaultAmount;
 
 	
-    public static ServiceOptionResponseDTO fromEntityToFetchOptionResponse(ServiceOption option) {
+    public static ServiceOptionResponseDTO fromEntityToFetchOptionResponse(ServiceTaskOption option) {
         return ServiceOptionResponseDTO.builder()
                 .id(option.getId())
                 .name(option.getName())
                 .description(option.getDescription())
-                .inclusions(option.getInclusions())
-            	.exclusions(option.getExclusions())
+                .serviceCategoryID(option.getServiceCategoryID())
+                .serviceTaskID(option.getServiceTaskID())
+                .defaultAmount(option.getDefaultAmount())
                 .build();
     }
 }

@@ -12,16 +12,18 @@ import lombok.Data;
 @Entity
 @Data
 @Builder
-@Table(name="service_option")
-public class ServiceLocationTask extends Auditable {
+@Table(name="onboarded_location_task")
+public class OnboardedLocationTask extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long locationID;
+    private Long stateID;
 
-    private Long serviceTaskID;
+    private Long districtID;
+
+    private String name;
 
     private Boolean enabled;
 }

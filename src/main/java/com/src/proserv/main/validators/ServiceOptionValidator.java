@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.src.proserv.main.exceptions.AbstractRuntimeException;
-import com.src.proserv.main.request.dto.ServiceOptionRequestDTO;
+import com.src.proserv.main.request.dto.ServiceTaskOptionRequestDTO;
 
 import lombok.AllArgsConstructor;
 
@@ -14,34 +14,22 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ServiceOptionValidator {
 
-	public void validateCreateOptionRequest(ServiceOptionRequestDTO optionRequest) {
+	public void validateCreateOptionRequest(ServiceTaskOptionRequestDTO optionRequest) {
 		Optional<String> description = Optional.ofNullable(optionRequest.getDescription());
 		Optional<String> name = Optional.ofNullable(optionRequest.getName());
-		Optional<Long> operationID = Optional.ofNullable(optionRequest.getServiceOperationID());
 		Optional<Long> categoryID = Optional.ofNullable(optionRequest.getServiceCategoryID());
-		Optional<String> inclusions = Optional.ofNullable(optionRequest.getInclusions());
-		Optional<String> exclusions = Optional.ofNullable(optionRequest.getExclusions());
-		if (inclusions.isEmpty() || inclusions.get().isEmpty()) {
-			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Inclusion Details are Mandatory");
-		}
-		if (exclusions.isEmpty() || exclusions.get().isEmpty()) {
-			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Exclusion Details are Mandatory");
-		}
 		if (name.isEmpty() || name.get().isEmpty()) {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Option Name Cannot be Empty");
 		}
 		if (description.isEmpty() || description.get().isEmpty()) {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Option Description Cannot be Empty.");
 		}
-		if (operationID.isEmpty() || operationID.get()<=0) {
-			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Operation ID Cannot be Empty.");
-		}
 		if (categoryID.isEmpty() || categoryID.get()<=0) {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Category ID Cannot be Empty.");
 		}
 	}
 
-	public void validateUpdateOptionRequest(ServiceOptionRequestDTO OptionRequest) {
+	public void validateUpdateOptionRequest(ServiceTaskOptionRequestDTO OptionRequest) {
 		Optional<Long> id = Optional.ofNullable(OptionRequest.getId());
 		if (id.isEmpty() || id.get()<=0) {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Invalid Option ID.");

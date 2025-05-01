@@ -20,10 +20,8 @@ import com.src.proserv.main.configuration.JWTTokenProvider;
 import com.src.proserv.main.request.dto.ServiceCategoryRequestDTO;
 import com.src.proserv.main.response.dto.JSONResponseDTO;
 import com.src.proserv.main.services.CategoryService;
-import com.src.proserv.main.services.OperationService;
 import com.src.proserv.main.utils.AppUtils;
 import com.src.proserv.main.validators.OperationValidator;
-import com.src.proserv.main.validators.ServiceCategoryValidator;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -35,8 +33,6 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/api/service")
 public class ServiceCategoryController {
 
-	
-	final OperationService operationService;
 	
 	final OperationValidator operationValidator;
 	

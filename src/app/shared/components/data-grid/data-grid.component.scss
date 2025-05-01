@@ -2,7 +2,7 @@
 
 .table {
   margin-top: 1rem;
-  color: #1f5779;
+  color: $primary-color;
   table-layout: fixed;
 }
 
@@ -51,7 +51,7 @@ th {
 }
 
 th:hover {
-  background-color: #f0f8ff;
+  background-color: $hover-color;
 }
 
 .pagination .page-link {
@@ -60,14 +60,31 @@ th:hover {
 
 .pagination .page-item.disabled .page-link {
   pointer-events: none;
-  color: #ccc;
+  color: $disable-color;
 }
-
+.table-row-hover:hover {
+  background-color: $hover-color;
+  color: $primary-color;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 .pagination .page-item.active .page-link {
-  background-color: #1f5779;
-  border-color: #1f5779;
-  color: white;
+  background-color: $primary-color;
+  border-color: $primary-color;
+  color: $background-color;;
 }
 .page-link {
   color: $primary-color;
+}
+.header-position {
+  cursor: pointer; 
+  position: relative;
+}
+
+.ms-auto {
+  margin-left: auto !important;
+}
+
+.gap-2 {
+  gap: 0.5rem;
 }

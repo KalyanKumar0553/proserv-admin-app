@@ -16,28 +16,32 @@ public class ServiceTaskResponseDTO {
 
 	private Long id;
 
-    private String name;
+    private String title;
 
-    private Long serviceOptionID;
-
-    private Long serviceOperationID;
-
+    private String serviceTitle;
+    
+    private String description;
+    
     private Long serviceCategoryID;
-
-    private Long bookingAmount;
 
     private String inclusions;
 
     private String exclusions;
+    
+    private String displayURL;
+    
+    private String note;
 
     public static ServiceTaskResponseDTO fromEntityToServiceTaskResponse(ServiceTask taskEntity) {
         return ServiceTaskResponseDTO.builder()
                 .id(taskEntity.getId())
-                .name(taskEntity.getName())
-				.serviceOptionID(taskEntity.getServiceOptionID())
-				.serviceOperationID(taskEntity.getServiceOperationID())
+                .title(taskEntity.getTitle())
+                .description(taskEntity.getDescription())
 				.serviceCategoryID(taskEntity.getServiceCategoryID())
-				.bookingAmount(taskEntity.getBookingAmount())
+				.inclusions(taskEntity.getInclusions())
+				.exclusions(taskEntity.getExclusions())
+				.displayURL(taskEntity.getDisplayURL())
+				.note(taskEntity.getNote())
 				.build();
     }
 }

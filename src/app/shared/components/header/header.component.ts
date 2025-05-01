@@ -6,11 +6,12 @@ import { LocalStorageService } from 'app/shared/services/local-service';
 import RouteUrl from 'app/shared/constants/router-url.enum';
 import { MenuItem } from 'app/shared/models/menu-item.model';
 import { AppUtilsService } from 'app/shared/services/app-utils.service';
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports:[RouterModule,CommonModule],
+  imports:[RouterModule,CommonModule,ConfirmationModalComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -24,6 +25,9 @@ export class HeaderComponent implements OnInit,OnChanges {
   activeNav: string = null;
   router = inject(Router);
 
+  showLogoutModal:boolean =false;
+  deleteRequestInProgress:boolean = false;
+
   @Input()
   sideNavMenu:MenuItem[] = [];
 
@@ -36,7 +40,14 @@ export class HeaderComponent implements OnInit,OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if(changes['updateSignal']) {
         this.changeDetector.detectChanges();
-        this.activeNav = this.appUtils.fetchActiveHeader(this.sideNavMenu);
+        if(this.sideNavMenu && this.sideNavMenu.length>0) {
+          this.activeNav = this.appUtils.fetchActiveHeader(this.sideNavMenu);
+        } else {
+          let route = this.router.url;
+          route = route.indexOf("/") == -1 ? route : route.substring(route.indexOf("/") + 1);
+          this.activeNav = route;
+        }
+        
     }
   }
 
@@ -61,9 +72,19 @@ export class HeaderComponent implements OnInit,OnChanges {
   }
 
   logout() {
-    this.authService.logoutUser().subscribe(()=>{
+    this.showLogoutModal = true;
+  }
+
+  logoutConfirmation() {
+    this.deleteRequestInProgress = true;
+    this.authService.logoutUser().toPromise().then(()=>{
       this.localService.clearData();
       this.router.navigateByUrl(RouteUrl.LOGIN);
-    })
+      this.showLogoutModal = false;
+      this.deleteRequestInProgress = false;
+    }).catch(()=>{
+      this.showLogoutModal = false;
+      this.deleteRequestInProgress = false;
+    });
   }
 }

@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.src.proserv.main.exceptions.AbstractRuntimeException;
-import com.src.proserv.main.request.dto.ServiceOptionRequestDTO;
+import com.src.proserv.main.request.dto.ServiceTaskOptionRequestDTO;
 import com.src.proserv.main.request.dto.ServiceTaskRequestDTO;
 
 import lombok.AllArgsConstructor;
@@ -17,21 +17,9 @@ public class ServiceTaskValidator {
 
 	public void validateCreateTaskRequest(ServiceTaskRequestDTO taskRequest) {
 		Optional<String> name = Optional.ofNullable(taskRequest.getName());
-		Optional<Long> bookingAmount = Optional.ofNullable(taskRequest.getBookingAmount());
-		Optional<Long> serviceOptionID = Optional.ofNullable(taskRequest.getServiceOptionID());
-		Optional<Long> serviceOperationID = Optional.ofNullable(taskRequest.getServiceOperationID());
 		Optional<Long> serviceCategoryID = Optional.ofNullable(taskRequest.getServiceCategoryID());
 		if (name.isEmpty() || name.get().isEmpty()) {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Option Name Cannot be Empty");
-		}
-		if (bookingAmount.isEmpty() || bookingAmount.get()<=0) {
-			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Invalid Booking amount");
-		}
-		if (serviceOptionID.isEmpty() || serviceOptionID.get()<=0) {
-			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Invalid Option ID");
-		}
-		if (serviceOperationID.isEmpty() || serviceOperationID.get()<=0) {
-			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Invalid Operation ID");
 		}
 		if (serviceCategoryID.isEmpty() || serviceCategoryID.get()<=0) {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Invalid Category ID");

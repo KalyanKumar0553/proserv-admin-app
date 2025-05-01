@@ -1,51 +1,8 @@
 @import './../../../app.component.scss';
-.container {
-    max-width: 900px;
-  }
-  
-  .custom-breadcrumb .breadcrumb {
-    background-color: transparent;
-    padding-left: 0;
-  }
-  
-  .custom-breadcrumb a {
-    color: $primary-color;
-    text-decoration: none;
-    transition: all 0.3s ease;
-  }
-  
-  .custom-breadcrumb a:hover {
-    text-decoration: underline;
-    color: $primary-color;
-  }
-  
-  .breadcrumb-hover:hover {
-    transition: background-color 0.3s ease;
-    transform: scale(1.05);
-  }
-  
-  .breadcrumb-icon {
-    font-weight: bold;
-    color: $primary-color;
-  }
-  
-  .active-link {
-    text-decoration: underline;
-    font-weight: 500;
-    color: $primary-color;
-    cursor: pointer;
-  }
-  
-  .table-row-hover:hover {
-    background-color: #f0f8ff;
-    color: $primary-color;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .breadcrumb-item {
-    color: $primary-color;
-  }
 
-  .status-spinner {
-    margin-top: 9rem;
-  }
+.container {
+  max-width: 900px;
+}
+.status-spinner {
+  margin-top: 9rem;
+}

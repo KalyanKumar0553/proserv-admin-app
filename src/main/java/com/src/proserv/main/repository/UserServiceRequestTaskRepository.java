@@ -13,9 +13,6 @@ public interface UserServiceRequestTaskRepository extends JpaRepository<UserServ
 	@Query("SELECT COUNT(c) FROM UserServiceRequestTask st WHERE st.serviceCategoryID = :serviceCategoryID and COALESCE(status,'UNASSIGNED')<>'COMPLETED'")
 	long countIncompleteTasksByServiceCategoryID(@Param("serviceCategoryID") Long serviceCategoryID);
 
-	@Query("SELECT COUNT(c) FROM UserServiceRequestTask st WHERE st.serviceCategoryID = :serviceCategoryID and st.serviceOperationID = :serviceOperationID and COALESCE(status,'UNASSIGNED')<>'COMPLETED'")
-	long countIncompleteTasksByServiceCategoryIDAndServiceOperationID(@Param("serviceCategoryID") Long serviceCategoryID,@Param("serviceOperationID") Long serviceOperationID);
-
 
 	@Query("SELECT COUNT(c) FROM UserServiceRequestTask st WHERE st.serviceOptionID = :serviceOptionID and COALESCE(status,'UNASSIGNED')<>'COMPLETED'")
 	long countIncompleteTasksByServiceOptionID(@Param("serviceOptionID") Long serviceOptionID);

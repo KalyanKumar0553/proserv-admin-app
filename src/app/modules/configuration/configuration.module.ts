@@ -9,6 +9,8 @@ import { AddUpdateCategoryComponent } from './add-update-category/add-update-cat
 import { UnauthorizedComponent } from 'app/shared/components/unauthorized/unauthorized.component';
 import { SettingsComponent } from './settings/settings.component';
 import { DataGridComponent } from 'app/shared/components/data-grid/data-grid.component';
+import { BreadCrumbComponent } from 'app/shared/components/breadcrumb/breadcrumb.component';
+import { ConfirmationModalComponent } from 'app/shared/components/confirmation-modal/confirmation-modal.component';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { DataGridComponent } from 'app/shared/components/data-grid/data-grid.com
     ConfigurationRoutingModule,
     SidenavComponent,
     UnauthorizedComponent,
-    DataGridComponent
+    DataGridComponent,
+    BreadCrumbComponent,
+    ConfirmationModalComponent
   ]
 })
 export class ConfigurationModule { }

@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.src.proserv.main.configuration.JWTTokenProvider;
-import com.src.proserv.main.request.dto.ServiceOptionRequestDTO;
+import com.src.proserv.main.request.dto.ServiceTaskOptionRequestDTO;
 import com.src.proserv.main.response.dto.JSONResponseDTO;
-import com.src.proserv.main.services.OptionService;
+import com.src.proserv.main.services.TaskOptionService;
 import com.src.proserv.main.utils.AppUtils;
 import com.src.proserv.main.validators.ServiceOptionValidator;
 
@@ -31,44 +31,44 @@ import lombok.extern.log4j.Log4j2;
 @AllArgsConstructor
 @CrossOrigin
 @RequestMapping("/api/service/categories")
-public class ServiceOptionController {
+public class ServiceTaskOptionController {
 
 
-	final OptionService optionService;
+	final TaskOptionService optionService;
 
 	final ServiceOptionValidator optionValidator;
 
 	final JWTTokenProvider jwtTokenProvider;
 
-	@GetMapping("/{serviceCategoryID}/operations/{operationID}/options")
+	@GetMapping("/{serviceCategoryID}/options")
 	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
-	public ResponseEntity<JSONResponseDTO<?>> getOptions(@PathVariable Long serviceCategoryID,@PathVariable Long serviceOperationID,Authentication authentication)
+	public ResponseEntity<JSONResponseDTO<?>> getOptions(@PathVariable Long serviceCategoryID,Authentication authentication)
 			throws MessagingException {
-		return ResponseEntity.ok(AppUtils.getJSONObject(optionService.fetchAllServiceOptions(serviceCategoryID,serviceOperationID)));
+		return ResponseEntity.ok(AppUtils.getJSONObject(optionService.fetchAllServiceOptions(serviceCategoryID)));
 	}
 
 
-	@PostMapping("/{serviceCategoryID}/operations/{operationID}/option")
+	@PostMapping("/{serviceCategoryID}/option")
 	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-	public ResponseEntity<JSONResponseDTO<?>> createOption(@PathVariable Long serviceCategoryID,@PathVariable Long serviceOperationID,@RequestHeader("Authorization") String token,Authentication authentication,@RequestBody ServiceOptionRequestDTO optionRequestDTO)
+	public ResponseEntity<JSONResponseDTO<?>> createOption(@PathVariable Long serviceCategoryID,@RequestHeader("Authorization") String token,Authentication authentication,@RequestBody ServiceTaskOptionRequestDTO optionRequestDTO)
 			throws MessagingException {
 		optionValidator.validateCreateOptionRequest(optionRequestDTO);
 		return ResponseEntity.ok(AppUtils.getJSONObject(optionService.createServiceOption(jwtTokenProvider.getUserIDFromToken(token.substring(7)),optionRequestDTO)));
 	}
 
-	@PutMapping("/{serviceCategoryID}/operations/{operationID}/option")
+	@PutMapping("/{serviceCategoryID}/option")
 	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-	public ResponseEntity<JSONResponseDTO<?>> updateOption(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,Authentication authentication,@RequestBody ServiceOptionRequestDTO optionRequestDTO)
+	public ResponseEntity<JSONResponseDTO<?>> updateOption(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,Authentication authentication,@RequestBody ServiceTaskOptionRequestDTO optionRequestDTO)
 			throws MessagingException {
 		optionValidator.validateUpdateOptionRequest(optionRequestDTO);
     	return ResponseEntity.ok(AppUtils.getJSONObject(optionService.updateServiceOption(jwtTokenProvider.getUserIDFromToken(token.substring(7)),optionRequestDTO)));
 	}
 
-	@DeleteMapping("/{serviceCategoryID}/operations/{operationID}/option/{optionID}")
+	@DeleteMapping("/{serviceCategoryID}/option/{optionID}")
 	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-	public ResponseEntity<JSONResponseDTO<?>> deleteOption(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long operationID,@PathVariable Long optionID,Authentication authentication)
+	public ResponseEntity<JSONResponseDTO<?>> deleteOption(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long optionID,Authentication authentication)
 			throws MessagingException {
-		optionService.deleteServiceOption(optionID,serviceCategoryID,operationID);
+		optionService.deleteServiceOption(optionID,serviceCategoryID);
 		return ResponseEntity.ok(AppUtils.getJSONObject("Category Succesfully Deleted"));
 	}
 

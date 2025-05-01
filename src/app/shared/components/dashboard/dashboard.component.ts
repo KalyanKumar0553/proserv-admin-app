@@ -47,33 +47,8 @@ export class DashboardComponent implements OnInit,OnDestroy {
       this.isLoading = false;
     } else {
       this.redirectToLoginOrHome();
-      this.loadMenuBasedOnRoute(this.router.url);
-      this.updateMenuOnRouteChange();
-    }
-  }
-
-  updateMenuOnRouteChange() {
-    this.routerSubscription = this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        const state = this.location.getState() as {
-          activeComponent : string
-        };
-        this.activeComponent = state?.activeComponent || '';
-        this.loadMenuBasedOnRoute(this.router.url);
-      });
-  }
-
-  loadMenuBasedOnRoute(route: string) {
-    if (route.length > 1) {
-      route = route.indexOf("/") == -1 ? route : route.substring(route.indexOf("/") + 1);
-      if (appConfig[route]) {
-        let configData = appConfig[route];
-        let navItems = configData.sideNavMenu;
-        this.appUtils.updateMenuExpansion(navItems, this.activeComponent);
-        this.sideNavMenu = navItems;
-        this.updateSignal++;
-      }
+      this.appUtils.loadMenuBasedOnRoute(this,this.router.url);
+      this.appUtils.updateMenuOnRouteChange(this);
     }
   }
 

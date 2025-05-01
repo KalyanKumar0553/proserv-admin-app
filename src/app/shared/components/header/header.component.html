@@ -49,4 +49,12 @@
             </div>
         </div>
     </div>
+    <app-confirmation-modal *ngIf="showLogoutModal" 
+        [title]="`Are you sure you want to Logout ?`" 
+        [message]="''"
+        [(showModal)]="showLogoutModal" 
+        [(requestInProgress)]="deleteRequestInProgress"
+        (confirmAction)="logoutConfirmation()" (cancelAction)="showLogoutModal=false;"
+        class="absolute">
+    </app-confirmation-modal>
 </header>

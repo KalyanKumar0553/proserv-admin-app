@@ -12,26 +12,16 @@ import lombok.Data;
 @Entity
 @Data
 @Builder
-@Table(name="service_option")
-public class ServiceOption extends Auditable {
+@Table(name="location_service_task")
+public class LocationServiceTask extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private Long locationID;
 
-    private Long serviceOperationID;
+    private Long serviceTaskID;
 
-    private String description;
-    
-    private String displayURL;
-
-    private Long serviceCategoryID;
-    
-    private String inclusions;
-    
-    private String exclusions;
-    
-    private String note;
+    private Boolean enabled;
 }

@@ -26,8 +26,4 @@ public class FrequentlyAskedQuestion extends Auditable {
     private Long serviceTaskID;
 
     private Long serviceCategoryID;
-
-    private Long serviceOperationID;
-
-    private Long serviceOptionID;
 }

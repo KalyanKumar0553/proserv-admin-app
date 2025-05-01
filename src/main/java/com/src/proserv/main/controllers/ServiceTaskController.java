@@ -40,36 +40,27 @@ public class ServiceTaskController {
 
 	final JWTTokenProvider jwtTokenProvider;
 
-	@GetMapping("/{serviceCategoryID}/operations/{operationID}/options/{optionID}/tasks")
+	@GetMapping("/{serviceCategoryID}/options/{optionID}/tasks")
 	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
-	public ResponseEntity<JSONResponseDTO<?>> getTasks(@PathVariable Long serviceCategoryID,@PathVariable Long serviceOperationID,@PathVariable Long optionID,Authentication authentication)
+	public ResponseEntity<JSONResponseDTO<?>> getTasks(@PathVariable Long serviceCategoryID,@PathVariable Authentication authentication)
 			throws MessagingException {
-		return ResponseEntity.ok(AppUtils.getJSONObject(taskService.fetchAllServiceTasks(serviceCategoryID,serviceOperationID,optionID)));
+		return ResponseEntity.ok(AppUtils.getJSONObject(taskService.fetchAllServiceTasks(serviceCategoryID)));
 	}
 
 
-	@PostMapping("/{serviceCategoryID}/operations/{operationID}/option/{optionID}/task")
+	@PostMapping("/{serviceCategoryID}/option/{optionID}/task")
 	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-	public ResponseEntity<JSONResponseDTO<?>> createTask(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long serviceOperationID,@PathVariable Long optionID,Authentication authentication,@RequestBody ServiceTaskRequestDTO taskRequestDTO)
+	public ResponseEntity<JSONResponseDTO<?>> createTask(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long optionID,Authentication authentication,@RequestBody ServiceTaskRequestDTO taskRequestDTO)
 			throws MessagingException {
 		taskValidator.validateCreateTaskRequest(taskRequestDTO);
 		return ResponseEntity.ok(AppUtils.getJSONObject(taskService.createServiceTask(jwtTokenProvider.getUserIDFromToken(token.substring(7)),taskRequestDTO)));
 	}
 
-	@PutMapping("/{serviceCategoryID}/operations/{operationID}/option/{optionID}/task")
+	@PutMapping("/{serviceCategoryID}/option/{optionID}/task")
 	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-	public ResponseEntity<JSONResponseDTO<?>> updateTask(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long serviceOperationID,@PathVariable Long optionID,Authentication authentication,@RequestBody ServiceTaskRequestDTO taskRequestDTO)
+	public ResponseEntity<JSONResponseDTO<?>> updateTask(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long optionID,Authentication authentication,@RequestBody ServiceTaskRequestDTO taskRequestDTO)
 			throws MessagingException {
 		taskValidator.validateUpdateTaskRequest(taskRequestDTO);
     	return ResponseEntity.ok(AppUtils.getJSONObject(taskService.updateServiceTask(jwtTokenProvider.getUserIDFromToken(token.substring(7)),taskRequestDTO)));
 	}
-
-	@DeleteMapping("/{serviceCategoryID}/operations/{operationID}/option/{optionID}/task/{taskID}")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-	public ResponseEntity<JSONResponseDTO<?>> deleteCategory(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long operationID,@PathVariable Long optionID,@PathVariable Long taskID,Authentication authentication)
-			throws MessagingException {
-		taskService.deleteServiceTask(taskID,serviceCategoryID,operationID,optionID);
-		return ResponseEntity.ok(AppUtils.getJSONObject("Task Succesfully Deleted"));
-	}
-
 }

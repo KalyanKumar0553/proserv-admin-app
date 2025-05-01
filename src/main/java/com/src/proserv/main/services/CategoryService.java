@@ -1,6 +1,5 @@
 package com.src.proserv.main.services;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,13 +11,11 @@ import com.src.proserv.main.exceptions.AbstractRuntimeException;
 import com.src.proserv.main.model.ServiceCategory;
 import com.src.proserv.main.repository.FrequentlyAskedQuestionRepository;
 import com.src.proserv.main.repository.ServiceCategoryRepository;
-import com.src.proserv.main.repository.ServiceOperationRepository;
-import com.src.proserv.main.repository.ServiceOptionRepository;
+import com.src.proserv.main.repository.ServiceTaskOptionRepository;
 import com.src.proserv.main.repository.ServiceTaskRepository;
 import com.src.proserv.main.repository.UserServiceRequestTaskRepository;
 import com.src.proserv.main.request.dto.ServiceCategoryRequestDTO;
 import com.src.proserv.main.response.dto.ServiceCategoryResponseDTO;
-import com.src.proserv.main.transformers.ServiceOperationTransformer;
 
 import lombok.AllArgsConstructor;
 
@@ -28,17 +25,13 @@ public class CategoryService {
 
 	final ServiceCategoryRepository categoryRepository;
 
-	final ServiceOperationRepository serviceOperationRepository;
-
-	final ServiceOptionRepository optionRepository;
+	final ServiceTaskOptionRepository optionRepository;
 
 	final ServiceTaskRepository taskRepository;
 
 	final FrequentlyAskedQuestionRepository faqRepository;
 
 	final UserServiceRequestTaskRepository userTaskRequestRepository;
-
-	final ServiceOperationTransformer serviceOperationTransformer;
 
 	public List<ServiceCategoryResponseDTO> fetchAllServiceCategories() {
 		return categoryRepository.findAll().stream().map(ServiceCategoryResponseDTO::fromEntityToFetchCategoryResponse)
@@ -51,7 +44,6 @@ public class CategoryService {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
 					"Tasks available to work for the service category");
 		}
-		serviceOperationRepository.deleteAllByServiceCategoryID(serviceCategoryID);
 		optionRepository.deleteAllByServiceCategoryID(serviceCategoryID);
 		taskRepository.deleteAllByServiceCategoryID(serviceCategoryID);
 		faqRepository.deleteAllByServiceCategoryID(serviceCategoryID);

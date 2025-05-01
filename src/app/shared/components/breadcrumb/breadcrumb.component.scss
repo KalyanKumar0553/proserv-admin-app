@@ -1,0 +1,38 @@
+
+@import './../../../app.component.scss';
+.custom-breadcrumb .breadcrumb {
+    background-color: transparent;
+    padding-left: 0;
+  }
+  
+  .custom-breadcrumb a {
+    color: $primary-color;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .custom-breadcrumb a:hover {
+    text-decoration: underline;
+    color: $primary-color;
+  }
+  
+  .breadcrumb-hover:hover {
+    transition: background-color 0.3s ease;
+    transform: scale(1.05);
+  }
+  
+  .breadcrumb-icon {
+    font-weight: bold;
+    color: $primary-color;
+  }
+  
+  .active-link {
+    text-decoration: underline;
+    font-weight: 500;
+    color: $primary-color;
+    cursor: pointer;
+  }
+  
+  .breadcrumb-item {
+    color: $primary-color;
+  }

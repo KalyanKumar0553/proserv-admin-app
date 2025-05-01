@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -13,6 +13,9 @@ export class DataGridComponent implements OnInit {
   @Input() headers: { field: string; label: string }[] = [];
   @Input() data: any[] = [];
   @Input() pageSize = 5;
+
+  @Output() editRowEvent = new EventEmitter<string>();
+  @Output() deleteRowEvent = new EventEmitter<string>();
 
   filters: { [key: string]: string } = {};
   showFilter: { [key: string]: boolean } = {};
@@ -77,5 +80,17 @@ export class DataGridComponent implements OnInit {
 
   totalPages(): number {
     return Math.ceil(this.filteredData.length / this.pageSize);
+  }
+
+  editRow(item: any): void {
+    if(item) {
+      this.editRowEvent.emit(item);
+    }
+  }
+
+  deleteRow(item: any): void {
+    if(item) {
+      this.deleteRowEvent.emit(item);
+    }
   }
 }

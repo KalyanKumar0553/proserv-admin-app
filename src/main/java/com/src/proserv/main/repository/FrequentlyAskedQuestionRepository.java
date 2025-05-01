@@ -10,12 +10,16 @@ import com.src.proserv.main.model.FrequentlyAskedQuestion;
 
 
 public interface FrequentlyAskedQuestionRepository extends JpaRepository<FrequentlyAskedQuestion, Long> {
-	void deleteAllByServiceOperationIDAndServiceCategoryID(Long serviceOptionID,Long serviceCategoryID);
+	
+	
+	void deleteAllById(Long id);
 	void deleteAllByServiceCategoryID(Long serviceCategoryID);
-	void deleteAllByServiceOptionIDAndServiceOperationIDAndServiceCategoryID(Long optionID,Long operationID,Long categoryID);
-	void deleteAllByServiceTaskIDAndServiceOptionIDAndServiceOperationIDAndServiceCategoryID(Long taskID,Long optionID,Long operationID,Long categoryID);
-	List<FrequentlyAskedQuestion> findAllByServiceTaskID(Long taskID);
-	Optional<FrequentlyAskedQuestion> findByIdAndServiceTaskID(Long id,Long serviceTaskID);
 	void deleteAllByIdAndServiceTaskID(Long id,Long serviceTaskID);
+	void deleteAllByServiceCategoryIDAndServiceTaskID(Long serviceCategoryID,Long serviceTaskID);
+	
+	
+	List<FrequentlyAskedQuestion> findAllByServiceTaskID(Long taskID);
+	List<FrequentlyAskedQuestion> findAllByServiceTaskIDAndServiceCategoryID(Long taskID,Long categoryID);
+	Optional<FrequentlyAskedQuestion> findByIdAndServiceTaskID(Long ID, Long serviceTaskID);
 	Optional<FrequentlyAskedQuestion> findByQuestionAndServiceTaskID(String question, Long serviceTaskID);
 }

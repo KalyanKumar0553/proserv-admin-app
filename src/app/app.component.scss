@@ -1,5 +1,8 @@
 $primary-color: #1f5779;
 $background-color: #f7f8f7;
+$disable-color:#ccc;
+$hover-color: #f0f8ff;
+$danger-color: rgb(194, 89, 89);
 body {
     font-family: 'Inter', sans-serif;
     height: auto;
@@ -15,6 +18,16 @@ body {
     transition: transform 0.3s ease;
     background-color: $primary-color;
     border-color: $primary-color;
+}
+.btn-outline-primary:hover {
+    background-color: $primary-color;
+    border-color: $primary-color;
+    color: $background-color;
+}
+.btn-outline-danger {
+    background-color: $danger-color;
+    border-color: $danger-color;
+    color: $background-color;
 }
 .spinner-border {
     color:$primary-color;

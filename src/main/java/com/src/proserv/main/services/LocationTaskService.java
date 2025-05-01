@@ -12,18 +12,20 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.src.proserv.main.exceptions.AbstractRuntimeException;
-import com.src.proserv.main.model.ServiceLocationTask;
-import com.src.proserv.main.repository.ServiceLocationTaskRepository;
+import com.src.proserv.main.model.LocationServiceTask;
+import com.src.proserv.main.model.LocationServiceTask;
+import com.src.proserv.main.repository.LocationServiceTaskRepository;
+import com.src.proserv.main.repository.LocationServiceTaskRepository;
 
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class ServiceLocationTaskService {
+public class LocationTaskService {
 
-	private final ServiceLocationTaskRepository repository;
+	private final LocationServiceTaskRepository repository;
 
-	public ServiceLocationTask save(ServiceLocationTask task, String userUUID) {
+	public LocationServiceTask save(LocationServiceTask task, String userUUID) {
 		boolean exists = repository.findByLocationIDAndServiceTaskID(task.getLocationID(), task.getServiceTaskID())
 				.isPresent();
 		if (exists) {
@@ -32,25 +34,26 @@ public class ServiceLocationTaskService {
 		return repository.save(task);
 	}
 
-	public List<ServiceLocationTask> findAll(Long locationID) {
+	public List<LocationServiceTask> findAll(Long locationID) {
 		return repository.findAllByLocationID(locationID);
 	}
 
 	@Transactional
-	public List<ServiceLocationTask> saveAll(List<ServiceLocationTask> tasks) {
+	public List<LocationServiceTask> saveAll(List<LocationServiceTask> tasks) {
 		Set<String> uniqueKeys = new HashSet<>();
-		List<ServiceLocationTask> distinctTasks = tasks.stream().filter(task -> uniqueKeys.add(task.getLocationID() + "|" + task.getServiceTaskID())).toList();
-		List<ServiceLocationTask> existing = repository.findAll();
+		List<LocationServiceTask> distinctTasks = tasks.stream().filter(task -> uniqueKeys.add(task.getLocationID() + "|" + task.getServiceTaskID())).toList();
+		List<LocationServiceTask> existing = repository.findAll();
 		Set<String> existingKeys = existing.stream().map(task -> task.getLocationID() + "|" + task.getServiceTaskID()).collect(Collectors.toSet());
-		List<ServiceLocationTask> filteredToSave = distinctTasks.stream().filter(task -> !existingKeys.contains(task.getLocationID() + "|" + task.getServiceTaskID())).toList();
+		List<LocationServiceTask> filteredToSave = distinctTasks.stream().filter(task -> !existingKeys.contains(task.getLocationID() + "|" + task.getServiceTaskID())).toList();
 		return repository.saveAll(filteredToSave);
 	}
 
-	public Optional<ServiceLocationTask> findByLocationIdAndId(Long locationID,Long taskID) {
+	public Optional<LocationServiceTask> findByLocationIdAndTaskId(Long locationID,Long taskID) {
 		return repository.findByLocationIDAndServiceTaskID(locationID,taskID);
 	}
+	
 
-	public ServiceLocationTask update(Long locationID,Long id, ServiceLocationTask updated, String userUUID) {
+	public LocationServiceTask update(Long locationID,Long id, LocationServiceTask updated, String userUUID) {
 		return repository.findById(id).map(existing -> {
 			existing.setEnabled(updated.getEnabled());
 			return repository.save(existing);
@@ -62,7 +65,7 @@ public class ServiceLocationTaskService {
 	}
 	
 	public void deleteLocationTask(Long locationID,Long taskID) {
-		Optional<ServiceLocationTask> taskHolder = repository.findByLocationIDAndServiceTaskID(locationID,taskID);
+		Optional<LocationServiceTask> taskHolder = repository.findByLocationIDAndServiceTaskID(locationID,taskID);
 		if(taskHolder.isEmpty()) {
 			throw new AbstractRuntimeException(500,"Service task not found with details");
 		}

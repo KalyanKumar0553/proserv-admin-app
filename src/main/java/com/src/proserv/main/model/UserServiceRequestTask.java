@@ -21,8 +21,6 @@ public class UserServiceRequestTask extends Auditable {
 
     private Long serviceOptionID;
 
-    private Long serviceOperationID;
-
     private Long serviceCategoryID;
 
     private Long serviceAddressID;

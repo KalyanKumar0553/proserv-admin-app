@@ -1,9 +1,6 @@
 package com.src.proserv.main.request.dto;
 
-import java.time.LocalDateTime;
-
 import com.src.proserv.main.model.Auditable;
-import com.src.proserv.main.model.ServiceOperation;
 import com.src.proserv.main.model.UserAddress;
 import com.src.proserv.main.model.UserInfo;
 

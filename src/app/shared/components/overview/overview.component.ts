@@ -31,11 +31,7 @@ export class OverviewComponent implements OnInit,OnDestroy {
   }
 
   navigateToComponent(component: string) {
-    this.router.navigate([RouteUrl.CONFIGURATION],{
-      state : {
-        activeComponent : component
-      }
-    });
+     this.utils.navigateToComponent(RouteUrl.CONFIGURATION,component);
   }
 
   ngOnDestroy(): void {

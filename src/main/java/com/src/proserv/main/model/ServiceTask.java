@@ -19,14 +19,18 @@ public class ServiceTask extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    private String name;
-    
-    private Long serviceOptionID;
-    
-    private Long serviceOperationID;
+    private String title;
     
     private Long serviceCategoryID;
 
-    private Long bookingAmount;
+    private String displayURL;
+
+    private String description;
+    
+    private String inclusions;
+    
+    private String exclusions;
+    
+    private String note;
     
 }

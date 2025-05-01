@@ -1,0 +1,8 @@
+<nav aria-label="breadcrumb" class="custom-breadcrumb">
+    <ol class="breadcrumb mb-4">
+        <li *ngFor="let item of crumbItems" class="breadcrumb-item breadcrumb-hover" [class.active-link]="item.isTail">
+            <a *ngIf="item.route" (click)="navigateToComponent(item.route,item.component)">{{item.label}} <span class="breadcrumb-icon">&gt;</span></a>
+            <span *ngIf="!item.route">{{item.label}} <span class="breadcrumb-icon" *ngIf="!item.isTail">&gt;</span></span>
+        </li>
+    </ol>
+</nav>

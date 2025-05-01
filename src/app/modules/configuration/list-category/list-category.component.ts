@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import RouteUrl from 'app/shared/constants/router-url.enum';
+import { BreadCrumbItem } from 'app/shared/models/bread-crumb-item.model';
 import { Category } from 'app/shared/models/category';
 import { AppUtilsService } from 'app/shared/services/app-utils.service';
 import { CategoryService } from 'app/shared/services/categories.service';
@@ -15,7 +17,8 @@ import { Subscription } from 'rxjs';
 export class ListCategoryComponent implements OnInit,OnDestroy {
   categories: Category[] = [];
   apiLoading:boolean = false;
-  
+  showDeleteModal = false;
+
   private listCategoriesSubscription? : Subscription;
 
   headers = [
@@ -25,6 +28,13 @@ export class ListCategoryComponent implements OnInit,OnDestroy {
     { field: 'locations', label: 'Locations' }
   ];
 
+  crumbItems:BreadCrumbItem[] = [
+    {'label' : 'Home' , 'route' : RouteUrl.HOME, 'component':''},
+    {'label' : 'Categories'},
+    {'label' : 'View Categories','isTail':true},
+  ];
+
+  delteItem: any = {};
   pageSize = 5;
 
   constructor(private categoryService: CategoryService, private router: Router,private utils:AppUtilsService) {}
@@ -64,8 +74,13 @@ export class ListCategoryComponent implements OnInit,OnDestroy {
     // }));
   }
 
-  editCategory(id: number) {
-    console.log('Edit category with ID:', id);
+  editCategory(item: any) {
+    console.log('Edit category with ',item);
+  }
+
+  deleteCategory(item: any) {
+    this.delteItem = item;
+    this.showDeleteModal = true;
   }
 
   addNewCategory() {
@@ -74,5 +89,19 @@ export class ListCategoryComponent implements OnInit,OnDestroy {
 
   goToDashboard() {
     this.router.navigate(['/dashboard']);
+  }
+
+  handleConfirmDeleteAction() {
+    this.delteItem = null;
+    this.showDeleteModal = false;
+  }
+
+  cancelConfirmAction() {
+    this.delteItem = null;
+    this.showDeleteModal = false;
+  }
+
+  getConfirmationTitle() {
+    return `Are you sure you want to delete ${this.delteItem.name} ?`
   }
 }

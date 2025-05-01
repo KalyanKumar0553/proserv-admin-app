@@ -1,7 +1,5 @@
 package com.src.proserv.main.model;
 
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,20 +12,21 @@ import lombok.Data;
 @Entity
 @Data
 @Builder
-@Table(name="service_operation")
-public class ServiceOperation extends Auditable {
+@Table(name="service_task_option")
+public class ServiceTaskOption extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+    
+    private String description;
 
     private Long serviceCategoryID;
-
-    private String serviceTitle;
-
-    private String displayURL;
-
-    private String description;
+    
+    private Long serviceTaskID;
+    
+    private Long defaultAmount;
+    
 }
