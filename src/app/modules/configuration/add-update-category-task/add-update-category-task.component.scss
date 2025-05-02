@@ -1,0 +1,40 @@
+@import './../../../app.component.scss';
+
+.modal {
+    display: block;
+  }
+  
+  .custom-modal-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .modal-dialog {
+    max-width: 600px;
+  }
+  
+  .modal-content {
+    border-radius: 8px;
+    background:$background-color;
+  }
+  
+  .modal-header, .modal-footer {
+    border: none;
+  }
+  
+  .modal-body {
+    font-size: 16px;
+  }
+  
+  .modal-header {
+    display: block;
+  }
+  .modal-title {
+    display:inline;
+    color: $primary-color;
+  }
+  .close {
+    display: inline;
+    float: right;
+    border: 0px;
+    background: $background-color;
+  }

@@ -25,6 +25,12 @@ body {
     color: $background-color;
 }
 .btn-outline-danger {
+    // background-color: $danger-color;
+    border-color: $danger-color;
+    color: $danger-color;
+}
+
+.btn-outline-danger:hover {
     background-color: $danger-color;
     border-color: $danger-color;
     color: $background-color;

@@ -4,9 +4,8 @@
       <app-sidenav [sideNavMenu]="sideNavMenu" [updateSignal]="updateSignal" (componentChangeEvent)="componentChangeEvent($event)"></app-sidenav>
     </div>
     <div class="col-md-9 content-area">
-      <app-list-category *ngIf="activeComponent=='list-categories'"></app-list-category>
-      <app-add-update-category *ngIf="activeComponent=='add-update-category'"></app-add-update-category>
-      <app-delete-category *ngIf="activeComponent=='delete-category'"></app-delete-category>
+      <app-list-category *ngIf="activeComponent=='list-categories'" (updateComponentEvent)="updateComponent($event)"></app-list-category>
+      <app-add-update-category *ngIf="activeComponent=='add-update-category'" [categoryID]="categoryID"></app-add-update-category>
       <app-settings *ngIf="activeComponent=='settings'"></app-settings>
     </div>
   </div>

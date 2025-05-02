@@ -1,0 +1,23 @@
+<div class="modal fade show d-block custom-modal-backdrop" tabindex="-1" role="dialog" *ngIf="showModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Task</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" *ngIf="!requestInProgress" (click)="onCancel()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Adding Task
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" *ngIf="!requestInProgress" (click)="onCancel()">Close</button>
+          <button *ngIf="!requestInProgress" type="button" class="btn btn-primary" (click)="onSave()">Save Task</button>
+          <button class="btn btn-outline-primary" type="button" *ngIf="requestInProgress">
+            <span class="spinner-border spinner-border-sm spinner-border-primary" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
+        </div>
+      </div>
+    </div>
+ </div>

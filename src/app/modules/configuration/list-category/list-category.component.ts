@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import RouteUrl from 'app/shared/constants/router-url.enum';
 import { BreadCrumbItem } from 'app/shared/models/bread-crumb-item.model';
@@ -20,6 +20,10 @@ export class ListCategoryComponent implements OnInit,OnDestroy {
   showDeleteModal = false;
 
   private listCategoriesSubscription? : Subscription;
+
+
+  @Output() updateComponentEvent = new EventEmitter<any>();
+
 
   headers = [
     { field: 'id', label: 'ID' },
@@ -84,7 +88,10 @@ export class ListCategoryComponent implements OnInit,OnDestroy {
   }
 
   addNewCategory() {
-    console.log('Add new category');
+    this.updateComponentEvent.emit({
+      component:'add-update-category',
+      state:{}
+    });
   }
 
   goToDashboard() {

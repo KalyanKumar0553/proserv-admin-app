@@ -1,1 +1,101 @@
-<p>add-update-category works!</p>
+<div class="proserve-theme" mat-theme>
+  <div class="container mt-5 p-4 bg-white shadow-sm rounded">
+    <app-breadcrumb [crumbItems]="crumbItems"></app-breadcrumb>
+    <h5 class="fw-bold mb-4">Add New Category</h5>
+    <div class="mb-3">
+      <label for="categoryName" class="form-label">Category Name</label>
+      <input type="text" class="form-control" id="categoryName" placeholder="Enter category name"
+        [(ngModel)]="categoryName">
+    </div>
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <label class="form-label">Display Image</label>
+        <div class="border border-2 border-dashed text-center py-5 rounded" style="cursor: pointer;">
+          <div>
+            <i class="bi bi-cloud-arrow-up fs-3"></i>
+            <p class="text-muted small mb-0">Click to upload or drag and drop</p>
+            <p class="text-muted small">SVG, PNG, JPG (MAX. 800×400px)</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex align-items-center justify-content-center bg-light rounded">
+        <i class="bi bi-image fs-1 text-muted"></i>
+      </div>
+    </div>
+    <div class="row g-3 mb-4">
+      <div class="col-md-12">
+        <mat-tab-group>
+          <mat-tab label="Basic Info">
+            <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="form-container">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Category ID</mat-label>
+                <input matInput formControlName="categoryId" readonly />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Category Status</mat-label>
+                <mat-select formControlName="status">
+                  <mat-option value="Active">Active</mat-option>
+                  <mat-option value="Inactive">Inactive</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Category Description</mat-label>
+                <textarea matInput formControlName="description" rows="4"></textarea>
+              </mat-form-field>
+        
+              <div class="icon-section">
+                <mat-icon class="category-icon">home</mat-icon>
+                <button mat-stroked-button type="button">Change Icon</button>
+              </div>
+        
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Total Service Providers</mat-label>
+                <input matInput type="number" formControlName="serviceProviders" />
+              </mat-form-field>
+        
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Available Locations</mat-label>
+                <input matInput type="number" formControlName="availableLocations" />
+              </mat-form-field>
+            </form>
+          </mat-tab>
+          <mat-tab label="Tasks">
+            <div class="mb-3 faq-container">
+              <div class="d-flex justify-content-between align-items-center add-faq-button">
+                <h6 class="fw-bold" *ngIf="tasks.length>0">Tasks</h6>
+                <h6 class="fw-bold" *ngIf="tasks.length==0">No Tasks Available</h6>
+                <button class="btn btn-sm btn-outline-primary" (click)="showTaskModal()">
+                  <i class="bi bi-plus-circle"></i> Add New Task
+                </button>
+              </div>
+              
+            </div>
+          </mat-tab>
+          <!-- <mat-tab label="FAQs">
+            <div class="mb-3 faq-container">
+              <div class="d-flex justify-content-between align-items-center add-faq-button">
+                <h6 class="fw-bold" *ngIf="faqs.length>0">FAQ</h6>
+                <h6 class="fw-bold" *ngIf="faqs.length==0">No FAQ Available</h6>
+                <button class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-plus-circle"></i> Add New Question
+                </button>
+              </div>
+              <app-data-accordion *ngIf="faqs.length>0" id="taskSection" [title]="'Frequently Asked Questions'" [items]="faqs"
+                [titleKey]="'title'" [bodyKey]="'body'" [searchable]="true" [showEdit]="true" [showDelete]="true"
+                (searchChanged)="getTasksFromApi($event)" (editItem)="onEditFAQ($event)"
+                (deleteItem)="onDeleteFAQ($event)"></app-data-accordion>
+            </div>
+          </mat-tab> -->
+        </mat-tab-group>
+      </div>
+    </div>
+    <div class="text-end mt-4">
+      <button class="btn btn-primary btn-outline-primary">
+        <i class="bi bi-check-circle me-2"></i>Save Category
+      </button>
+    </div>
+  </div>
+  <div class="container mt-5 p-4 bg-white shadow-sm rounded" *ngIf="showAddTask" >
+    <app-add-update-category-task [showModal]="showAddTask" (saveAction)="saveTask($event)" (cancelAction)="cancelTask($event)"></app-add-update-category-task>
+  </div>
+</div>

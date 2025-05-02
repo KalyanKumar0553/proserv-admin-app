@@ -1,0 +1,11 @@
+@import './../../../app.component.scss';
+.accordion-button:focus {
+  box-shadow: none;
+}
+.btn-outline-danger {
+  margin-right: 13px;
+}
+.accordion-container {
+  max-height: 430px;
+  overflow: scroll;
+}

@@ -12,7 +12,7 @@
           </div>
           <div *ngIf="showFilter[header.field]" class="filter-container mt-2">
             <input type="text" class="form-control form-control-sm" [(ngModel)]="filters[header.field]"
-              (keydown.enter)="applyFilters()" (blur)="$event.stopPropagation(); toggleFilter(header.field)"
+              (keydown.enter)="applyFilters()" (blur)="$event.stopPropagation();"
               (click)="$event.stopPropagation()">
           </div>
         </th>

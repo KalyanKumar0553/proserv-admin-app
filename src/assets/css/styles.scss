@@ -1,3 +1,11 @@
+.proserve-theme {
+  --md-sys-color-primary: #1f5779;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-secondary: #e91e63;
+  --md-sys-color-on-secondary: #ffffff;
+  --mat-sys-on-surface:#1f5779;
+  --mat-sys-primary: #1f5779;
+}
 
 html, body { 
     color: #1f5779;
@@ -18,4 +26,7 @@ table th {
     transform: scale(1.04);
     transition: all 0.3s ease;
 }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html, body { height: 100%;}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

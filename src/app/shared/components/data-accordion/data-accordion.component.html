@@ -1,0 +1,30 @@
+<div class="proserve-theme" mat-theme class="accordion-container">
+  <mat-accordion class="mb-3">
+    <mat-form-field *ngIf="searchable" class="w-100 mt-3" appearance="outline">
+      <mat-label>Search</mat-label>
+      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" />
+    </mat-form-field>
+    <ng-container *ngIf="items.length > 0; else noItems">
+      <mat-accordion multi class="d-flex flex-column gap-2">
+        <mat-expansion-panel *ngFor="let item of items">
+          <mat-expansion-panel-header class="d-flex align-items-center w-100">
+            <div class="flex-grow-1 fw-semibold">{{ item[titleKey] }}</div>
+
+            <div *ngIf="showEdit || showDelete" class="ms-auto d-flex gap-2 align-items-center">
+                <button class="btn btn-sm btn-outline-primary me-1" (click)="onEdit(item);$event.stopPropagation();">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" (click)="onDelete(item);$event.stopPropagation();">
+                  <i class="bi bi-trash"></i>
+                </button>
+            </div>
+          </mat-expansion-panel-header>
+          <p class="ms-2 text-muted">{{ item[bodyKey] }}</p>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </ng-container>
+    <ng-template #noItems>
+      <div class="text-center text-muted py-3">No Items Available</div>
+    </ng-template>
+  </mat-accordion>
+</div>

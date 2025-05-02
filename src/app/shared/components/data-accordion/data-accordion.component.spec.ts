@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DeleteCategoryComponent } from './delete-category.component';
+import { DataAccordionComponent } from './data-accordion.component';
 
-describe('DeleteCategoryComponent', () => {
-  let component: DeleteCategoryComponent;
-  let fixture: ComponentFixture<DeleteCategoryComponent>;
+describe('DataAccordionComponent', () => {
+  let component: DataAccordionComponent;
+  let fixture: ComponentFixture<DataAccordionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DeleteCategoryComponent]
+      imports: [DataAccordionComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DeleteCategoryComponent);
+    fixture = TestBed.createComponent(DataAccordionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
