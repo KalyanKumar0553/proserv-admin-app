@@ -2,17 +2,181 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Add New Task</h5>
+          <h5 class="modal-title" *ngIf="taskState=='ADD'">Add New Task</h5>
+          <h5 class="modal-title" *ngIf="taskState=='EDIT'">Edit Task</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close" *ngIf="!requestInProgress" (click)="onCancel()">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          Adding Task
+          <div class="col-md-12">
+            <mat-tab-group>
+              <mat-tab label="General Info">
+                <div class="general-container">
+                  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="form-container">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Task Title</mat-label>
+                          <input matInput formControlName="name"/>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Task Status</mat-label>
+                          <mat-select formControlName="status">
+                            <mat-option value="Active">Active</mat-option>
+                            <mat-option value="Inactive">Inactive</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Inclusions</mat-label>
+                          <mat-chip-grid #inclusionChipGrid aria-label="Enter Inclusions for the task to service">
+                              <mat-chip-row *ngFor="let item of inclusions"
+                                (removed)="removeInclusion(item)"
+                                [editable]="true"
+                                (edited)="editInclusion(item, $event)">
+                                {{item}}
+                                <button matChipRemove>
+                                  <mat-icon>cancel</mat-icon>
+                                </button>
+                              </mat-chip-row>
+                            <input
+                              placeholder="Enter Inclusions Detail..."
+                              [matChipInputFor]="inclusionChipGrid"
+                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                              [matChipInputAddOnBlur]="true"
+                              (matChipInputTokenEnd)="addInclusion($event)"/>
+                          </mat-chip-grid>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Exclusions</mat-label>
+                          <mat-chip-grid #exlcusionChipGrid aria-label="Enter exclusions for the task to service">
+                              <mat-chip-row *ngFor="let item of exclusions"
+                                (removed)="removeExclusion(item)"
+                                [editable]="true"
+                                (edited)="editExclusion(item, $event)">
+                                {{item}}
+                                <button matChipRemove>
+                                  <mat-icon>cancel</mat-icon>
+                                </button>
+                              </mat-chip-row>
+                            <input
+                              placeholder="Enter exclusion Detail..."
+                              [matChipInputFor]="exlcusionChipGrid"
+                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                              [matChipInputAddOnBlur]="true"
+                              (matChipInputTokenEnd)="addExclusion($event)"/>
+                          </mat-chip-grid>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Task Description</mat-label>
+                          <textarea matInput formControlName="description" rows="4"></textarea>
+                        </mat-form-field>    
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Notes</mat-label>
+                          <textarea matInput formControlName="notes" rows="4"></textarea>
+                        </mat-form-field>    
+                      </div>
+                    </div>
+                    <div class="row g-3 mb-4">
+                      <div class="col-md-6">
+                        <label class="form-label">Display Image</label>
+                        <div class="border border-2 border-dashed text-center py-5 rounded" style="cursor: pointer;">
+                          <div>
+                            <i class="bi bi-cloud-arrow-up fs-3"></i>
+                            <p class="text-muted small mb-0">Click to upload or drag and drop</p>
+                            <p class="text-muted small">SVG, PNG, JPG (MAX. 800×400px)</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6 d-flex align-items-center justify-content-center bg-light rounded">
+                        <i class="bi bi-image fs-1 text-muted"></i>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </mat-tab>
+              <mat-tab label="FAQs">
+                <div class="mb-3 faq-container" *ngIf="faqState=='list-faq'">
+                  <div class="d-flex justify-content-between align-items-center add-faq-button">
+                    <h6 class="faq-label" *ngIf="faqs.length>0">FAQ</h6>
+                    <h6 class="faq-label" *ngIf="faqs.length==0">No FAQ Available</h6>
+                    <button class="btn btn-sm btn-outline-primary" (click)="addFAQState()">
+                      <i class="bi bi-plus-circle"></i> Add New Question
+                    </button>
+                  </div>
+                  <app-data-accordion *ngIf="faqs.length>0" id="taskSection" [title]="'Frequently Asked Questions'" [items]="faqs"
+                    [titleKey]="'title'" [bodyKey]="'body'" [searchable]="true" [showEdit]="true" [showDelete]="true"
+                    (searchChanged)="getFaqsFromApi($event)" (editItem)="onEditFAQ($event)"
+                    (deleteItem)="onDeleteFAQ($event)"></app-data-accordion>
+                </div>
+                <div class="mb-3 faq-container" *ngIf="faqState=='add-faq'">
+                  <form [formGroup]="addFaqForm" (ngSubmit)="onSubmit()" class="form-container">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Question</mat-label>
+                          <input matInput formControlName="question"/>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Descripiton</mat-label>
+                          <textarea matInput formControlName="description" rows="4"></textarea>
+                        </mat-form-field>    
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </mat-tab>
+              <mat-tab label="Options">
+                <div class="mb-3 option-container">
+                  <div class="card-list">
+                    <div *ngFor="let option of taskOptions" class="card p-2 d-flex justify-content-between align-items-center mb-2">
+                      <div>{{ option.name }}</div>
+                      <div>
+                        <i class="bi bi-pencil-fill text-primary me-2" (click)="editOption(option)" style="cursor: pointer;"></i>
+                        <i class="bi bi-trash-fill text-danger" (click)="deleteOption(option)" style="cursor: pointer;"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer"  *ngIf="faqState!='add-faq'">
           <button type="button" class="btn btn-secondary" *ngIf="!requestInProgress" (click)="onCancel()">Close</button>
           <button *ngIf="!requestInProgress" type="button" class="btn btn-primary" (click)="onSave()">Save Task</button>
+          <button class="btn btn-outline-primary" type="button" *ngIf="requestInProgress">
+            <span class="spinner-border spinner-border-sm spinner-border-primary" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
+        </div>
+        <div class="modal-footer"  *ngIf="faqState=='add-faq'">
+          <button type="button" class="btn btn-secondary" *ngIf="!requestInProgress" (click)="cancelAddFAQ()">Back</button>
+          <button *ngIf="!requestInProgress" type="button" class="btn btn-primary" (click)="saveFAQ()">Save FAQ</button>
           <button class="btn btn-outline-primary" type="button" *ngIf="requestInProgress">
             <span class="spinner-border spinner-border-sm spinner-border-primary" role="status" aria-hidden="true"></span>
             Loading...

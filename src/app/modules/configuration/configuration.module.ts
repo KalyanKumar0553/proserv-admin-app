@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AddUpdateCategoryTaskComponent } from './add-update-category-task/add-update-category-task.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { AddUpdateCategoryTaskComponent } from './add-update-category-task/add-u
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
+    MatChipsModule,
     ReactiveFormsModule
 
   ]

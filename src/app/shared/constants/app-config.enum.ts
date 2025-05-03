@@ -7,7 +7,7 @@ export const appConfig : any = {
                     "active": true,
                     "children":  [
                         { "label": "List Categories", "route": "list-categories", "active":true },
-                        { "label": "Add Category", "route": "add-update-category","active":false  },
+                        { "label": "Add / Update Category", "route": "add-update-category","active":false  },
                     ]
                 },
                 {

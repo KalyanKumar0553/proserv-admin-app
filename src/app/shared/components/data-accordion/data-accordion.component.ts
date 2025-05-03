@@ -31,7 +31,6 @@ export class DataAccordionComponent implements OnInit {
   private subscription = new Subscription();
 
   ngOnInit() {
-    console.log(this.items);
     this.subscription = this.searchSubject
       .pipe(debounceTime(300))
       .subscribe(term => this.searchChanged.emit(term));

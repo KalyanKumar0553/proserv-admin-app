@@ -1,7 +1,8 @@
 <div class="proserve-theme" mat-theme>
   <div class="container mt-5 p-4 bg-white shadow-sm rounded">
     <app-breadcrumb [crumbItems]="crumbItems"></app-breadcrumb>
-    <h5 class="fw-bold mb-4">Add New Category</h5>
+    <h5 class="fw-bold mb-4" *ngIf="state=='ADD'">Add New Category</h5>
+    <h5 class="fw-bold mb-4" *ngIf="state=='UPDATE'">Update Category</h5>
     <div class="mb-3">
       <label for="categoryName" class="form-label">Category Name</label>
       <input type="text" class="form-control" id="categoryName" placeholder="Enter category name"
@@ -27,7 +28,7 @@
         <mat-tab-group>
           <mat-tab label="Basic Info">
             <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="form-container">
-              <mat-form-field appearance="outline" class="full-width">
+              <mat-form-field appearance="outline" class="full-width" *ngIf="state=='UPDATE'" aria-readonly="true">
                 <mat-label>Category ID</mat-label>
                 <input matInput formControlName="categoryId" readonly />
               </mat-form-field>
@@ -38,28 +39,17 @@
                   <mat-option value="Inactive">Inactive</mat-option>
                 </mat-select>
               </mat-form-field>
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Category Description</mat-label>
-                <textarea matInput formControlName="description" rows="4"></textarea>
-              </mat-form-field>
-        
-              <div class="icon-section">
-                <mat-icon class="category-icon">home</mat-icon>
-                <button mat-stroked-button type="button">Change Icon</button>
-              </div>
-        
-              <mat-form-field appearance="outline" class="half-width">
+              <mat-form-field appearance="outline" class="half-width" *ngIf="state=='UPDATE'" aria-readonly="true">
                 <mat-label>Total Service Providers</mat-label>
                 <input matInput type="number" formControlName="serviceProviders" />
               </mat-form-field>
-        
-              <mat-form-field appearance="outline" class="half-width">
+              <mat-form-field appearance="outline" class="half-width" *ngIf="state=='UPDATE'" aria-readonly="true">
                 <mat-label>Available Locations</mat-label>
                 <input matInput type="number" formControlName="availableLocations" />
               </mat-form-field>
             </form>
           </mat-tab>
-          <mat-tab label="Tasks">
+          <mat-tab label="Tasks" *ngIf="state=='UPDATE'">
             <div class="mb-3 faq-container">
               <div class="d-flex justify-content-between align-items-center add-faq-button">
                 <h6 class="fw-bold" *ngIf="tasks.length>0">Tasks</h6>
@@ -71,21 +61,6 @@
               
             </div>
           </mat-tab>
-          <!-- <mat-tab label="FAQs">
-            <div class="mb-3 faq-container">
-              <div class="d-flex justify-content-between align-items-center add-faq-button">
-                <h6 class="fw-bold" *ngIf="faqs.length>0">FAQ</h6>
-                <h6 class="fw-bold" *ngIf="faqs.length==0">No FAQ Available</h6>
-                <button class="btn btn-sm btn-outline-primary">
-                  <i class="bi bi-plus-circle"></i> Add New Question
-                </button>
-              </div>
-              <app-data-accordion *ngIf="faqs.length>0" id="taskSection" [title]="'Frequently Asked Questions'" [items]="faqs"
-                [titleKey]="'title'" [bodyKey]="'body'" [searchable]="true" [showEdit]="true" [showDelete]="true"
-                (searchChanged)="getTasksFromApi($event)" (editItem)="onEditFAQ($event)"
-                (deleteItem)="onDeleteFAQ($event)"></app-data-accordion>
-            </div>
-          </mat-tab> -->
         </mat-tab-group>
       </div>
     </div>

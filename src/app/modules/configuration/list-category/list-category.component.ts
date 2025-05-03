@@ -52,34 +52,20 @@ export class ListCategoryComponent implements OnInit,OnDestroy {
   }
 
   loadCategories() {
-    this.categories = [
-          { id: 1, name: 'Home Cleaning', providers: 45, locations: 12 },
-          { id: 2, name: 'Pest Control', providers: 30, locations: 8 },
-          { id: 3, name: 'Plumbing', providers: 20, locations: 6 },
-          { id: 4, name: 'Electricians', providers: 10, locations: 5 },
-          { id: 5, name: 'Painting', providers: 15, locations: 7 },
-          { id: 6, name: 'Carpentry', providers: 18, locations: 4 }
-    ];
-    // this.apiLoading = true;
-    // this.listCategoriesSubscription = this.categoryService.listCategories().subscribe(res=>{
-    //   this.categories =  res?.statusMsg;
-    //   this.categories = [
-    //     { id: 1, name: 'Home Cleaning', providers: 45, locations: 12 },
-    //     { id: 2, name: 'Pest Control', providers: 30, locations: 8 },
-    //     { id: 3, name: 'Plumbing', providers: 20, locations: 6 },
-    //     { id: 4, name: 'Electricians', providers: 10, locations: 5 },
-    //     { id: 5, name: 'Painting', providers: 15, locations: 7 },
-    //     { id: 6, name: 'Carpentry', providers: 18, locations: 4 }
-    //   ];
-    //   console.log(this.categories);
-    //   this.apiLoading = false;
-    // },((err)=>{
-    //   this.apiLoading = false;
-    // }));
+    this.apiLoading = true;
+    this.listCategoriesSubscription = this.categoryService.listCategories().subscribe(res=>{
+      this.categories =  res?.statusMsg;
+      this.apiLoading = false;
+    },((err)=>{
+      this.apiLoading = false;
+    }));
   }
 
   editCategory(item: any) {
-    console.log('Edit category with ',item);
+    this.updateComponentEvent.emit({
+      component:'add-update-category',
+      state:{id:item.id}
+    });
   }
 
   deleteCategory(item: any) {

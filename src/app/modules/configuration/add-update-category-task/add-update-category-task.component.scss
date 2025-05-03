@@ -1,40 +1,67 @@
 @import './../../../app.component.scss';
 
 .modal {
-    display: block;
-  }
-  
-  .custom-modal-backdrop {
-    background: rgba(0, 0, 0, 0.5);
-  }
-  
-  .modal-dialog {
-    max-width: 600px;
-  }
-  
-  .modal-content {
-    border-radius: 8px;
-    background:$background-color;
-  }
-  
-  .modal-header, .modal-footer {
-    border: none;
-  }
-  
-  .modal-body {
-    font-size: 16px;
-  }
-  
-  .modal-header {
-    display: block;
-  }
-  .modal-title {
-    display:inline;
-    color: $primary-color;
-  }
-  .close {
-    display: inline;
-    float: right;
-    border: 0px;
-    background: $background-color;
-  }
+  display: block;
+}
+
+.custom-modal-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-dialog {
+  max-width: 600px;
+}
+
+.modal-content {
+  border-radius: 8px;
+  background: $background-color;
+}
+
+.modal-header,
+.modal-footer {
+  border: none;
+}
+
+.modal-body {
+  font-size: 16px;
+}
+
+.modal-header {
+  display: block;
+}
+
+.modal-title {
+  display: inline;
+  color: $primary-color;
+}
+
+.close {
+  display: inline;
+  float: right;
+  border: 0px;
+  background: $background-color;
+}
+
+mat-form-field {
+  margin-top: 2%;
+  width: 98%;
+}
+
+.general-container,
+.faq-container,
+.option-container {
+  margin-top: 1%;
+  width: 98%;
+  max-height: 480px;
+  overflow: scroll;
+}
+
+.card-list .card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.faq-label {
+  font-weight: 500 !important;
+  color: $primary-color;
+}

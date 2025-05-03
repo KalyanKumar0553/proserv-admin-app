@@ -29,4 +29,6 @@ public class ServiceTaskOption extends Auditable {
     
     private Long defaultAmount;
     
+    private String displayURL;
+    
 }
