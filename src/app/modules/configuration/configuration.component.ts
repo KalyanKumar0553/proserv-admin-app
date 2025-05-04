@@ -46,7 +46,6 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
   updateComponent(componentData: any) {
     let component = componentData?.component || '';
     this.categoryID = componentData?.state?.id;
-    console.log(this.categoryID);
     if(component) {
       this.activeComponent = component;
       this.appUtils.loadMenuBasedOnRoute(this,this.router.url);

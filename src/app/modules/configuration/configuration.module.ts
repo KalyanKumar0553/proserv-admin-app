@@ -22,6 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AddUpdateCategoryTaskComponent } from './add-update-category-task/add-update-category-task.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { SpinnerComponent } from 'app/shared/components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -49,8 +50,8 @@ import { MatChipsModule } from '@angular/material/chips';
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
-    ReactiveFormsModule
-
+    ReactiveFormsModule,
+    SpinnerComponent
   ]
 })
 export class ConfigurationModule { }

@@ -21,7 +21,7 @@ public class OperationValidator {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Category Name Cannot be Empty");
 		}
 		if (displayURL.isEmpty() || displayURL.get().isEmpty()) {
-			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Invalid Request.");
+			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Invalid Request. Need Display URL");
 		}
 	}
 

@@ -3,5 +3,6 @@ export enum RouteUrl {
     HOME='/home',
     UNAUTHORIZED = '/unauthorized',
     CONFIGURATION = '/configuration',
+    SEPERATOR = '/',
 }
 export default RouteUrl;

@@ -1,3 +1,5 @@
+import RouteUrl from 'app/shared/constants/router-url.enum';
+import { BreadCrumbItem } from 'app/shared/models/bread-crumb-item.model';
 
 export enum AuthStateConstants {
   LOGIN_STATE = "auth_login",
@@ -16,7 +18,7 @@ export enum ApiUrls {
   ROLES = '/auth/roles',
   PING = '/ping',
   OVERVIEW = '/overview',
-  LIST_CATEGORY = '/service/categories',
+  CATEGORIES = '/service/categories',
 }
 export enum LocalStorageKeys {
    USER_TOKEN = 'TOKEN'
@@ -26,4 +28,21 @@ export enum AlertTypes {
   SUCCESS = 'alert-success',
   ERROR = 'alert-danger',
   WARN = 'alert-warning'
+}
+export enum ComponentState {
+  ADD = 'add',
+  UPDATE = 'update'
+}
+
+export const CrumbItems : Record<string, BreadCrumbItem[]> = {
+  AddCategoryCrumbItems : [
+      { 'label': 'Home', 'route': RouteUrl.HOME, 'component': '' },
+      { 'label': 'Categories' },
+      { 'label': 'Add Category', 'isTail': true },
+  ],
+  UpdateCategoryCrumbItems : [
+    {'label' : 'Home' , 'route' : RouteUrl.HOME, 'component':''},
+    {'label' : 'Categories'},
+    {'label' : 'Update Category','isTail':true},
+  ]
 }

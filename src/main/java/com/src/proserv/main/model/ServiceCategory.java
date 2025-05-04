@@ -27,6 +27,6 @@ public class ServiceCategory extends Auditable {
 
     private String displayURL;
     
-    private boolean status;
+    private boolean enabled;
 
 }

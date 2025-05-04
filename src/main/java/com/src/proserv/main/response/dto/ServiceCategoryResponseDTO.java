@@ -16,6 +16,7 @@ public class ServiceCategoryResponseDTO {
 	Long id;
 	private String name;
     private String displayURL;
+    private boolean enabled;
     private long providerCount;
     private long locationsCount;
 
@@ -25,6 +26,7 @@ public class ServiceCategoryResponseDTO {
                 .id(category.getId())
                 .name(category.getName())
                 .displayURL(category.getDisplayURL())
+                .enabled(category.isEnabled())
                 .build();
     }
 }

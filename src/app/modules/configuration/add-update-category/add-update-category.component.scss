@@ -35,3 +35,12 @@
 .add-faq-button {
     margin-bottom: 13px;
 }
+mat-form-field {
+    margin-top:18px !important;
+}
+.preview-container img {
+    max-width: 200px;
+    max-height: 200px;
+    border: 1px solid #ccc;
+    object-fit: contain;
+}

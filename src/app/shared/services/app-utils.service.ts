@@ -5,6 +5,7 @@ import { filter, Subscription } from 'rxjs';
 import RouteUrl from '../constants/router-url.enum';
 import { NavigationEnd, Router } from '@angular/router';
 import { appConfig } from 'app/shared/constants/app-config.enum';
+import { FormGroup } from '@angular/forms';
 @Injectable({
     providedIn: 'root'
 })
@@ -125,11 +126,11 @@ export class AppUtilsService {
                     activeComponent: string
                 };
                 context.activeComponent = state?.activeComponent ?? 'list-categories';
-                this.loadMenuBasedOnRoute(context,context.router.url);
-        });
+                this.loadMenuBasedOnRoute(context, context.router.url);
+            });
     }
 
-    loadMenuBasedOnRoute(context: any,route: string) {
+    loadMenuBasedOnRoute(context: any, route: string) {
         if (route.length > 1) {
             route = route.indexOf("/") == -1 ? route : route.substring(route.indexOf("/") + 1);
             if (appConfig[route]) {
@@ -143,5 +144,16 @@ export class AppUtilsService {
                 context.updateSignal++;
             }
         }
+    }
+
+    focusFirstInvalidControl(context: any, formGroup: FormGroup): void {
+        const controls = context.categoryForm.controls;
+        const invalidControlKey = Object.keys(controls).find(key => controls[key].invalid);
+        if (invalidControlKey) {
+            const index = Object.keys(controls).indexOf(invalidControlKey);
+            const field = context.formFields.toArray()[index];
+            field?.nativeElement?.focus();
+        }
+        return;
     }
 }

@@ -37,6 +37,11 @@ public class CategoryService {
 		return categoryRepository.findAll().stream().map(ServiceCategoryResponseDTO::fromEntityToFetchCategoryResponse)
 				.collect(Collectors.toList());
 	}
+	
+	public List<ServiceCategoryResponseDTO> fetchServiceCategoryByID(Long serviceCategoryID) {
+		return categoryRepository.findById(serviceCategoryID).stream().map(ServiceCategoryResponseDTO::fromEntityToFetchCategoryResponse)
+				.collect(Collectors.toList());
+	}
 
 	public void deleteServiceCategory(Long serviceCategoryID) {
 		long count = userTaskRequestRepository.countIncompleteTasksByServiceCategoryID(serviceCategoryID);

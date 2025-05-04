@@ -16,10 +16,10 @@
               (click)="$event.stopPropagation()">
           </div>
         </th>
-        <th></th>
+        <th *ngIf="paginatedData.length>0"></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody *ngIf="paginatedData.length>0">
       <tr *ngFor="let item of paginatedData">
         <td *ngFor="let header of headers">
           {{ item?.[header.field] ?? '-' }}
@@ -34,8 +34,15 @@
         </td>
       </tr>
     </tbody>
+    <tbody *ngIf="paginatedData.length==0">
+      <tr>
+        <td [attr.colspan]="headers.length">
+          No data available
+        </td>
+      </tr>
+    </tbody>
   </table>
-  <div class="d-flex justify-content-between align-items-center">
+  <div class="d-flex justify-content-between align-items-center"  *ngIf="paginatedData.length>0">
     <div>
       Showing {{ paginatedData.length }} of {{ filteredData.length }} records
     </div>

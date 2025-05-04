@@ -47,6 +47,13 @@ public class ServiceCategoryController {
 		return ResponseEntity.ok(AppUtils.getJSONObject(categoryService.fetchAllServiceCategories()));
 	}
 	
+	@GetMapping("/categories/{categoryID}")
+	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
+	public ResponseEntity<JSONResponseDTO<?>> getCategoriesByID(Authentication authentication,@PathVariable Long categoryID)
+			throws MessagingException {
+		return ResponseEntity.ok(AppUtils.getJSONObject(categoryService.fetchServiceCategoryByID(categoryID)));
+	}
+	
 	
 	@PostMapping("/categories")
 	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
