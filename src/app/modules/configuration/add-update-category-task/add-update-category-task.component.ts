@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
+import { ComponentState } from 'app/shared/constants/constants.enum';
 
 @Component({
   selector: 'app-add-update-category-task',
@@ -13,7 +14,7 @@ export class AddUpdateCategoryTaskComponent implements OnInit {
 
   @Input() showModal: boolean = false;
   @Input() requestInProgress: boolean = false;
-  @Input() taskState: string = 'ADD';
+  @Input() state: string = ComponentState.UPDATE;
 
   @Output() saveAction = new EventEmitter<void>();
   @Output() cancelAction = new EventEmitter<void>();
@@ -28,6 +29,9 @@ export class AddUpdateCategoryTaskComponent implements OnInit {
   inclusions: string[] = [];
   exclusions: string[] = [];
   taskOptions: any = [];
+
+  addState = ComponentState.ADD;
+  updateState = ComponentState.UPDATE;
 
   constructor(private fb: FormBuilder) { }
 

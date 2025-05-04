@@ -4,7 +4,7 @@
   <span class="loading-label">Loading...</span>
 </div>
 <div class="proserve-theme" mat-theme  *ngIf="!isLoading">
-  <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="form-container">
+  <form [formGroup]="categoryForm" class="form-container" (keydown.enter)="$event.preventDefault()">
     <div class="container mt-5 p-4 bg-white shadow-sm rounded">
       <app-breadcrumb *ngIf="state==addState" [crumbItems]="addCrumbItems"></app-breadcrumb>
       <app-breadcrumb *ngIf="state==updateState" [crumbItems]="updateCrumbItems"></app-breadcrumb>
@@ -24,8 +24,7 @@
               <div class="row g-3 mb-4">
                 <div class="col-md-6">
                   <mat-form-field appearance="outline" class="full-width">
-                    <input type="file" matInput formControlName="displayUrl"/>
-                    <!-- <input matInput formControlName="displayUrl" (blur)="onUrlBlur()"/> -->
+                    <input matInput formControlName="displayURL" (blur)="onUrlBlur()"/>
                   </mat-form-field>
                 </div>
                 <div class="col-md-1 bg-light rounded">
@@ -42,17 +41,17 @@
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Category Status</mat-label>
                 <mat-select formControlName="enabled">
-                  <mat-option value=true>Active</mat-option>
-                  <mat-option value=false>Inactive</mat-option>
+                  <mat-option value="active">Active</mat-option>
+                  <mat-option value="inactive">Inactive</mat-option>
                 </mat-select>
               </mat-form-field>
               <mat-form-field appearance="outline" class="half-width" *ngIf="state==updateState" aria-readonly="true">
                 <mat-label>Total Service Providers</mat-label>
-                <input matInput type="number" formControlName="serviceProviders" />
+                <input matInput type="number" formControlName="serviceProviders" readonly/>
               </mat-form-field>
               <mat-form-field appearance="outline" class="half-width" *ngIf="state==updateState" aria-readonly="true">
                 <mat-label>Available Locations</mat-label>
-                <input matInput type="number" formControlName="availableLocations" />
+                <input matInput type="number" formControlName="availableLocations" readonly/>
               </mat-form-field>
             </mat-tab>
             <mat-tab label="Tasks" *ngIf="state==updateState">
@@ -60,7 +59,7 @@
                 <div class="d-flex justify-content-between align-items-center add-faq-button">
                   <h6 class="fw-bold" *ngIf="tasks.length>0">Tasks</h6>
                   <h6 class="fw-bold" *ngIf="tasks.length==0">No Tasks Available</h6>
-                  <button class="btn btn-sm btn-outline-primary" (click)="showTaskModal()">
+                  <button class="btn btn-sm btn-outline-primary" (click)="showTaskModal(updateState)">
                     <i class="bi bi-plus-circle"></i> Add New Task
                   </button>
                 </div>
@@ -71,13 +70,13 @@
         </div>
       </div>
       <div class="text-end mt-4">
-        <button class="btn btn-primary btn-outline-primary">
+        <button class="btn btn-primary btn-outline-primary" (click)="onSubmit()">
           <i class="bi bi-check-circle me-2"></i>Save Category
         </button>
       </div>
     </div>
     <div class="container mt-5 p-4 bg-white shadow-sm rounded" *ngIf="showAddTask">
-      <app-add-update-category-task [showModal]="showAddTask" (saveAction)="saveTask($event)"
+      <app-add-update-category-task [state]="taskState" [showModal]="showAddTask" (saveAction)="saveTask($event)"
         (cancelAction)="cancelTask($event)"></app-add-update-category-task>
     </div>
   </form>

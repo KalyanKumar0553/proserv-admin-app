@@ -12,6 +12,7 @@ import { CredentialsInterceptor } from './shared/services/credentials-intercepto
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 import { ConfigService } from './shared/services/config.service';
 import { initializeApp } from './app-init';
+import { SnackbarComponent } from './shared/components/snackbar/snackbar.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { initializeApp } from './app-init';
     RouterModule,
     ConfigurationModule,
     AppRoutingModule,
-    SpinnerComponent
+    SpinnerComponent,
+    SnackbarComponent
 ],
   declarations: [
     AppComponent

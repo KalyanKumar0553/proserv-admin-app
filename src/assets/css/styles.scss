@@ -6,6 +6,10 @@
   --mat-sys-on-surface:#1f5779;
   --mat-sys-primary: #1f5779;
 }
+.custom-snackbar {
+    margin-bottom: 5rem !important;
+    padding:0px !important;
+}
 .modal {
     z-index: 100000;
 }
@@ -40,4 +44,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .mdc-text-field--filled:not(.mdc-text-field--disabled) {
     background: #f0f0f0 !important;
+}
+.mat-mdc-snackbar-surface, .mat-mdc-snack-bar-label{
+    padding:0px !important;
 }

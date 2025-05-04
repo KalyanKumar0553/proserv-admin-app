@@ -6,7 +6,7 @@ import { ProServApiService } from './proserv-api.service';
 import {jwtDecode} from 'jwt-decode';
 import { JwtPayload } from '../models/jwt-payload.model';
 import { Roles } from '../models/roles.enum';
-import { CreateCategoryRequest } from '../models/category';
+import { CreateCategoryRequest, UpdateCategoryRequest } from '../models/category';
 import RouteUrl from '../constants/router-url.enum';
 
 @Injectable({
@@ -32,5 +32,9 @@ export class CategoryService {
 
   saveCategory(payload:CreateCategoryRequest) {
     return this.apiService.save(ApiUrls.CATEGORIES,payload);
+  }
+
+  updateCategory(id,payload:UpdateCategoryRequest) {
+    return this.apiService.update(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+id,payload);
   }
 }

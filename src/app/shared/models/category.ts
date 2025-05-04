@@ -9,3 +9,9 @@ export interface CreateCategoryRequest {
   displayURL?: string;
   enabled: boolean;
 }
+export interface UpdateCategoryRequest {
+  id:string;
+  name: string;
+  displayURL?: string;
+  enabled: boolean;
+}

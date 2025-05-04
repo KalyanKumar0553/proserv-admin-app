@@ -2,8 +2,8 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" *ngIf="taskState=='ADD'">Add New Task</h5>
-          <h5 class="modal-title" *ngIf="taskState=='EDIT'">Edit Task</h5>
+          <h5 class="modal-title" *ngIf="state==addState">Add New Task</h5>
+          <h5 class="modal-title" *ngIf="state==updateState">Edit Task</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close" *ngIf="!requestInProgress" (click)="onCancel()">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -115,7 +115,7 @@
                   </form>
                 </div>
               </mat-tab>
-              <mat-tab label="FAQs">
+              <mat-tab label="FAQs" *ngIf="state==updateState">
                 <div class="mb-3 faq-container" *ngIf="faqState=='list-faq'">
                   <div class="d-flex justify-content-between align-items-center add-faq-button">
                     <h6 class="faq-label" *ngIf="faqs.length>0">FAQ</h6>
@@ -150,7 +150,7 @@
                   </form>
                 </div>
               </mat-tab>
-              <mat-tab label="Options">
+              <mat-tab label="Options" *ngIf="state==updateState">
                 <div class="mb-3 option-container">
                   <div class="card-list">
                     <div *ngFor="let option of taskOptions" class="card p-2 d-flex justify-content-between align-items-center mb-2">

@@ -33,6 +33,12 @@ export enum ComponentState {
   ADD = 'add',
   UPDATE = 'update'
 }
+export enum STATUS {
+  SUCCESS = 'success',
+  ERROR = 'error',
+  INFO = 'info',
+  WARN = 'warning'
+}
 
 export const CrumbItems : Record<string, BreadCrumbItem[]> = {
   AddCategoryCrumbItems : [

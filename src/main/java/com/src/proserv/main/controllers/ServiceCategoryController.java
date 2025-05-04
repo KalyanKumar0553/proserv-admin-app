@@ -65,7 +65,7 @@ public class ServiceCategoryController {
 	
 	@PutMapping("/categories/{categoryID}")
 	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-	public ResponseEntity<JSONResponseDTO<?>> updateCategory(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,Authentication authentication,@RequestBody ServiceCategoryRequestDTO categoryRequestDTO)
+	public ResponseEntity<JSONResponseDTO<?>> updateCategory(@RequestHeader("Authorization") String token,@PathVariable Long categoryID,Authentication authentication,@RequestBody ServiceCategoryRequestDTO categoryRequestDTO)
 			throws MessagingException {
 		operationValidator.validateUpdateCategoryRequest(categoryRequestDTO);
     	return ResponseEntity.ok(AppUtils.getJSONObject(categoryService.updateServiceCategory(jwtTokenProvider.getUserIDFromToken(token.substring(7)),categoryRequestDTO)));
@@ -73,9 +73,9 @@ public class ServiceCategoryController {
 
 	@DeleteMapping("/categories/{categoryID}")
 	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-	public ResponseEntity<JSONResponseDTO<?>> deleteCategory(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,Authentication authentication)
+	public ResponseEntity<JSONResponseDTO<?>> deleteCategory(@RequestHeader("Authorization") String token,@PathVariable Long categoryID,Authentication authentication)
 			throws MessagingException {
-		categoryService.deleteServiceCategory(serviceCategoryID);
+		categoryService.deleteServiceCategory(categoryID);
 		return ResponseEntity.ok(AppUtils.getJSONObject("Category Succesfully Deleted"));
 	}
 	

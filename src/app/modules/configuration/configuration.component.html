@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-9 content-area">
       <app-list-category *ngIf="activeComponent=='list-categories'" (updateComponentEvent)="updateComponent($event)"></app-list-category>
-      <app-add-update-category *ngIf="activeComponent=='add-update-category'" [categoryID]="categoryID"></app-add-update-category>
+      <app-add-update-category *ngIf="activeComponent=='add-update-category'" [categoryID]="categoryID" (updateComponentEvent)="updateComponent($event)"></app-add-update-category>
       <app-settings *ngIf="activeComponent=='settings'"></app-settings>
     </div>
   </div>

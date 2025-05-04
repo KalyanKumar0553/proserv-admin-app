@@ -77,6 +77,7 @@ public class CategoryService {
 		ServiceCategory sc = existingServiceCategory.get();
 		sc.setName(serviceCategoryRequest.getName());
 		sc.setDisplayURL(serviceCategoryRequest.getDisplayURL());
+		sc.setEnabled(serviceCategoryRequest.isEnabled());
 		categoryRepository.save(sc);
 		return "Service Category Created Succesfully";
 	}

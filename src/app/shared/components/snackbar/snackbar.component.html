@@ -1,0 +1,5 @@
+<div class="snackbar-content" [ngClass]="data.type">
+    <mat-icon class="snackbar-icon">{{ getIcon(data.type) }}</mat-icon>
+    <span class="snackbar-message">{{ data.message }}</span>
+    <mat-icon class="snackbar-close" (click)="close()">close</mat-icon>
+</div>

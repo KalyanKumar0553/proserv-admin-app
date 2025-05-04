@@ -1,6 +1,7 @@
 package com.src.proserv.main.controllers;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.context.Context;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+
 import com.src.proserv.main.configuration.JWTTokenProvider;
 import com.src.proserv.main.exceptions.UserNotFoundException;
+import com.src.proserv.main.model.InvalidatedToken;
 import com.src.proserv.main.model.UserInfo;
 import com.src.proserv.main.request.dto.LoginRequestDTO;
 import com.src.proserv.main.request.dto.OTPVerificationRequestDTO;

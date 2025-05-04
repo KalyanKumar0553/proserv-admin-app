@@ -1,0 +1,50 @@
+@import './../../../app.component.scss';
+
+.snackbar-content {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    padding: 10px 16px;
+    min-width: 300px;
+
+    .snackbar-message {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .snackbar-close {
+        margin-left: auto;
+        cursor: pointer;
+    }
+
+
+    .snackbar-icon {
+        margin-right: 8px;
+    }
+
+    &.success {
+        color: #2e7d32;
+        background: #e8f5e9;
+        padding: 13px;
+    }
+
+    &.error {
+        color: $danger-color;
+        background: #ffebee;
+        padding: 13px;
+    }
+
+    &.info {
+        color: $primary-color;
+        background: #e3f2fd;
+        padding: 13px;
+    }
+
+    &.warning {
+        color: #e9c5a8;
+        background: #fff3e0;
+        padding: 13px;
+    }
+}

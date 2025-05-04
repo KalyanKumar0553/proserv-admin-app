@@ -29,7 +29,8 @@ export class ListCategoryComponent implements OnInit,OnDestroy {
     { field: 'id', label: 'ID' },
     { field: 'name', label: 'Name' },
     { field: 'providers', label: 'Providers' },
-    { field: 'locations', label: 'Locations' }
+    { field: 'locations', label: 'Locations' },
+    { field: 'enabled', label: 'Enabled' }
   ];
 
   crumbItems:BreadCrumbItem[] = [
