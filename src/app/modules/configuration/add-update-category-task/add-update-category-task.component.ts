@@ -1,8 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
-import { ComponentState } from 'app/shared/constants/constants.enum';
+import { ComponentState, STATUS } from 'app/shared/constants/constants.enum';
+import { AppUtilsService } from 'app/shared/services/app-utils.service';
+import { CreateCategoryTaskRequest, UpdateCategoryTaskRequest } from 'app/shared/models/category';
+import { CategoryService } from 'app/shared/services/categories.service';
+import { SnackbarService } from 'app/shared/services/snackbar.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-update-category-task',
@@ -10,16 +15,18 @@ import { ComponentState } from 'app/shared/constants/constants.enum';
   templateUrl: './add-update-category-task.component.html',
   styleUrl: './add-update-category-task.component.scss'
 })
-export class AddUpdateCategoryTaskComponent implements OnInit {
+export class AddUpdateCategoryTaskComponent implements OnInit,OnDestroy {
 
   @Input() showModal: boolean = false;
-  @Input() requestInProgress: boolean = false;
   @Input() state: string = ComponentState.UPDATE;
-
+  @Input() categoryID: number = 0;
+  @Input() taskID: number = 0;
   @Output() saveAction = new EventEmitter<void>();
   @Output() cancelAction = new EventEmitter<void>();
 
-  faqState:string = 'list-faq';
+  @ViewChildren('formField') formFields!: QueryList<ElementRef>;
+  faqState: string = 'list-faq';
+  previewUrl = '';
 
   taskForm: FormGroup;
   addFaqForm: FormGroup;
@@ -33,16 +40,25 @@ export class AddUpdateCategoryTaskComponent implements OnInit {
   addState = ComponentState.ADD;
   updateState = ComponentState.UPDATE;
 
-  constructor(private fb: FormBuilder) { }
+  isLoading: boolean = false;
+  
+  private updateCategoryTaskSubscription?: Subscription;
+  private getCategoryTaskSubscription?: Subscription;
+  
+  constructor(private fb: FormBuilder, private appUtils: AppUtilsService,private categoryService:CategoryService,private snackbar:SnackbarService) { }
 
   ngOnInit(): void {
+    if (this.state == this.updateState) {
+      this.isLoading = true;
+      this.fetchTaskDetails();
+    }
     this.taskForm = this.fb.group({
-      taskId: ['#CAT-001'],
-      status: ['Active'],
-      name: ['Home Cleaning'],
-      description: ['Professional home cleaning services including regular cleaning, deep cleaning, and specialized services for various areas of your home.'],
-      notes: ['Notes To be included for the Task'],
-      displayURL: ""
+      taskId: [],
+      enabled: ['active'],
+      title: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+      note: [''],
+      displayURL: ['', [Validators.required]],
     });
     this.addFaqForm = this.fb.group({
       question: [''],
@@ -52,11 +68,79 @@ export class AddUpdateCategoryTaskComponent implements OnInit {
   }
 
   onSave(): void {
-    this.saveAction.emit();
+    if (this.taskForm.invalid) {
+      this.appUtils.focusFirstInvalidControl(this, this.taskForm);
+      this.taskForm.markAllAsTouched();
+      return;
+    }
+    this.isLoading = true;
+    if (this.state == this.updateState) {
+      let payload: UpdateCategoryTaskRequest = { 
+        id: this.taskID, 
+        serviceCategoryID: this.categoryID, 
+        title: this.taskForm.get('title').value,
+        description: this.taskForm.get('description').value, 
+        displayURL: this.taskForm.get('displayURL').value, 
+        inclusions: this.inclusions.toString(),
+        exclusions: this.exclusions.toString(),
+        note: this.taskForm.get('note').value, 
+        enabled: this.taskForm.get('enabled').value == 'active'
+      };
+      this.updateCategoryTaskSubscription = this.categoryService.updateCategoryTask(this.categoryID, this.taskID, payload).subscribe({
+        next: (res) => {
+          this.snackbar.show('Succesfully Updated Category Details!', STATUS.SUCCESS);
+          this.isLoading = false;
+          this.saveAction.emit();
+        },
+        error: (err) => {
+          this.snackbar.show('Unable To Update Category Details!', STATUS.ERROR);
+          this.isLoading = false;
+        },
+      });
+    } else {
+      let payload: CreateCategoryTaskRequest = { 
+        serviceCategoryID: this.categoryID, 
+        title: this.taskForm.get('title').value,
+        description: this.taskForm.get('description').value, 
+        displayURL: this.taskForm.get('displayURL').value, 
+        inclusions: this.inclusions.toString(),
+        exclusions: this.exclusions.toString(),
+        note: this.taskForm.get('note').value, 
+        enabled: this.taskForm.get('enabled').value == 'active'
+      };
+      this.updateCategoryTaskSubscription = this.categoryService.saveCategoryTask(this.categoryID,payload).subscribe({
+        next: (res) => {
+          this.taskForm.reset();
+          this.previewUrl = '';
+          this.snackbar.show('Succesfully Saved Task Details!', STATUS.SUCCESS);
+          this.saveAction.emit();
+        },
+        error: (err) => {
+          this.snackbar.show('Unable To Save Task Details!', STATUS.ERROR);
+        },
+        complete: ()=>{
+          this.isLoading = false;
+        },
+      });
+    }
+  }
+
+  onTabChange(event: any): void {
+    const index = event.index;
+    console.log(index);
   }
 
   onCancel(): void {
     this.cancelAction.emit();
+  }
+
+  fetchTaskDetails() {
+    console.log("Fetching Task Details categoryID : "+this.categoryID + " TaskID : "+this.taskID);
+    this.isLoading = false;
+  }
+
+  onUrlBlur(): void {
+    this.previewUrl = this.taskForm.get('displayURL').value?.trim() || null;
   }
 
 
@@ -137,15 +221,15 @@ export class AddUpdateCategoryTaskComponent implements OnInit {
   }
 
   saveFAQ() {
-    this.faqs.push({'title':this.addFaqForm.get('question').value,'body':this.addFaqForm.get('description').value});
+    this.faqs.push({ 'title': this.addFaqForm.get('question').value, 'body': this.addFaqForm.get('description').value });
     this.addFaqForm.reset();
     this.faqState = 'list-faq';
   }
 
   loadServiceOptions() {
     this.taskOptions = [
-      {name:'2 BHK Cleaning',descripption:'',defaultAmount:110,displayURL:''},
-      {name:'Full house cleaning',descripption:'',defaultAmount:200,displayURL:''},
+      { name: '2 BHK Cleaning', descripption: '', defaultAmount: 110, displayURL: '' },
+      { name: 'Full house cleaning', descripption: '', defaultAmount: 200, displayURL: '' },
     ];
   }
 
@@ -155,5 +239,16 @@ export class AddUpdateCategoryTaskComponent implements OnInit {
 
   deleteOption(option: any) {
     console.log('Delete', option);
+  }
+
+  ngOnDestroy(): void {
+    this.categoryID = null;
+    if (this.getCategoryTaskSubscription) {
+      this.getCategoryTaskSubscription.unsubscribe();
+    }
+    if (this.updateCategoryTaskSubscription) {
+      this.updateCategoryTaskSubscription.unsubscribe();
+    }
+    this.taskForm.reset();
   }
 }

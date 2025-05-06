@@ -7,7 +7,7 @@ import { STATUS } from 'app/shared/constants/constants.enum';
 
 @Component({
   selector: 'app-snackbar',
-  imports: [NgIf, NgClass, MatIconModule],
+  imports: [NgClass, MatIconModule],
   templateUrl: './snackbar.component.html',
   styleUrl: './snackbar.component.scss'
 })

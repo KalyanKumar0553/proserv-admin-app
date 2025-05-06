@@ -24,6 +24,7 @@
               <div class="row g-3 mb-4">
                 <div class="col-md-6">
                   <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Display Image</mat-label>
                     <input matInput formControlName="displayURL" (blur)="onUrlBlur()"/>
                   </mat-form-field>
                 </div>
@@ -59,11 +60,14 @@
                 <div class="d-flex justify-content-between align-items-center add-faq-button">
                   <h6 class="fw-bold" *ngIf="tasks.length>0">Tasks</h6>
                   <h6 class="fw-bold" *ngIf="tasks.length==0">No Tasks Available</h6>
-                  <button class="btn btn-sm btn-outline-primary" (click)="showTaskModal(updateState)">
+                  <button class="btn btn-sm btn-outline-primary" (click)="showTaskModal(addState)">
                     <i class="bi bi-plus-circle"></i> Add New Task
                   </button>
                 </div>
-
+                <app-data-accordion *ngIf="tasks.length>0" id="taskSection" [title]="'Category Tasks'" [items]="tasks"
+                  [titleKey]="'title'" [bodyKey]="'description'" [searchable]="true" [showEdit]="true" [showDelete]="true"
+                  (searchChanged)="getTasksFromApi($event)" (editItem)="onEditTask($event)"
+                  (deleteItem)="onDeleteTask($event)"></app-data-accordion>
               </div>
             </mat-tab>
           </mat-tab-group>
@@ -76,8 +80,13 @@
       </div>
     </div>
     <div class="container mt-5 p-4 bg-white shadow-sm rounded" *ngIf="showAddTask">
-      <app-add-update-category-task [state]="taskState" [showModal]="showAddTask" (saveAction)="saveTask($event)"
+      <app-add-update-category-task [categoryID]="categoryID" [taskID]="taskID" [state]="taskState" [showModal]="showAddTask" (saveAction)="saveTask($event)"
         (cancelAction)="cancelTask($event)"></app-add-update-category-task>
     </div>
   </form>
+  <app-confirmation-modal *ngIf="taskID" 
+    [title]="`Are you sure you want to Delete Task ?`" 
+    [message]="'All Associated Options will be removed. Please confirm.'"
+    [(showModal)]="showDeleteModal" (confirmAction)="handleConfirmDeleteAction($event)" (cancelAction)="cancelConfirmAction()">
+  </app-confirmation-modal>
 </div>

@@ -16,9 +16,9 @@ import lombok.AllArgsConstructor;
 public class ServiceTaskValidator {
 
 	public void validateCreateTaskRequest(ServiceTaskRequestDTO taskRequest) {
-		Optional<String> name = Optional.ofNullable(taskRequest.getName());
+		Optional<String> title = Optional.ofNullable(taskRequest.getTitle());
 		Optional<Long> serviceCategoryID = Optional.ofNullable(taskRequest.getServiceCategoryID());
-		if (name.isEmpty() || name.get().isEmpty()) {
+		if (title.isEmpty() || title.get().isEmpty()) {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Option Name Cannot be Empty");
 		}
 		if (serviceCategoryID.isEmpty() || serviceCategoryID.get()<=0) {

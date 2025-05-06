@@ -15,3 +15,24 @@ export interface UpdateCategoryRequest {
   displayURL?: string;
   enabled: boolean;
 }
+export interface CreateCategoryTaskRequest {
+    serviceCategoryID:number;
+    title:string;
+    displayURL:string;
+    description:string;
+    inclusions?:string;
+    exclusions?:string;
+    note?:string;
+    enabled:boolean;
+}
+export interface UpdateCategoryTaskRequest {
+  id:number;
+  serviceCategoryID:number;
+  title:string;
+  displayURL:string;
+  description:string;
+  inclusions?:string;
+  exclusions?:string;
+  note?:string;
+  enabled:boolean;
+}

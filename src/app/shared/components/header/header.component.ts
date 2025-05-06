@@ -79,6 +79,7 @@ export class HeaderComponent implements OnInit,OnChanges {
     this.deleteRequestInProgress = true;
     this.authService.logoutUser().toPromise().then(()=>{
       this.localService.clearData();
+      this.authService.clearUserData();
       this.router.navigateByUrl(RouteUrl.LOGIN);
       this.showLogoutModal = false;
       this.deleteRequestInProgress = false;

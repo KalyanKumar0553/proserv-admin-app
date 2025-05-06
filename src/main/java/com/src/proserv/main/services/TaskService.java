@@ -50,19 +50,22 @@ public class TaskService {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Service task with Given details not available");
 		}
 		faqRepository.deleteAllByServiceCategoryIDAndServiceTaskID(serviceCategoryID,taskID);
+		optionRepository.deleteAllByServiceCategoryIDAndServiceTaskID(serviceCategoryID,taskID);
 		taskRepository.deleteAllByIdAndServiceCategoryID(taskID,serviceCategoryID);
 	}
 
 	public String createServiceTask(String userUUID,ServiceTaskRequestDTO serviceTaskRequest) {
-		String name = serviceTaskRequest.getName();
+		String title = serviceTaskRequest.getTitle();
 		Long serviceCategoryID = serviceTaskRequest.getServiceCategoryID();
 		ServiceTask serviceTask = ServiceTaskRequestDTO.toEntityFromTaskRequestDTO(serviceTaskRequest);
-		Optional<ServiceTask> currOption = taskRepository.findByTitleAndServiceCategoryID(name,serviceCategoryID);
-		if(currOption.isEmpty()) {
-			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Service task with Given details not available");
+		Optional<ServiceTask> currOption = taskRepository.findByTitleAndServiceCategoryID(title,serviceCategoryID);
+		if(currOption.isPresent()) {
+			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Service task with Given Title already available");
 		}
 		serviceTask.setCreatedBy(userUUID);
 		serviceTask.setCreatedOn(LocalDateTime.now());
+		serviceTask.setLastModifiedBy(userUUID);
+		serviceTask.setLastModifiedOn(LocalDateTime.now());
 		taskRepository.save(serviceTask);
 		return "Service Task Created Succesfully";
 	}

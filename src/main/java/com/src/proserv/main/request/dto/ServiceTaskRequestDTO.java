@@ -9,8 +9,6 @@ public class ServiceTaskRequestDTO {
 
     private Long id;
 
-    private String name;
-    
     private Long serviceCategoryID;
 
     private String title;
@@ -24,6 +22,8 @@ public class ServiceTaskRequestDTO {
     private String exclusions;
     
     private String note;
+    
+    private boolean enabled;
 
 	public static ServiceTask toEntityFromTaskRequestDTO(ServiceTaskRequestDTO requestDTO) {
 		return ServiceTask.builder()
@@ -33,6 +33,7 @@ public class ServiceTaskRequestDTO {
 				.description(requestDTO.getDescription())
 				.inclusions(requestDTO.getInclusions())
 				.exclusions(requestDTO.getExclusions())
+				.enabled(requestDTO.isEnabled())
 				.build();
 	}
 

@@ -114,7 +114,7 @@ public class JWTTokenProvider {
 				return false;
 			}
 			return true;
-		} catch (JwtException | IllegalArgumentException ex) {
+		} catch (JwtException | IllegalArgumentException | ExpiredJwtException ex) {
 			return false;
 		}
 	}

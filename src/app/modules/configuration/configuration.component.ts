@@ -45,7 +45,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
 
   updateComponent(componentData: any) {
     let component = componentData?.component || '';
-    this.categoryID = componentData?.state?.id;
+    this.categoryID = componentData?.state?.id || null;
     if(component) {
       this.activeComponent = component;
       this.appUtils.loadMenuBasedOnRoute(this,this.router.url);
@@ -53,6 +53,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
   }
   
   componentChangeEvent(activeComponent:string) {
+    this.categoryID = null;
     this.activeComponent = activeComponent;
   }
 

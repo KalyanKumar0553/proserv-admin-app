@@ -12,6 +12,8 @@ public interface ServiceTaskOptionRepository extends JpaRepository<ServiceTaskOp
 	void deleteAllByServiceCategoryID(Long serviceCategoryID);
 
 	void deleteAllByIdAndServiceCategoryID(Long id,Long serviceCategoryID);
+	
+	void deleteAllByServiceCategoryIDAndServiceTaskID(Long serviceCategoryID,Long serviceTaskID);
 
 	void deleteById(Long id);
 

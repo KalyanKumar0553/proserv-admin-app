@@ -31,6 +31,7 @@ export class AuthInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
           this.localService.clearData();
+          this.authService.clearUserData();
           this.router.navigate([RouteUrl.LOGIN],{
             state :{
               msg : 'Unauthorized'

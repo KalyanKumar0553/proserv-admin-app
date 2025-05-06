@@ -6,7 +6,7 @@ import { ProServApiService } from './proserv-api.service';
 import {jwtDecode} from 'jwt-decode';
 import { JwtPayload } from '../models/jwt-payload.model';
 import { Roles } from '../models/roles.enum';
-import { CreateCategoryRequest, UpdateCategoryRequest } from '../models/category';
+import { CreateCategoryRequest, CreateCategoryTaskRequest, UpdateCategoryRequest, UpdateCategoryTaskRequest } from '../models/category';
 import RouteUrl from '../constants/router-url.enum';
 
 @Injectable({
@@ -26,8 +26,16 @@ export class CategoryService {
     return this.apiService.get(ApiUrls.CATEGORIES);
   }
 
+  deleteCategory(id) {
+    return this.apiService.delete(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+id);
+  }
+
   getCategory(id:any) {
     return this.apiService.get(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+id);
+  }
+
+  getCategoryTasks(id:any) {
+    return this.apiService.get(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+id+ApiUrls.TASKS);
   }
 
   saveCategory(payload:CreateCategoryRequest) {
@@ -36,5 +44,17 @@ export class CategoryService {
 
   updateCategory(id,payload:UpdateCategoryRequest) {
     return this.apiService.update(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+id,payload);
+  }
+
+  updateCategoryTask(categoryID,taskID,payload:UpdateCategoryTaskRequest) {
+    return this.apiService.update(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+categoryID+ApiUrls.TASKS+RouteUrl.SEPERATOR+taskID,payload);
+  }
+
+  saveCategoryTask(categoryID,payload:CreateCategoryTaskRequest) {
+    return this.apiService.save(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+categoryID+ApiUrls.TASKS,payload);
+  }
+
+  deleteCategoryTask(categoryID,taskID) {
+    return this.apiService.delete(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+categoryID+ApiUrls.TASKS+RouteUrl.SEPERATOR+taskID);
   }
 }

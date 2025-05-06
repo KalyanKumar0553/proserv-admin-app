@@ -5,7 +5,7 @@ import { filter, Subscription } from 'rxjs';
 import RouteUrl from '../constants/router-url.enum';
 import { NavigationEnd, Router } from '@angular/router';
 import { appConfig } from 'app/shared/constants/app-config.enum';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 @Injectable({
     providedIn: 'root'
 })
@@ -147,10 +147,14 @@ export class AppUtilsService {
     }
 
     focusFirstInvalidControl(context: any, formGroup: FormGroup): void {
-        const controls = context.categoryForm.controls;
-        const invalidControlKey = Object.keys(controls).find(key => controls[key].invalid);
-        if (invalidControlKey) {
-            const index = Object.keys(controls).indexOf(invalidControlKey);
+        const controls = formGroup.controls;
+        const controlKeys = Object.keys(controls);
+        const keysWithValidators = controlKeys.filter(key =>
+            controls[key].validator !== null || controls[key].asyncValidator !== null
+        );
+        const firstInvalidKey = keysWithValidators.find(key => controls[key].invalid);
+        if (firstInvalidKey) {
+            const index = keysWithValidators.indexOf(firstInvalidKey); // Use original order for matching DOM elements
             const field = context.formFields.toArray()[index];
             field?.nativeElement?.focus();
         }

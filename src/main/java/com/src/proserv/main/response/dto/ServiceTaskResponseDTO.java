@@ -18,8 +18,6 @@ public class ServiceTaskResponseDTO {
 
     private String title;
 
-    private String serviceTitle;
-    
     private String description;
     
     private Long serviceCategoryID;
@@ -31,6 +29,8 @@ public class ServiceTaskResponseDTO {
     private String displayURL;
     
     private String note;
+    
+    private boolean enabled;
 
     public static ServiceTaskResponseDTO fromEntityToServiceTaskResponse(ServiceTask taskEntity) {
         return ServiceTaskResponseDTO.builder()
@@ -42,6 +42,7 @@ public class ServiceTaskResponseDTO {
 				.exclusions(taskEntity.getExclusions())
 				.displayURL(taskEntity.getDisplayURL())
 				.note(taskEntity.getNote())
+				.enabled(taskEntity.isEnabled())
 				.build();
     }
 }

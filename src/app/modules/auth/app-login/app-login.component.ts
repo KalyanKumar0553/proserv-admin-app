@@ -136,6 +136,7 @@ export class AppLoginComponent implements OnInit, OnDestroy {
   }
 
   login(event:any) {
+    this.authService.clearUserData();
     this.localService.clearData();
     this.alertType = AlertTypes.ERROR;
     if(!this.validationService.validateLoginRequest(this)) {

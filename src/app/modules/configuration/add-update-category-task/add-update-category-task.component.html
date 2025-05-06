@@ -1,4 +1,9 @@
-<div class="modal fade show d-block custom-modal-backdrop" tabindex="-1" role="dialog" *ngIf="showModal">
+<div class="container status-spinner" *ngIf="showModal && isLoading">
+  <div class="spinner-border text-primary" role="status">
+  </div>
+  <span class="loading-label">Loading...</span>
+</div>
+<div class="modal fade show d-block custom-modal-backdrop" tabindex="-1" role="dialog" *ngIf="showModal && !isLoading">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -10,29 +15,25 @@
         </div>
         <div class="modal-body">
           <div class="col-md-12">
-            <mat-tab-group>
+            <mat-tab-group (selectedTabChange)="onTabChange($event)">
               <mat-tab label="General Info">
                 <div class="general-container">
-                  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="form-container">
+                  <form [formGroup]="taskForm" class="form-container"  (keydown.enter)="$event.preventDefault()">
                     <div class="row">
                       <div class="col-md-12">
                         <mat-form-field>
                           <mat-label>Task Title</mat-label>
-                          <input matInput formControlName="name"/>
+                          <input #formField matInput formControlName="title"/>
                         </mat-form-field>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <mat-form-field>
-                          <mat-label>Task Status</mat-label>
-                          <mat-select formControlName="status">
-                            <mat-option value="Active">Active</mat-option>
-                            <mat-option value="Inactive">Inactive</mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                      </div>
-                    </div>
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Task Status</mat-label>
+                      <mat-select formControlName="enabled">
+                        <mat-option value="active">Active</mat-option>
+                        <mat-option value="inactive">Inactive</mat-option>
+                      </mat-select>
+                    </mat-form-field>
                     <div class="row">
                       <div class="col-md-12">
                         <mat-form-field>
@@ -85,7 +86,7 @@
                       <div class="col-md-12">
                         <mat-form-field>
                           <mat-label>Task Description</mat-label>
-                          <textarea matInput formControlName="description" rows="4"></textarea>
+                          <textarea matInput #formField formControlName="description" rows="4"></textarea>
                         </mat-form-field>    
                       </div>
                     </div>
@@ -93,25 +94,24 @@
                       <div class="col-md-12">
                         <mat-form-field>
                           <mat-label>Notes</mat-label>
-                          <textarea matInput formControlName="notes" rows="4"></textarea>
+                          <textarea matInput formControlName="note" rows="4"></textarea>
                         </mat-form-field>    
                       </div>
                     </div>
                     <div class="row g-3 mb-4">
                       <div class="col-md-6">
-                        <label class="form-label">Display Image</label>
-                        <div class="border border-2 border-dashed text-center py-5 rounded" style="cursor: pointer;">
-                          <div>
-                            <i class="bi bi-cloud-arrow-up fs-3"></i>
-                            <p class="text-muted small mb-0">Click to upload or drag and drop</p>
-                            <p class="text-muted small">SVG, PNG, JPG (MAX. 800×400px)</p>
-                          </div>
+                        <mat-form-field appearance="outline" class="full-width">
+                          <mat-label>Display Image</mat-label>
+                          <input matInput  #formField formControlName="displayURL" (blur)="onUrlBlur()"/>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-1 bg-light rounded">
+                        <i class="bi bi-image fs-1 text-muted preview-container" *ngIf="!previewUrl"></i>
+                        <div class="preview-container" *ngIf="previewUrl">
+                          <img [src]="previewUrl" alt="Preview" />
                         </div>
                       </div>
-                      <div class="col-md-6 d-flex align-items-center justify-content-center bg-light rounded">
-                        <i class="bi bi-image fs-1 text-muted"></i>
-                      </div>
-                    </div>
+                    </div>  
                   </form>
                 </div>
               </mat-tab>
