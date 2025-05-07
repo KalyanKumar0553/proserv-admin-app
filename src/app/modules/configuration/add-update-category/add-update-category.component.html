@@ -8,23 +8,31 @@
     <div class="container mt-5 p-4 bg-white shadow-sm rounded">
       <app-breadcrumb *ngIf="state==addState" [crumbItems]="addCrumbItems"></app-breadcrumb>
       <app-breadcrumb *ngIf="state==updateState" [crumbItems]="updateCrumbItems"></app-breadcrumb>
-      <h5 class="fw-bold mb-4" *ngIf="state==addState">Add New Category</h5>
-      <h5 class="fw-bold mb-4" *ngIf="state==updateState">Update Category</h5>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-4" *ngIf="state==addState">Add New Category</h5>
+        <h5 class="fw-bold mb-4" *ngIf="state==updateState">Update Category</h5>
+        <button class="btn btn-primary" *ngIf="state==updateState" (click)="addNewCategory()">Add New Category</button>
+      </div>
       <div class="row g-3 mb-4">
         <div class="col-md-12">
           <mat-tab-group>
             <mat-tab label="Basic Info">
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Category Name</mat-label>
-                <input #formField matInput formControlName="name"/>
-                <mat-error *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.hasError('required')">
-                  Category name is required.
-                </mat-error>
-                <mat-error *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.hasError('invalidCharacters')">
-                  {{ categoryForm.get('name')?.getError('invalidCharacters') }}
-                </mat-error>
-                <mat-error *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.hasError('maxlength') as err">
-                  Maximum length of characters 254 exceeded.
+                <input #formField matInput formControlName="name" [readonly]="state==updateState ? 'true' : 'false'"/>
+                <mat-error *ngIf="categoryForm.get('name')?.touched">
+                  <ng-container *ngIf="categoryForm.get('name')?.hasError('required')">
+                    Category name is required.
+                  </ng-container>
+                  <ng-container *ngIf="categoryForm.get('name')?.hasError('invalidCharacters')">
+                    {{ categoryForm.get('name')?.getError('invalidCharacters') }}
+                  </ng-container>
+                  <ng-container *ngIf="categoryForm.get('name')?.hasError('maxlength')">
+                    Maximum length of characters 254 exceeded.
+                  </ng-container>
+                  <ng-container *ngIf="categoryForm.get('name')?.hasError('noAlphabet')">
+                    At least one alphabet is required.
+                  </ng-container>
                 </mat-error>
               </mat-form-field>
               <div class="row g-3 mb-4">

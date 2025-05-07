@@ -8,6 +8,7 @@ import { CreateCategoryTaskRequest, UpdateCategoryTaskRequest } from 'app/shared
 import { CategoryService } from 'app/shared/services/categories.service';
 import { SnackbarService } from 'app/shared/services/snackbar.service';
 import { finalize, forkJoin, Subscription } from 'rxjs';
+import { alphabetSpaceValidator, alphaNumericSpaceValidator, atLeastOneAlphabetValidator } from 'app/shared/services/app-validators';
 
 @Component({
   selector: 'app-add-update-category-task',
@@ -15,7 +16,7 @@ import { finalize, forkJoin, Subscription } from 'rxjs';
   templateUrl: './add-update-category-task.component.html',
   styleUrl: './add-update-category-task.component.scss'
 })
-export class AddUpdateCategoryTaskComponent implements OnInit,OnDestroy {
+export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
 
   @Input() showModal: boolean = false;
   @Input() state: string = ComponentState.UPDATE;
@@ -26,37 +27,40 @@ export class AddUpdateCategoryTaskComponent implements OnInit,OnDestroy {
 
   @ViewChildren('formField') formFields!: QueryList<ElementRef>;
   faqState: string = 'list-faq';
+  
+  addState = ComponentState.ADD;
+  updateState = ComponentState.UPDATE;
+  isLoading: boolean = false;
+
   previewUrl = '';
 
   taskForm: FormGroup;
   addFaqForm: FormGroup;
 
-  faqs = [];
+  allFaqs = [];
+  filteredFaqs = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
+  
   inclusions: string[] = [];
   exclusions: string[] = [];
   taskOptions: any = [];
 
-  addState = ComponentState.ADD;
-  updateState = ComponentState.UPDATE;
-
-  isLoading: boolean = false;
   
   private updateCategoryTaskSubscription?: Subscription;
   private getCategoryTaskSubscription?: Subscription;
-  
-  constructor(private fb: FormBuilder, private appUtils: AppUtilsService,private categoryService:CategoryService,private snackbar:SnackbarService) { }
+
+  constructor(private fb: FormBuilder, private appUtils: AppUtilsService, private categoryService: CategoryService, private snackbar: SnackbarService) { }
 
   ngOnInit(): void {
     if (this.state == this.updateState) {
       this.isLoading = true;
-      this.fetchTaskDetails();
+      this.loadTaskDetails();
     }
     this.taskForm = this.fb.group({
-      taskId: [],
+      taskID: [],
       enabled: ['active'],
-      title: ['', [Validators.required]],
-      description: ['', [Validators.required]],
+      title: ['', [Validators.required, alphaNumericSpaceValidator(), atLeastOneAlphabetValidator(), Validators.maxLength(254)]],
+      description: ['', [Validators.required, alphaNumericSpaceValidator(), atLeastOneAlphabetValidator(), Validators.maxLength(254)]],
       note: [''],
       displayURL: ['', [Validators.required]],
     });
@@ -64,22 +68,40 @@ export class AddUpdateCategoryTaskComponent implements OnInit,OnDestroy {
       question: [''],
       description: [''],
     });
-    this.loadTaskDetails();
   }
 
 
   loadTaskDetails() {
     this.isLoading = true;
     this.getCategoryTaskSubscription = forkJoin([
-        this.categoryService.getCategoryTaskByID(this.categoryID,this.taskID),
-        this.categoryService.getCategoryTaskByID(this.categoryID,this.taskID)
+      this.categoryService.getCategoryTaskByID(this.categoryID, this.taskID),
     ]).pipe(
-          finalize(() => {
-            this.isLoading = false;
-          })
-        ).subscribe(([taskResponse, faqResponse]) => {
-        
-        });
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe(([taskResponse]) => {
+      this.isLoading = false;
+      if (taskResponse?.statusMsg[0]?.faqs) {
+        this.allFaqs = taskResponse?.statusMsg[0]?.faqs || [];
+        this.filteredFaqs = taskResponse?.statusMsg[0]?.faqs || [];
+      }
+      if (taskResponse?.statusMsg[0]?.options?.length ?? false) {
+        this.taskOptions = taskResponse?.statusMsg[0]?.options || [];
+      }
+      if (taskResponse?.statusMsg?.length > 0) {
+        let taskData = taskResponse.statusMsg[0];
+        this.taskForm.get('title').setValue(taskData.title);
+        this.taskForm.get('displayURL').setValue(taskData.displayURL);
+        if (taskData.displayURL) {
+          this.previewUrl = taskData.displayURL;
+        }
+        this.taskForm.get('taskID').setValue(taskData.taskID);
+        this.taskForm.get('description').setValue(taskData.description);
+        this.taskForm.get('note').setValue(taskData.note);
+        this.inclusions = (taskData?.inclusions||'').split(",");
+        this.exclusions = (taskData?.exclusions||'').split(",");
+      }
+    });
   }
 
   onSave(): void {
@@ -90,15 +112,15 @@ export class AddUpdateCategoryTaskComponent implements OnInit,OnDestroy {
     }
     this.isLoading = true;
     if (this.state == this.updateState) {
-      let payload: UpdateCategoryTaskRequest = { 
-        id: this.taskID, 
-        serviceCategoryID: this.categoryID, 
+      let payload: UpdateCategoryTaskRequest = {
+        id: this.taskID,
+        serviceCategoryID: this.categoryID,
         title: this.taskForm.get('title').value,
-        description: this.taskForm.get('description').value, 
-        displayURL: this.taskForm.get('displayURL').value, 
+        description: this.taskForm.get('description').value,
+        displayURL: this.taskForm.get('displayURL').value,
         inclusions: this.inclusions.toString(),
         exclusions: this.exclusions.toString(),
-        note: this.taskForm.get('note').value, 
+        note: this.taskForm.get('note').value,
         enabled: this.taskForm.get('enabled').value == 'active'
       };
       this.updateCategoryTaskSubscription = this.categoryService.updateCategoryTask(this.categoryID, this.taskID, payload).subscribe({
@@ -113,17 +135,17 @@ export class AddUpdateCategoryTaskComponent implements OnInit,OnDestroy {
         },
       });
     } else {
-      let payload: CreateCategoryTaskRequest = { 
-        serviceCategoryID: this.categoryID, 
+      let payload: CreateCategoryTaskRequest = {
+        serviceCategoryID: this.categoryID,
         title: this.taskForm.get('title').value,
-        description: this.taskForm.get('description').value, 
-        displayURL: this.taskForm.get('displayURL').value, 
+        description: this.taskForm.get('description').value,
+        displayURL: this.taskForm.get('displayURL').value,
         inclusions: this.inclusions.toString(),
         exclusions: this.exclusions.toString(),
-        note: this.taskForm.get('note').value, 
+        note: this.taskForm.get('note').value,
         enabled: this.taskForm.get('enabled').value == 'active'
       };
-      this.updateCategoryTaskSubscription = this.categoryService.saveCategoryTask(this.categoryID,payload).subscribe({
+      this.updateCategoryTaskSubscription = this.categoryService.saveCategoryTask(this.categoryID, payload).subscribe({
         next: (res) => {
           this.taskForm.reset();
           this.previewUrl = '';
@@ -140,26 +162,19 @@ export class AddUpdateCategoryTaskComponent implements OnInit,OnDestroy {
   }
 
   onTabChange(event: any): void {
-    const index = event.index;
+    const tabIndex = event.index;
   }
 
   onCancel(): void {
     this.cancelAction.emit();
   }
 
-  fetchTaskDetails() {
-    console.log("Fetching Task Details categoryID : "+this.categoryID + " TaskID : "+this.taskID);
-    this.isLoading = false;
-  }
-
   onUrlBlur(): void {
     this.previewUrl = this.taskForm.get('displayURL').value?.trim() || null;
   }
 
-
-  getFaqsFromApi(term: string) {
-    const allFaqs = this.faqs; // fetch search faq based on term from api
-    this.faqs = allFaqs.filter(f => f.title.toLowerCase().includes(term.toLowerCase()));
+  searchFAQ(term: string) {
+    this.filteredFaqs = this.allFaqs.filter(f => f.title.toLowerCase().includes(term.toLowerCase()));
   }
 
   onEditFAQ(item: any) {
@@ -234,7 +249,7 @@ export class AddUpdateCategoryTaskComponent implements OnInit,OnDestroy {
   }
 
   saveFAQ() {
-    this.faqs.push({ 'title': this.addFaqForm.get('question').value, 'body': this.addFaqForm.get('description').value });
+    this.allFaqs.push({ 'title': this.addFaqForm.get('question').value, 'body': this.addFaqForm.get('description').value });
     this.addFaqForm.reset();
     this.faqState = 'list-faq';
   }

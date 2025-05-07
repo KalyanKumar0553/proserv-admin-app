@@ -8,7 +8,9 @@
               <span>{{ header.label }}</span>
               <span *ngIf="sortField === header.field">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
             </div>
-            <span (click)="$event.stopPropagation(); toggleFilter(header.field)" class="filter-icon">🔍</span>
+            <span (click)="$event.stopPropagation(); toggleFilter(header.field)" class="filter-icon">
+              <i class="bi bi-search"></i>
+            </span>
           </div>
           <div *ngIf="showFilter[header.field]" class="filter-container mt-2">
             <input type="text" class="form-control form-control-sm" [(ngModel)]="filters[header.field]"

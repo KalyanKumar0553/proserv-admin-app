@@ -62,9 +62,11 @@ public class CategoryService {
 
 	public String createServiceCategory(String userUUID, ServiceCategoryRequestDTO serviceCategoryRequest) {
 		ServiceCategory serviceCategory = ServiceCategory.builder().name(serviceCategoryRequest.getName())
-				.displayURL(serviceCategoryRequest.getDisplayURL()).build();
+				.displayURL(serviceCategoryRequest.getDisplayURL())
+				.enabled(serviceCategoryRequest.isEnabled())
+				.build();
 		Optional<ServiceCategory> existingServiceCategory = categoryRepository
-				.findByName(serviceCategoryRequest.getName());
+				.findByNameIgnoreCase(serviceCategoryRequest.getName());
 		if (existingServiceCategory.isPresent()) {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
 					"Service Category with Name exists already");

@@ -35,7 +35,7 @@
                       <div class="col-md-12">
                         <mat-form-field>
                           <mat-label>Task Title</mat-label>
-                          <input #formField matInput formControlName="title"/>
+                          <input #formField matInput formControlName="title" [readonly]="state==updateState ? 'true' : 'false'"/>
                           <mat-error *ngIf="taskForm.get('title')?.touched && taskForm.get('title')?.hasError('required')">
                             Title is required.
                           </mat-error>
@@ -157,15 +157,15 @@
               <mat-tab label="FAQs" *ngIf="state==updateState">
                 <div class="mb-3 faq-container" *ngIf="faqState=='list-faq'">
                   <div class="d-flex justify-content-between align-items-center add-faq-button">
-                    <h6 class="faq-label" *ngIf="faqs.length>0">FAQ</h6>
-                    <h6 class="faq-label" *ngIf="faqs.length==0">No FAQ Available</h6>
+                    <h6 class="faq-label" *ngIf="filteredFaqs.length>0">FAQ</h6>
+                    <h6 class="faq-label" *ngIf="filteredFaqs.length==0">No FAQ Available</h6>
                     <button class="btn btn-sm btn-outline-primary" (click)="addFAQState()">
                       <i class="bi bi-plus-circle"></i> Add New Question
                     </button>
                   </div>
-                  <app-data-accordion *ngIf="faqs.length>0" id="taskSection" [title]="'Frequently Asked Questions'" [items]="faqs"
+                  <app-data-accordion *ngIf="filteredFaqs.length>0" id="taskSection" [title]="'Frequently Asked Questions'" [items]="filteredFaqs"
                     [titleKey]="'title'" [bodyKey]="'body'" [searchable]="true" [showEdit]="true" [showDelete]="true"
-                    (searchChanged)="getFaqsFromApi($event)" (editItem)="onEditFAQ($event)"
+                    (searchChanged)="searchFAQ($event)" (editItem)="onEditFAQ($event)"
                     (deleteItem)="onDeleteFAQ($event)"></app-data-accordion>
                 </div>
                 <div class="mb-3 faq-container" *ngIf="faqState=='add-faq'">

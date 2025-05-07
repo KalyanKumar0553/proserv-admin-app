@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ServiceOptionResponseDTO {
+public class ServiceTaskOptionResponseDTO {
 
 	private Long id;
 
@@ -27,8 +27,8 @@ public class ServiceOptionResponseDTO {
     private Long defaultAmount;
 
 	
-    public static ServiceOptionResponseDTO fromEntityToFetchOptionResponse(ServiceTaskOption option) {
-        return ServiceOptionResponseDTO.builder()
+    public static ServiceTaskOptionResponseDTO fromEntityToFetchOptionResponse(ServiceTaskOption option) {
+        return ServiceTaskOptionResponseDTO.builder()
                 .id(option.getId())
                 .name(option.getName())
                 .description(option.getDescription())

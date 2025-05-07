@@ -38,44 +38,12 @@ public class FAQService {
 				.map(FAQResponseDTO::fromEntityToFetchOptionResponse).collect(Collectors.toList());
 	}
 
-	public void deleteFAQ(Long taskID, Long faqID) {
-		long count = userTaskRequestRepository.countIncompleteTasksByServiceTaskID(taskID);
-		if (count > 0) {
-			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-					"Tasks available to work for the faq assigned");
-		}
-		Optional<FrequentlyAskedQuestion> currFAQ = faqRepository.findByIdAndServiceTaskID(taskID, faqID);
+	public void deleteFAQ(Long categoryID,Long taskID,Long faqID) {
+		Optional<FrequentlyAskedQuestion> currFAQ = faqRepository.findByIdAndServiceCategoryIDAndServiceTaskID(faqID,categoryID,taskID);
 		if (currFAQ.isEmpty()) {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
 					"FAQ With Given details not available");
 		}
-		faqRepository.deleteAllByIdAndServiceTaskID(faqID, taskID);
+		faqRepository.deleteAllByIdAndServiceCategoryIDAndServiceTaskID(faqID, categoryID,taskID);
 	}
-
-	public String createFAQ(String userUUID, FAQRequestDTO faqRequest) {
-		FrequentlyAskedQuestion faq = FAQRequestDTO.toEntityFromFAQRequestDTO(faqRequest);
-		Optional<FrequentlyAskedQuestion> existinFAQHolder = faqRepository
-				.findByQuestionAndServiceTaskID(faqRequest.getQuestion(), faqRequest.getServiceTaskID());
-		if (existinFAQHolder.isPresent()) {
-			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-					"Question is already available with taskID");
-		}
-		faqRepository.save(faq);
-		return "FAQ Created Succesfully";
-	}
-
-	public String updateFAQ(String userUUID, Long faqID, FAQRequestDTO faqRequest) {
-		Optional<FrequentlyAskedQuestion> existinFAQHolder = faqRepository.findByIdAndServiceTaskID(faqID,
-				faqRequest.getServiceTaskID());
-		if (existinFAQHolder.isEmpty()) {
-			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-					"Question with given Details not available");
-		}
-		FrequentlyAskedQuestion existinFAQ = existinFAQHolder.get();
-		existinFAQ.setQuestion(faqRequest.getQuestion());
-		existinFAQ.setAnswer(faqRequest.getAnswer());
-		faqRepository.save(existinFAQ);
-		return "Service Question Updated Succesfully";
-	}
-
 }

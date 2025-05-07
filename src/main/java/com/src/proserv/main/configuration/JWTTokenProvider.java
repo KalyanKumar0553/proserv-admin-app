@@ -35,11 +35,11 @@ public class JWTTokenProvider {
 
 	private final String JWT_SECRET = "6rvQrbY7/yDbU6JfDdpHA9gN5Q/w7fhgJEBde0x6CTJtV8Pyyyhqaw+k5HKbfMlvg6nstoAZ2SjkZfte7Ehgqg==";
 
-	private final long JWT_EXPIRATION = 18 * 60 * 1000L;
+	private final long JWT_EXPIRATION = 30 * 60 * 1000L;
 
 	private final InvalidatedTokenRepository tokenRepository;
 
-	private final Cache<String, Boolean> invalidatedTokenCache = Caffeine.newBuilder().expireAfterWrite(15, TimeUnit.MINUTES).maximumSize(50000).build();
+	private final Cache<String, Boolean> invalidatedTokenCache = Caffeine.newBuilder().expireAfterWrite(25, TimeUnit.MINUTES).maximumSize(50000).build();
 
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);

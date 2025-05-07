@@ -13,18 +13,14 @@ public class ServiceTaskOptionRequestDTO {
 
     private String description;
 
-    private Long serviceCategoryID;
-    
-    private Long serviceTaskID;
-    
     private Long defaultAmount;
 
-	public static ServiceTaskOption toEntityFromOperationRequestDTO(ServiceTaskOptionRequestDTO requestDTO) {
+	public static ServiceTaskOption toEntityFromOperationRequestDTO(Long serviceCategoryID,Long serviceTaskID,ServiceTaskOptionRequestDTO requestDTO) {
 		return ServiceTaskOption.builder()
 				.name(requestDTO.getName())
 	            .description(requestDTO.getDescription())
-	            .serviceCategoryID(requestDTO.getServiceCategoryID())
-	            .serviceTaskID(requestDTO.getServiceTaskID())
+	            .serviceCategoryID(serviceCategoryID)
+	            .serviceTaskID(serviceTaskID)
 	            .defaultAmount(requestDTO.getDefaultAmount())
 	            .build();
 	}

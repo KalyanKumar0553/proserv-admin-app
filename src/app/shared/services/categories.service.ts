@@ -6,7 +6,7 @@ import { ProServApiService } from './proserv-api.service';
 import {jwtDecode} from 'jwt-decode';
 import { JwtPayload } from '../models/jwt-payload.model';
 import { Roles } from '../models/roles.enum';
-import { CreateCategoryRequest, CreateCategoryTaskRequest, UpdateCategoryRequest, UpdateCategoryTaskRequest } from '../models/category';
+import { CreateCategoryRequest, CreateCategoryTaskRequest, CreateFAQRequest, UpdateCategoryRequest, UpdateCategoryTaskRequest } from '../models/category';
 import RouteUrl from '../constants/router-url.enum';
 
 @Injectable({
@@ -64,5 +64,9 @@ export class CategoryService {
 
   deleteCategoryTask(categoryID,taskID) {
     return this.apiService.delete(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+categoryID+ApiUrls.TASKS+RouteUrl.SEPERATOR+taskID);
+  }
+
+  saveFAQ(categoryID,taskID,payload:CreateFAQRequest) {
+
   }
 }

@@ -17,6 +17,7 @@ import com.src.proserv.main.repository.ServiceTaskRepository;
 import com.src.proserv.main.repository.UserServiceRequestTaskRepository;
 import com.src.proserv.main.request.dto.ServiceTaskRequestDTO;
 import com.src.proserv.main.response.dto.FAQResponseDTO;
+import com.src.proserv.main.response.dto.ServiceTaskOptionResponseDTO;
 import com.src.proserv.main.response.dto.ServiceTaskResponseDTO;
 
 import lombok.AllArgsConstructor;
@@ -34,6 +35,8 @@ public class TaskService {
 	final FrequentlyAskedQuestionRepository faqRepository;
 
 	final UserServiceRequestTaskRepository userTaskRequestRepository;
+	
+	final TaskOptionService optionService;
 
 	public List<ServiceTaskResponseDTO> fetchAllServiceTasks(Long serviceCategoryID) {
 		return taskRepository.findAllByServiceCategoryID(serviceCategoryID)
@@ -42,8 +45,9 @@ public class TaskService {
 	
 	public List<ServiceTaskResponseDTO> fetchServiceTaskByID(Long serviceCategoryID,Long serviceTaskID) {
 		List<FAQResponseDTO> faqs = faqRepository.findAllByServiceTaskIDAndServiceCategoryID(serviceTaskID, serviceCategoryID).stream().map(FAQResponseDTO::fromEntityToFetchOptionResponse).collect(Collectors.toList());
+		List<ServiceTaskOptionResponseDTO> taskOptions = optionService.fetchAllServiceTaskOptions(serviceCategoryID, serviceTaskID);
 		return taskRepository.findByIdAndServiceCategoryID(serviceTaskID,serviceCategoryID)
-				.stream().map(e->ServiceTaskResponseDTO.fromEntityToIndiviualServiceTaskResponse(e,faqs)).collect(Collectors.toList());
+				.stream().map(e->ServiceTaskResponseDTO.fromEntityToIndiviualServiceTaskResponse(e,faqs,taskOptions)).collect(Collectors.toList());
 	}
 
 
@@ -65,7 +69,7 @@ public class TaskService {
 		String title = serviceTaskRequest.getTitle();
 		Long serviceCategoryID = serviceTaskRequest.getServiceCategoryID();
 		ServiceTask serviceTask = ServiceTaskRequestDTO.toEntityFromTaskRequestDTO(serviceTaskRequest);
-		Optional<ServiceTask> currOption = taskRepository.findByTitleAndServiceCategoryID(title,serviceCategoryID);
+		Optional<ServiceTask> currOption = taskRepository.findByTitleAndServiceCategoryIDIgnoreCase(title,serviceCategoryID);
 		if(currOption.isPresent()) {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Service task with Given Title already available");
 		}

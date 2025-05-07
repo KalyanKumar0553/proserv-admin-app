@@ -11,16 +11,21 @@ import com.src.proserv.main.model.ServiceTaskOption;
 public interface ServiceTaskOptionRepository extends JpaRepository<ServiceTaskOption, Long> {
 	@Transactional
 	void deleteAllByServiceCategoryID(Long serviceCategoryID);
+	
 	@Transactional
 	void deleteAllByIdAndServiceCategoryID(Long id,Long serviceCategoryID);
+	
+	@Transactional
+	void deleteAllByIdAndServiceCategoryIDAndServiceTaskID(Long id,Long serviceCategoryID,Long serviceTaskID);
+	
 	@Transactional
 	void deleteAllByServiceCategoryIDAndServiceTaskID(Long serviceCategoryID,Long serviceTaskID);
 	@Transactional
 	void deleteById(Long id);
 
-	Optional<ServiceTaskOption> findByIdAndServiceCategoryID(Long id,Long serviceCategoryID);
+	Optional<ServiceTaskOption> findByIdAndServiceCategoryIDAndServiceTaskID(Long id,Long serviceCategoryID,Long serviceTaskID);
 
 	Optional<ServiceTaskOption> findByNameAndServiceCategoryID(String name,Long serviceCategoryID);
 	
-	List<ServiceTaskOption> findAllByServiceCategoryID(Long serviceCategoryID);
+	List<ServiceTaskOption> findAllByServiceCategoryIDAndServiceTaskID(Long serviceCategoryID,Long serviceTaskID);
 }

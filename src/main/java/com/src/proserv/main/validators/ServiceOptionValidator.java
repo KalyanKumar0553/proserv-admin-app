@@ -17,15 +17,11 @@ public class ServiceOptionValidator {
 	public void validateCreateOptionRequest(ServiceTaskOptionRequestDTO optionRequest) {
 		Optional<String> description = Optional.ofNullable(optionRequest.getDescription());
 		Optional<String> name = Optional.ofNullable(optionRequest.getName());
-		Optional<Long> categoryID = Optional.ofNullable(optionRequest.getServiceCategoryID());
 		if (name.isEmpty() || name.get().isEmpty()) {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Option Name Cannot be Empty");
 		}
 		if (description.isEmpty() || description.get().isEmpty()) {
 			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Option Description Cannot be Empty.");
-		}
-		if (categoryID.isEmpty() || categoryID.get()<=0) {
-			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Category ID Cannot be Empty.");
 		}
 	}
 

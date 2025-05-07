@@ -9,7 +9,7 @@ import { CategoryService } from 'app/shared/services/categories.service';
 import { finalize, forkJoin, Subscription } from 'rxjs';
 import { SnackbarService } from 'app/shared/services/snackbar.service';
 import { CreateCategoryRequest, UpdateCategoryRequest } from 'app/shared/models/category';
-import { alphaNumericSpaceValidator } from 'app/shared/services/app-validators';
+import { alphabetSpaceValidator,atLeastOneAlphabetValidator } from 'app/shared/services/app-validators';
 
 
 @Component({
@@ -61,10 +61,10 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
     this.categoryForm = this.fb.group({
       categoryId: [],
       enabled: ['active'],
-      name: ['', [Validators.required,alphaNumericSpaceValidator(),Validators.maxLength(254)]],
+      name: ['', [Validators.required,alphabetSpaceValidator(),atLeastOneAlphabetValidator(),Validators.maxLength(254)]],
       serviceProviders: [],
       availableLocations: [],
-      displayURL: ['', [Validators.required,Validators.maxLength(254)]]
+      displayURL: ['', [Validators.required,Validators.maxLength(254),atLeastOneAlphabetValidator()]]
     });
   }
 
@@ -72,13 +72,11 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.getCategorySubscription = forkJoin([
       this.categoryService.getCategory(this.categoryID),
-      this.categoryService.getCategoryTasks(this.categoryID),
     ]).pipe(
       finalize(() => {
         this.isLoading = false;
       })
     ).subscribe(([categoriesResponse]) => {
-      console.log(categoriesResponse);
       if (categoriesResponse?.statusMsg[0]?.serviceCategoryTasks??false) {
         this.tasks = categoriesResponse?.statusMsg[0]?.serviceCategoryTasks || [];
         this.allTasks = categoriesResponse?.statusMsg[0]?.serviceCategoryTasks || [];
@@ -132,7 +130,7 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         error: (err) => {
-          this.snackservice.show('Unable To Save Category Details!', STATUS.ERROR);
+          this.snackservice.show((err?.message??'Unable To Save Category Details!'), STATUS.ERROR);
           this.isLoading = false;
         }
       });
@@ -169,6 +167,15 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
 
   onUrlBlur(): void {
     this.previewUrl = this.categoryForm.get('displayURL').value?.trim() || null;
+  }
+
+  addNewCategory() {
+    this.categoryForm.reset();
+    this.state = this.addState;
+    this.previewUrl = null;
+    this.categoryID = null;
+    this.taskID = null;
+    this.tasks = null;
   }
 
 

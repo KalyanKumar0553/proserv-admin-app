@@ -56,7 +56,7 @@ public class ServiceTaskController {
 
 
 	@PostMapping("/{serviceCategoryID}/tasks")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
 	public ResponseEntity<JSONResponseDTO<?>> createTask(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,Authentication authentication,@RequestBody ServiceTaskRequestDTO taskRequestDTO)
 			throws MessagingException {
 		taskValidator.validateCreateTaskRequest(taskRequestDTO);
@@ -64,18 +64,19 @@ public class ServiceTaskController {
 	}
 	
 	@DeleteMapping("{serviceCategoryID}/tasks/{serviceTaskID}")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
 	public ResponseEntity<JSONResponseDTO<?>> deleteCategory(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long serviceTaskID,Authentication authentication)
 			throws MessagingException {
 		taskService.deleteServiceTask(serviceCategoryID,serviceTaskID);
 		return ResponseEntity.ok(AppUtils.getJSONObject("Category Succesfully Deleted"));
 	}
+	
+	@PutMapping("{serviceCategoryID}/tasks/{serviceTaskID}")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
+	public ResponseEntity<JSONResponseDTO<?>> updateTask(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,Authentication authentication,@RequestBody ServiceTaskRequestDTO taskRequestDTO)
+			throws MessagingException {
+		taskValidator.validateUpdateTaskRequest(taskRequestDTO);
+    	return ResponseEntity.ok(AppUtils.getJSONObject(taskService.updateServiceTask(jwtTokenProvider.getUserIDFromToken(token.substring(7)),taskRequestDTO)));
+	}
 
-//	@PutMapping("/{serviceCategoryID}/option/{optionID}/task")
-//	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-//	public ResponseEntity<JSONResponseDTO<?>> updateTask(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long optionID,Authentication authentication,@RequestBody ServiceTaskRequestDTO taskRequestDTO)
-//			throws MessagingException {
-//		taskValidator.validateUpdateTaskRequest(taskRequestDTO);
-//    	return ResponseEntity.ok(AppUtils.getJSONObject(taskService.updateServiceTask(jwtTokenProvider.getUserIDFromToken(token.substring(7)),taskRequestDTO)));
-//	}
 }

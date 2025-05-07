@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.src.proserv.main.configuration.JWTTokenProvider;
 import com.src.proserv.main.request.dto.ServiceTaskOptionRequestDTO;
 import com.src.proserv.main.response.dto.JSONResponseDTO;
+import com.src.proserv.main.services.FAQService;
 import com.src.proserv.main.services.TaskOptionService;
 import com.src.proserv.main.utils.AppUtils;
 import com.src.proserv.main.validators.ServiceOptionValidator;
@@ -31,20 +32,21 @@ import lombok.extern.log4j.Log4j2;
 @AllArgsConstructor
 @CrossOrigin
 @RequestMapping("/api/service/categories")
-public class ServiceTaskOptionController {
+public class FAQController {
 
 
-	final TaskOptionService optionService;
-
-	final ServiceOptionValidator optionValidator;
+	final FAQService faqService;
 
 	final JWTTokenProvider jwtTokenProvider;
 
-	@DeleteMapping("/{serviceCategoryID}/tasks/{taskID}/option/{optionID}")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-	public ResponseEntity<JSONResponseDTO<?>> deleteOption(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long taskID,@PathVariable Long optionID,Authentication authentication)
+
+	@DeleteMapping("/{serviceCategoryID}/tasks/{taskID}/faq/{faqID}")
+	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
+	public ResponseEntity<JSONResponseDTO<?>> deleteOption(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long taskID,@PathVariable Long faqID,Authentication authentication)
 			throws MessagingException {
-		optionService.deleteServiceOption(optionID,serviceCategoryID,taskID);
+		faqService.deleteFAQ(faqID,serviceCategoryID,taskID);
 		return ResponseEntity.ok(AppUtils.getJSONObject("Category Succesfully Deleted"));
 	}
+
+
 }
