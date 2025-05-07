@@ -9,6 +9,7 @@ import { CategoryService } from 'app/shared/services/categories.service';
 import { finalize, forkJoin, Subscription } from 'rxjs';
 import { SnackbarService } from 'app/shared/services/snackbar.service';
 import { CreateCategoryRequest, UpdateCategoryRequest } from 'app/shared/models/category';
+import { alphaNumericSpaceValidator } from 'app/shared/services/app-validators';
 
 
 @Component({
@@ -37,12 +38,10 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
 
   private appUtils = inject(AppUtilsService);
   
-  apiLoading:boolean =false;
-
   private getCategorySubscription?: Subscription;
   private updateCategorySubscription?: Subscription;
   private deleteCategoryTaskSubscription?: Subscription;
-
+  tabIndex: number = 0;
   addCrumbItems: BreadCrumbItem[] = CrumbItems.AddCategoryCrumbItems;
   updateCrumbItems: BreadCrumbItem[] = CrumbItems.UpdateCategoryCrumbItems;
 
@@ -62,14 +61,15 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
     this.categoryForm = this.fb.group({
       categoryId: [],
       enabled: ['active'],
-      name: ['', [Validators.required]],
+      name: ['', [Validators.required,alphaNumericSpaceValidator(),Validators.maxLength(254)]],
       serviceProviders: [],
       availableLocations: [],
-      displayURL: ['', [Validators.required]]
+      displayURL: ['', [Validators.required,Validators.maxLength(254)]]
     });
   }
 
   fetchCategoryDetails() {
+    this.isLoading = true;
     this.getCategorySubscription = forkJoin([
       this.categoryService.getCategory(this.categoryID),
       this.categoryService.getCategoryTasks(this.categoryID),
@@ -77,11 +77,11 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
       finalize(() => {
         this.isLoading = false;
       })
-    ).subscribe(([categoriesResponse, tasksResponse]) => {
-      if (tasksResponse?.statusMsg?.length > 0) {
-        this.tasks = tasksResponse.statusMsg;
-        this.allTasks = tasksResponse.statusMsg;
-        console.log(tasksResponse);
+    ).subscribe(([categoriesResponse]) => {
+      console.log(categoriesResponse);
+      if (categoriesResponse?.statusMsg[0]?.serviceCategoryTasks??false) {
+        this.tasks = categoriesResponse?.statusMsg[0]?.serviceCategoryTasks || [];
+        this.allTasks = categoriesResponse?.statusMsg[0]?.serviceCategoryTasks || [];
       }
       if (categoriesResponse?.statusMsg?.length > 0) {
         let categoryData = categoriesResponse.statusMsg[0];
@@ -187,22 +187,23 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
     this.categoryForm.reset();
   }
 
-  handleConfirmDeleteAction() {
-    this.apiLoading = true;
+  handleConfirmDeleteTaskAction() {
+    this.isLoading = true;
     this.deleteCategoryTaskSubscription =  this.categoryService.deleteCategoryTask(this.categoryID,this.taskID).subscribe((res)=>{
       this.showDeleteModal = false;
       this.taskID = null;
-      this.apiLoading = false;
-      this.snackservice.show('Delete Task Succsefully',STATUS.SUCCESS);
+      this.isLoading = false;
+      this.snackservice.show('Deleted Task Succsefully',STATUS.SUCCESS);
+      this.fetchCategoryDetails();
     },(err)=>{
       this.showDeleteModal = false;
       this.taskID = null;
-      this.apiLoading = false;
+      this.isLoading = false;
       this.snackservice.show('Unable To Delete Task',STATUS.ERROR);
     });
   }
 
-  cancelConfirmAction() {
+  cancelConfirmDeleteTaskAction() {
     this.taskID = null;
     this.showDeleteModal = false;
   }

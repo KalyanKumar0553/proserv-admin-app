@@ -46,6 +46,13 @@ public class ServiceTaskController {
 			throws MessagingException {
 		return ResponseEntity.ok(AppUtils.getJSONObject(taskService.fetchAllServiceTasks(serviceCategoryID)));
 	}
+	
+	@GetMapping("/{serviceCategoryID}/tasks/{serviceTaskID}")
+	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
+	public ResponseEntity<JSONResponseDTO<?>> getTaskById(@PathVariable Long serviceCategoryID,@PathVariable Long serviceTaskID,Authentication authentication)
+			throws MessagingException {
+		return ResponseEntity.ok(AppUtils.getJSONObject(taskService.fetchServiceTaskByID(serviceCategoryID,serviceTaskID)));
+	}
 
 
 	@PostMapping("/{serviceCategoryID}/tasks")
@@ -56,11 +63,11 @@ public class ServiceTaskController {
 		return ResponseEntity.ok(AppUtils.getJSONObject(taskService.createServiceTask(jwtTokenProvider.getUserIDFromToken(token.substring(7)),taskRequestDTO)));
 	}
 	
-	@DeleteMapping("/categories/{categoryID}/tasks/{taskID}")
+	@DeleteMapping("{serviceCategoryID}/tasks/{serviceTaskID}")
 	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-	public ResponseEntity<JSONResponseDTO<?>> deleteCategory(@RequestHeader("Authorization") String token,@PathVariable Long categoryID,@PathVariable Long taskID,Authentication authentication)
+	public ResponseEntity<JSONResponseDTO<?>> deleteCategory(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long serviceTaskID,Authentication authentication)
 			throws MessagingException {
-		taskService.deleteServiceTask(categoryID,taskID);
+		taskService.deleteServiceTask(serviceCategoryID,serviceTaskID);
 		return ResponseEntity.ok(AppUtils.getJSONObject("Category Succesfully Deleted"));
 	}
 

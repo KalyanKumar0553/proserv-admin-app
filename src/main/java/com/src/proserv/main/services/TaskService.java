@@ -16,6 +16,7 @@ import com.src.proserv.main.repository.ServiceTaskOptionRepository;
 import com.src.proserv.main.repository.ServiceTaskRepository;
 import com.src.proserv.main.repository.UserServiceRequestTaskRepository;
 import com.src.proserv.main.request.dto.ServiceTaskRequestDTO;
+import com.src.proserv.main.response.dto.FAQResponseDTO;
 import com.src.proserv.main.response.dto.ServiceTaskResponseDTO;
 
 import lombok.AllArgsConstructor;
@@ -36,22 +37,28 @@ public class TaskService {
 
 	public List<ServiceTaskResponseDTO> fetchAllServiceTasks(Long serviceCategoryID) {
 		return taskRepository.findAllByServiceCategoryID(serviceCategoryID)
-				.stream().map(ServiceTaskResponseDTO::fromEntityToServiceTaskResponse).collect(Collectors.toList());
+				.stream().map(ServiceTaskResponseDTO::fromEntityToAllServiceTaskResponse).collect(Collectors.toList());
+	}
+	
+	public List<ServiceTaskResponseDTO> fetchServiceTaskByID(Long serviceCategoryID,Long serviceTaskID) {
+		List<FAQResponseDTO> faqs = faqRepository.findAllByServiceTaskIDAndServiceCategoryID(serviceTaskID, serviceCategoryID).stream().map(FAQResponseDTO::fromEntityToFetchOptionResponse).collect(Collectors.toList());
+		return taskRepository.findByIdAndServiceCategoryID(serviceTaskID,serviceCategoryID)
+				.stream().map(e->ServiceTaskResponseDTO.fromEntityToIndiviualServiceTaskResponse(e,faqs)).collect(Collectors.toList());
 	}
 
 
-	public void deleteServiceTask(Long taskID,Long serviceCategoryID) {
-		long count = userTaskRequestRepository.countIncompleteTasksByServiceTaskID(taskID);
+	public void deleteServiceTask(Long serviceCategoryID,Long serviceTaskID) {
+		long count = userTaskRequestRepository.countIncompleteTasksByServiceTaskID(serviceTaskID);
 		if (count > 0) {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Pending Requests available to work for the task");
 		}
-		Optional<ServiceTask> currOption = taskRepository.findByIdAndServiceCategoryID(taskID,serviceCategoryID);
+		Optional<ServiceTask> currOption = taskRepository.findByIdAndServiceCategoryID(serviceTaskID,serviceCategoryID);
 		if(currOption.isEmpty()) {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Service task with Given details not available");
 		}
-		faqRepository.deleteAllByServiceCategoryIDAndServiceTaskID(serviceCategoryID,taskID);
-		optionRepository.deleteAllByServiceCategoryIDAndServiceTaskID(serviceCategoryID,taskID);
-		taskRepository.deleteAllByIdAndServiceCategoryID(taskID,serviceCategoryID);
+		faqRepository.deleteAllByServiceCategoryIDAndServiceTaskID(serviceCategoryID,serviceTaskID);
+		optionRepository.deleteAllByServiceCategoryIDAndServiceTaskID(serviceCategoryID,serviceTaskID);
+		taskRepository.deleteAllByIdAndServiceCategoryID(serviceTaskID,serviceCategoryID);
 	}
 
 	public String createServiceTask(String userUUID,ServiceTaskRequestDTO serviceTaskRequest) {

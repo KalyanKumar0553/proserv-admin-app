@@ -36,3 +36,14 @@ export interface UpdateCategoryTaskRequest {
   note?:string;
   enabled:boolean;
 }
+export interface CategoryTask {
+  id?:number;
+  title?:string;
+  description?:string;
+  serviceCategoryID?:number;
+  inclusions?:string;
+  exclusions?:string;
+  displayURL?:string;
+  note?:string;
+  enabled?:boolean;
+}

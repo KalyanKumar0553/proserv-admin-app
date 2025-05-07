@@ -16,6 +16,7 @@ import com.src.proserv.main.repository.ServiceTaskRepository;
 import com.src.proserv.main.repository.UserServiceRequestTaskRepository;
 import com.src.proserv.main.request.dto.ServiceCategoryRequestDTO;
 import com.src.proserv.main.response.dto.ServiceCategoryResponseDTO;
+import com.src.proserv.main.response.dto.ServiceTaskResponseDTO;
 
 import lombok.AllArgsConstructor;
 
@@ -32,6 +33,8 @@ public class CategoryService {
 	final FrequentlyAskedQuestionRepository faqRepository;
 
 	final UserServiceRequestTaskRepository userTaskRequestRepository;
+	
+	final TaskService taskService;
 
 	public List<ServiceCategoryResponseDTO> fetchAllServiceCategories() {
 		return categoryRepository.findAll().stream().map(ServiceCategoryResponseDTO::fromEntityToFetchCategoryResponse)
@@ -39,7 +42,9 @@ public class CategoryService {
 	}
 	
 	public List<ServiceCategoryResponseDTO> fetchServiceCategoryByID(Long serviceCategoryID) {
-		return categoryRepository.findById(serviceCategoryID).stream().map(ServiceCategoryResponseDTO::fromEntityToFetchCategoryResponse)
+		List<ServiceTaskResponseDTO> serviceCategoryTasks = taskService.fetchAllServiceTasks(serviceCategoryID);
+		return categoryRepository.findById(serviceCategoryID).stream()
+				.map(c->ServiceCategoryResponseDTO.fromEntityToFetchIndividualCategoryResponse(c,serviceCategoryTasks))
 				.collect(Collectors.toList());
 	}
 

@@ -34,8 +34,16 @@ export class CategoryService {
     return this.apiService.get(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+id);
   }
 
-  getCategoryTasks(id:any) {
-    return this.apiService.get(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+id+ApiUrls.TASKS);
+  getCategoryTasks(categoryID:any) {
+    return this.apiService.get(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+categoryID+ApiUrls.TASKS);
+  }
+
+  getCategoryTaskByID(categoryID:any,taskID:any) {
+    return this.apiService.get(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+categoryID+ApiUrls.TASKS+RouteUrl.SEPERATOR+taskID);
+  }
+
+  getFAQByCategoryIDAndTaskID(categoryID:any,taskID:any) {
+    return this.apiService.get(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+categoryID+ApiUrls.TASKS);
   }
 
   saveCategory(payload:CreateCategoryRequest) {

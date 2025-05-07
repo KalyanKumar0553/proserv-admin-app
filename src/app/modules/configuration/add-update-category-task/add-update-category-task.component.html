@@ -1,7 +1,19 @@
-<div class="container status-spinner" *ngIf="showModal && isLoading">
-  <div class="spinner-border text-primary" role="status">
+<div class="modal fade show d-block custom-modal-backdrop" tabindex="-1" role="dialog" *ngIf="showModal && isLoading">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" *ngIf="state==addState">Add New Task</h5>
+        <h5 class="modal-title" *ngIf="state==updateState">Edit Task</h5>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12">
+          <div class="spinner-border text-primary" role="status">
+          </div>
+          <span class="loading-label">Loading...</span>
+        </div>
+      </div>
+    </div>
   </div>
-  <span class="loading-label">Loading...</span>
 </div>
 <div class="modal fade show d-block custom-modal-backdrop" tabindex="-1" role="dialog" *ngIf="showModal && !isLoading">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -24,6 +36,15 @@
                         <mat-form-field>
                           <mat-label>Task Title</mat-label>
                           <input #formField matInput formControlName="title"/>
+                          <mat-error *ngIf="taskForm.get('title')?.touched && taskForm.get('title')?.hasError('required')">
+                            Title is required.
+                          </mat-error>
+                          <mat-error *ngIf="taskForm.get('title')?.touched && taskForm.get('title')?.hasError('invalidCharacters')">
+                            {{ taskForm.get('name')?.getError('invalidCharacters') }}
+                          </mat-error>
+                          <mat-error *ngIf="taskForm.get('title')?.touched && taskForm.get('title')?.hasError('maxlength') as err">
+                            Maximum length of characters 254 exceeded.
+                          </mat-error>
                         </mat-form-field>
                       </div>
                     </div>
@@ -87,6 +108,15 @@
                         <mat-form-field>
                           <mat-label>Task Description</mat-label>
                           <textarea matInput #formField formControlName="description" rows="4"></textarea>
+                          <mat-error *ngIf="taskForm.get('description')?.touched && taskForm.get('description')?.hasError('required')">
+                            Description is required.
+                          </mat-error>
+                          <mat-error *ngIf="taskForm.get('description')?.touched && taskForm.get('description')?.hasError('invalidCharacters')">
+                            {{ taskForm.get('name')?.getError('invalidCharacters') }}
+                          </mat-error>
+                          <mat-error *ngIf="taskForm.get('description')?.touched && taskForm.get('description')?.hasError('maxlength') as err">
+                            Maximum length of characters 254 exceeded.
+                          </mat-error>
                         </mat-form-field>    
                       </div>
                     </div>
@@ -103,6 +133,15 @@
                         <mat-form-field appearance="outline" class="full-width">
                           <mat-label>Display Image</mat-label>
                           <input matInput  #formField formControlName="displayURL" (blur)="onUrlBlur()"/>
+                          <mat-error *ngIf="taskForm.get('displayURL')?.touched && taskForm.get('displayURL')?.hasError('required')">
+                            Display URL is required.
+                          </mat-error>
+                          <mat-error *ngIf="taskForm.get('displayURL')?.touched && taskForm.get('displayURL')?.hasError('invalidCharacters')">
+                            {{ taskForm.get('name')?.getError('invalidCharacters') }}
+                          </mat-error>
+                          <mat-error *ngIf="taskForm.get('displayURL')?.touched && taskForm.get('displayURL')?.hasError('maxlength') as err">
+                            Maximum length of characters 254 exceeded.
+                          </mat-error>
                         </mat-form-field>
                       </div>
                       <div class="col-md-1 bg-light rounded">

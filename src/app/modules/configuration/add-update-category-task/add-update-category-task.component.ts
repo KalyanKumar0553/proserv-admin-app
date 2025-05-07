@@ -7,7 +7,7 @@ import { AppUtilsService } from 'app/shared/services/app-utils.service';
 import { CreateCategoryTaskRequest, UpdateCategoryTaskRequest } from 'app/shared/models/category';
 import { CategoryService } from 'app/shared/services/categories.service';
 import { SnackbarService } from 'app/shared/services/snackbar.service';
-import { Subscription } from 'rxjs';
+import { finalize, forkJoin, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-update-category-task',
@@ -64,7 +64,22 @@ export class AddUpdateCategoryTaskComponent implements OnInit,OnDestroy {
       question: [''],
       description: [''],
     });
-    this.loadServiceOptions();
+    this.loadTaskDetails();
+  }
+
+
+  loadTaskDetails() {
+    this.isLoading = true;
+    this.getCategoryTaskSubscription = forkJoin([
+        this.categoryService.getCategoryTaskByID(this.categoryID,this.taskID),
+        this.categoryService.getCategoryTaskByID(this.categoryID,this.taskID)
+    ]).pipe(
+          finalize(() => {
+            this.isLoading = false;
+          })
+        ).subscribe(([taskResponse, faqResponse]) => {
+        
+        });
   }
 
   onSave(): void {
@@ -114,20 +129,18 @@ export class AddUpdateCategoryTaskComponent implements OnInit,OnDestroy {
           this.previewUrl = '';
           this.snackbar.show('Succesfully Saved Task Details!', STATUS.SUCCESS);
           this.saveAction.emit();
+          this.isLoading = false;
         },
         error: (err) => {
           this.snackbar.show('Unable To Save Task Details!', STATUS.ERROR);
-        },
-        complete: ()=>{
           this.isLoading = false;
-        },
+        }
       });
     }
   }
 
   onTabChange(event: any): void {
     const index = event.index;
-    console.log(index);
   }
 
   onCancel(): void {

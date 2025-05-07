@@ -94,7 +94,7 @@ export class ListCategoryComponent implements OnInit,OnDestroy {
       this.showDeleteModal = false;
       this.delteItem = null;
       this.apiLoading = false;
-      this.snackService.show('Delete Category Succsefully',STATUS.SUCCESS);
+      this.snackService.show('Deleted Category Succsefully',STATUS.SUCCESS);
       this.loadCategories();
     },(err)=>{
       this.showDeleteModal = false;

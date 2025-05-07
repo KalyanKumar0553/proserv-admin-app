@@ -1,6 +1,8 @@
 
 package com.src.proserv.main.response.dto;
 
+import java.util.List;
+
 import com.src.proserv.main.model.ServiceTask;
 
 import lombok.AllArgsConstructor;
@@ -31,8 +33,10 @@ public class ServiceTaskResponseDTO {
     private String note;
     
     private boolean enabled;
+    
+    private List<FAQResponseDTO> faqs;
 
-    public static ServiceTaskResponseDTO fromEntityToServiceTaskResponse(ServiceTask taskEntity) {
+    public static ServiceTaskResponseDTO fromEntityToAllServiceTaskResponse(ServiceTask taskEntity) {
         return ServiceTaskResponseDTO.builder()
                 .id(taskEntity.getId())
                 .title(taskEntity.getTitle())
@@ -41,6 +45,21 @@ public class ServiceTaskResponseDTO {
 				.inclusions(taskEntity.getInclusions())
 				.exclusions(taskEntity.getExclusions())
 				.displayURL(taskEntity.getDisplayURL())
+				.note(taskEntity.getNote())
+				.enabled(taskEntity.isEnabled())
+				.build();
+    }
+    
+    public static ServiceTaskResponseDTO fromEntityToIndiviualServiceTaskResponse(ServiceTask taskEntity,List<FAQResponseDTO> faqResponse) {
+        return ServiceTaskResponseDTO.builder()
+                .id(taskEntity.getId())
+                .title(taskEntity.getTitle())
+                .description(taskEntity.getDescription())
+				.serviceCategoryID(taskEntity.getServiceCategoryID())
+				.inclusions(taskEntity.getInclusions())
+				.exclusions(taskEntity.getExclusions())
+				.displayURL(taskEntity.getDisplayURL())
+				.faqs(faqResponse)
 				.note(taskEntity.getNote())
 				.enabled(taskEntity.isEnabled())
 				.build();

@@ -20,13 +20,25 @@
                 <mat-error *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.hasError('required')">
                   Category name is required.
                 </mat-error>
+                <mat-error *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.hasError('invalidCharacters')">
+                  {{ categoryForm.get('name')?.getError('invalidCharacters') }}
+                </mat-error>
+                <mat-error *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.hasError('maxlength') as err">
+                  Maximum length of characters 254 exceeded.
+                </mat-error>
               </mat-form-field>
               <div class="row g-3 mb-4">
                 <div class="col-md-6">
                   <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Display Image</mat-label>
+                    <mat-label>Display Image URL</mat-label>
                     <input matInput formControlName="displayURL" (blur)="onUrlBlur()"/>
+                    <mat-error *ngIf="categoryForm.get('displayURL')?.touched && categoryForm.get('displayURL')?.hasError('required')">
+                      Display Image is required.
+                    </mat-error>
                   </mat-form-field>
+                  <mat-error *ngIf="categoryForm.get('displayURL')?.touched && categoryForm.get('displayURL')?.hasError('displayURL') as err">
+                    Maximum length of characters 254 exceeded.
+                  </mat-error>
                 </div>
                 <div class="col-md-1 bg-light rounded">
                   <i class="bi bi-image fs-1 text-muted preview-container" *ngIf="!previewUrl"></i>
@@ -87,6 +99,6 @@
   <app-confirmation-modal *ngIf="taskID" 
     [title]="`Are you sure you want to Delete Task ?`" 
     [message]="'All Associated Options will be removed. Please confirm.'"
-    [(showModal)]="showDeleteModal" (confirmAction)="handleConfirmDeleteAction($event)" (cancelAction)="cancelConfirmAction()">
+    [(showModal)]="showDeleteModal" (confirmAction)="handleConfirmDeleteTaskAction($event)" (cancelAction)="cancelConfirmDeleteTaskAction()">
   </app-confirmation-modal>
 </div>
