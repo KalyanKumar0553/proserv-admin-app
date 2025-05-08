@@ -163,7 +163,7 @@
                       <i class="bi bi-plus-circle"></i> Add New Question
                     </button>
                   </div>
-                  <app-data-accordion *ngIf="filteredFaqs.length>0" id="taskSection" [title]="'Frequently Asked Questions'" [items]="filteredFaqs"
+                  <app-data-accordion *ngIf="allFaqs.length>0" id="taskSection" [title]="'Frequently Asked Questions'" [items]="filteredFaqs"
                     [titleKey]="'title'" [bodyKey]="'body'" [searchable]="true" [showEdit]="true" [showDelete]="true"
                     (searchChanged)="searchFAQ($event)" (editItem)="onEditFAQ($event)"
                     (deleteItem)="onDeleteFAQ($event)"></app-data-accordion>

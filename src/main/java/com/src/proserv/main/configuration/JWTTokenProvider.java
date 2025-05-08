@@ -1,5 +1,6 @@
 package com.src.proserv.main.configuration;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -9,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 import org.springframework.security.core.Authentication;
@@ -54,7 +54,7 @@ public class JWTTokenProvider {
 		return claimsResolver.apply(claims);
 	}
 
-	private Claims extractAllClaims(String token) {
+	public Claims extractAllClaims(String token) {
 		return Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token).getBody();
 	}
 
@@ -121,8 +121,6 @@ public class JWTTokenProvider {
 
 	public List<String> getRolesFromJWT(String token) {
 		Claims claims = Jwts.parserBuilder().setSigningKey(JWT_SECRET).build().parseClaimsJws(token).getBody();
-
 		return claims.get("roles", List.class);
 	}
-
 }

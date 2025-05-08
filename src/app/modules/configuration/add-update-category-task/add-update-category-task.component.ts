@@ -163,6 +163,9 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
 
   onTabChange(event: any): void {
     const tabIndex = event.index;
+    if(tabIndex!=0) {
+      this.faqState = 'list-faq';
+    }
   }
 
   onCancel(): void {
@@ -173,7 +176,7 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
     this.previewUrl = this.taskForm.get('displayURL').value?.trim() || null;
   }
 
-  searchFAQ(term: string) {
+  searchFAQ(term: string = '') {
     this.filteredFaqs = this.allFaqs.filter(f => f.title.toLowerCase().includes(term.toLowerCase()));
   }
 
@@ -252,6 +255,7 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
     this.allFaqs.push({ 'title': this.addFaqForm.get('question').value, 'body': this.addFaqForm.get('description').value });
     this.addFaqForm.reset();
     this.faqState = 'list-faq';
+    this.searchFAQ();
   }
 
   loadServiceOptions() {

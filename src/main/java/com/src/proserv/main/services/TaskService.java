@@ -19,6 +19,7 @@ import com.src.proserv.main.request.dto.ServiceTaskRequestDTO;
 import com.src.proserv.main.response.dto.FAQResponseDTO;
 import com.src.proserv.main.response.dto.ServiceTaskOptionResponseDTO;
 import com.src.proserv.main.response.dto.ServiceTaskResponseDTO;
+import com.src.proserv.main.utils.AppUtils;
 
 import lombok.AllArgsConstructor;
 
@@ -73,10 +74,6 @@ public class TaskService {
 		if(currOption.isPresent()) {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Service task with Given Title already available");
 		}
-		serviceTask.setCreatedBy(userUUID);
-		serviceTask.setCreatedOn(LocalDateTime.now());
-		serviceTask.setLastModifiedBy(userUUID);
-		serviceTask.setLastModifiedOn(LocalDateTime.now());
 		taskRepository.save(serviceTask);
 		return "Service Task Created Succesfully";
 	}
@@ -88,8 +85,7 @@ public class TaskService {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Service Task with Details not available");
 		}
 		ServiceTask serviceTask = existingServiceTask.get();
-		serviceTask.setTitle(serviceTaskRequest.getTitle());
-		serviceTask.setServiceCategoryID(serviceTaskRequest.getServiceCategoryID());
+		AppUtils.applyPatch(serviceTaskRequest, serviceTask);
 		taskRepository.save(serviceTask);
 		return "Service Task Updated Succesfully";
 	}

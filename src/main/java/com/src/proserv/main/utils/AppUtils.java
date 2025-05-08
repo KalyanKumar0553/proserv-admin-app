@@ -1,5 +1,7 @@
 package com.src.proserv.main.utils;
 
+import java.lang.reflect.Field;
+import java.util.Objects;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -71,6 +73,42 @@ public class AppUtils {
         }
 
         return result.toString();
+    }
+    
+    public static <R, E> void applyPatch(R request, E entity) {
+        if (request == null || entity == null) {
+            throw new IllegalArgumentException("Request and entity must not be null");
+        }
+
+        Field[] requestFields = request.getClass().getDeclaredFields();
+        Class<?> entityClass = entity.getClass();
+
+        for (Field requestField : requestFields) {
+            try {
+                requestField.setAccessible(true);
+                Object requestValue = requestField.get(request);
+
+                if (requestValue == null) continue;
+
+                // Try to find matching field in entity
+                Field entityField;
+                try {
+                    entityField = entityClass.getDeclaredField(requestField.getName());
+                } catch (NoSuchFieldException e) {
+                    continue; // Skip if entity doesn't have this field
+                }
+
+                entityField.setAccessible(true);
+                Object entityValue = entityField.get(entity);
+
+                if (!Objects.equals(requestValue, entityValue)) {
+                    entityField.set(entity, requestValue);
+                }
+
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Failed to patch field: " + requestField.getName(), e);
+            }
+        }
     }
 
 }

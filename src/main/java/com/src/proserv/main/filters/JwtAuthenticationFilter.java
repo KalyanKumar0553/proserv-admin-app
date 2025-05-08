@@ -1,6 +1,10 @@
 package com.src.proserv.main.filters;
 
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +26,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.src.proserv.main.configuration.JWTTokenProvider;
 import com.src.proserv.main.services.UserDetailsServiceImpl;
+
+import io.jsonwebtoken.Claims;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -54,8 +60,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             
 			String username = jwtTokenProvider.getUsernameFromJWT(token);
             List<String> roles = jwtTokenProvider.getRolesFromJWT(token);
-            List<GrantedAuthority> authorities = roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+            Claims claims = jwtTokenProvider.extractAllClaims(token);
+            Date expiration = claims.getExpiration();
             
+            if (expiration != null) {
+                ZonedDateTime zonedExpiration = ZonedDateTime.ofInstant(
+                    expiration.toInstant(),
+                    ZoneId.systemDefault()
+                );
+                String isoTimestamp = zonedExpiration.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                response.setHeader("X-Token-Expires-At", isoTimestamp);
+            }
+            List<GrantedAuthority> authorities = roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
             UserDetails userDetails = new User(username, "", authorities);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
