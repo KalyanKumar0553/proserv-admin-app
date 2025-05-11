@@ -61,7 +61,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		UserInfo user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new UserNotFoundException(RequestStatus.USER_NOT_FOUND));
-		return new User(user.getUsername(), user.getPassword(), getAuthorities(user));
+		return new User(user.getUsername(), user.getPassword(), getAuthorities(user.getUUID()));
 	}
 
 	@Transactional
@@ -145,11 +145,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 	}
 
-	public Set<GrantedAuthority> getAuthorities(UserInfo user) {
+	public Set<GrantedAuthority> getAuthorities(String userUUID) {
 		Set<GrantedAuthority> authorities = new HashSet<>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		authorities.add(new SimpleGrantedAuthority("USER"));
-		Optional<ProServRoles> proservAdmin = rolesRepository.findByUserUUID(user.getUUID());
+		Optional<ProServRoles> proservAdmin = rolesRepository.findByUserUUID(userUUID);
 		if(proservAdmin.isPresent()) {
 			String[] roles = proservAdmin.get().getRoles().split(AppConstants.roleSeperator);
 			for(String currRole : roles) {

@@ -2,6 +2,12 @@ export const appConfig: any = {
     'configuration': {
         "sideNavMenu": [
             {
+                "label": "home",
+                "labelText": "Home",
+                "active": false,
+                "route": "home"
+            },
+            {
                 "label": "configuration",
                 "labelText": "Categories",
                 "active": true,
@@ -23,6 +29,22 @@ export const appConfig: any = {
                 "labelText": "Settings",
                 "active": false,
                 "route": "settings"
+            }
+        ]
+    },
+    'home': {
+        "sideNavMenu": [
+            {
+                "label": "home",
+                "labelText": "Home",
+                "active": false,
+                "route": "home"
+            },
+            {
+                "label": "configuration",
+                "labelText": "Configuration",
+                "active": false,
+                "route": "list-categories"
             }
         ]
     }

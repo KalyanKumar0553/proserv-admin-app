@@ -9,6 +9,16 @@
     padding: 28px;
   }
 
+  .responsive-logo {
+    width: auto !important;
+  }
+
+  @media (max-width: 767.98px) { /* xs and sm in Bootstrap */
+    .responsive-logo {
+      width: 70% !important;
+    }
+  }
+
   .btn-primary {
     background-color: $primary-color;
     border-color: $primary-color;

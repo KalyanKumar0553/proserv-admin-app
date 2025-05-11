@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { AuthService } from 'app/shared/services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit,OnDestroy {
   private updateSignal: number = 0;
   private activeComponent: string = '';
 
-  constructor() { }
+  constructor(private route: ActivatedRoute) { }
 
   async ngOnInit() {
     this.isMobile = this.deviceDetector.isMobileDevice();

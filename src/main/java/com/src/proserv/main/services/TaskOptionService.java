@@ -1,9 +1,10 @@
 package com.src.proserv.main.services;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -51,4 +52,11 @@ public class TaskOptionService {
 		optionRepository.deleteAllByIdAndServiceCategoryID(optionID,serviceCategoryID);
 	}
 
+	public void saveOption(String userIDFromToken, @Valid ServiceTaskOptionRequestDTO optionRequest) {
+		
+	}
+
+	public void updateOption(String userIDFromToken, Long optionID, @Valid ServiceTaskOptionRequestDTO optionRequest) {
+		
+	}
 }

@@ -9,6 +9,7 @@ import { NavigationTrackerService } from 'app/shared/services/navigration-tracki
 import { DeviceDetectorService } from 'app/shared/services/device-detector.service';
 import { filter, Subject, Subscription } from 'rxjs';
 import { AppUtilsService } from 'app/shared/services/app-utils.service';
+import { TokenExpiryService } from 'app/shared/services/token-expiry.service';
 @Component({
   selector: 'app-login',
   templateUrl: './app-login.component.html',
@@ -44,7 +45,7 @@ export class AppLoginComponent implements OnInit, OnDestroy {
   private resetOTPSubscription? : Subscription;
   private loginSubscription? : Subscription;
 
-  constructor(private utils: AppUtilsService,private deviceDetector : DeviceDetectorService,private route: ActivatedRoute,private router: Router,private validationService:AuthValidationService,private authService: AuthService,private localService : LocalStorageService) { }
+  constructor(private utils: AppUtilsService,private deviceDetector : DeviceDetectorService,private route: ActivatedRoute,private router: Router,private validationService:AuthValidationService,private authService: AuthService,private localService : LocalStorageService,private tokenExpireService:TokenExpiryService) { }
   
   ngOnDestroy(): void {
     this.utils.unsubscribeData([this.pingSubscription,this.sendOTPSubscription,this.resetOTPSubscription,this.loginSubscription]);
@@ -145,9 +146,10 @@ export class AppLoginComponent implements OnInit, OnDestroy {
     this.errorMsg = '';
     this.requestProgress = true;
     this.loginSubscription = this.authService.loginUser({"username":this.username,"password":this.password}).subscribe(res=>{
-      let token = res?.statusMsg?.accessToken;
       if(res?.statusMsg?.accessToken) {
         this.authService.setUserSession(res?.statusMsg?.accessToken);
+        this.authService.updateExpiration(res?.statusMsg?.expiresAt);
+        this.tokenExpireService.scheduleExpiryPopup(res?.statusMsg?.expiresAt);
         this.router.navigateByUrl(RouteUrl.HOME);
       }
       this.requestProgress = false;

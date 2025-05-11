@@ -22,6 +22,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.src.proserv.main.model.InvalidatedToken;
 import com.src.proserv.main.repository.InvalidatedTokenRepository;
+import com.src.proserv.main.repository.RefreshTokenRepository;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -35,11 +36,16 @@ public class JWTTokenProvider {
 
 	private final String JWT_SECRET = "6rvQrbY7/yDbU6JfDdpHA9gN5Q/w7fhgJEBde0x6CTJtV8Pyyyhqaw+k5HKbfMlvg6nstoAZ2SjkZfte7Ehgqg==";
 
-	private final long JWT_EXPIRATION = 30 * 60 * 1000L;
+	private final long ACCESS_TOKEN_EXPIRATION = 15 * 60 * 1000L; // 3 minutes
+
+	private final long REFRESH_TOKEN_EXPIRATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 	private final InvalidatedTokenRepository tokenRepository;
 
-	private final Cache<String, Boolean> invalidatedTokenCache = Caffeine.newBuilder().expireAfterWrite(25, TimeUnit.MINUTES).maximumSize(50000).build();
+	private final RefreshTokenRepository refreshTokenRepository;
+
+	private final Cache<String, Boolean> invalidatedTokenCache = Caffeine.newBuilder()
+			.expireAfterWrite(25, TimeUnit.MINUTES).maximumSize(50000).build();
 
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
@@ -55,7 +61,7 @@ public class JWTTokenProvider {
 	}
 
 	public Claims extractAllClaims(String token) {
-		return Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token).getBody();
+		return Jwts.parser().setSigningKey(JWT_SECRET.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token).getBody();
 	}
 
 	private boolean isTokenExpired(String token) {
@@ -82,34 +88,20 @@ public class JWTTokenProvider {
 		return tokenRepository.existsByToken(token);
 	}
 
-	public String generateToken(Authentication authentication, String string) {
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Date expiryDate = new Date(System.currentTimeMillis() + JWT_EXPIRATION);
-		List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-				.collect(Collectors.toList());
-		roles.add("ROLE_USER");
-		roles.add("USER");
-		return Jwts.builder().setSubject(userDetails.getUsername()).claim("userUUID", string).claim("roles", roles)
-				.claim(Claims.EXPIRATION, expiryDate).setIssuedAt(new Date()).setExpiration(expiryDate)
-				.signWith(SignatureAlgorithm.HS512, JWT_SECRET).compact();
-	}
-
-	public String getUsernameFromJWT(String token) {
-		return Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token).getBody().getSubject();
+	public String getUsernameFromToken(String token) {
+		return extractAllClaims(token).getSubject();
 	}
 
 	public String getUserIDFromToken(String token) {
-		Claims claims = Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token).getBody();
-		return claims.get("userUUID", String.class);
+		return extractAllClaims(token).get("userUUID", String.class);
 	}
 
 	public boolean validateToken(String authToken) {
 		try {
-			Claims claims = Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(authToken).getBody();
+			Claims claims = extractAllClaims(authToken);
 			if (claims.getExpiration().before(new Date())) {
 				return false;
 			}
-			// This line uses cache, and falls back to DB if not present
 			if (isTokenInvalidated(authToken)) {
 				return false;
 			}
@@ -120,7 +112,41 @@ public class JWTTokenProvider {
 	}
 
 	public List<String> getRolesFromJWT(String token) {
-		Claims claims = Jwts.parserBuilder().setSigningKey(JWT_SECRET).build().parseClaimsJws(token).getBody();
+		Claims claims = extractAllClaims(token);
 		return claims.get("roles", List.class);
+	}
+
+	public String generateAccessToken(Authentication authentication, String userUUID) {
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+				.collect(Collectors.toList());
+
+		Date expiryDate = new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION);
+
+		return Jwts.builder().setSubject(userDetails.getUsername()).claim("userUUID", userUUID).claim("roles", roles)
+				.setIssuedAt(new Date()).setExpiration(expiryDate)
+				.signWith(SignatureAlgorithm.HS512, JWT_SECRET.getBytes(StandardCharsets.UTF_8)).compact();
+	}
+
+	public String generateRefreshToken(String username, String userUUID) {
+		Date expiryDate = new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION);
+
+		return Jwts.builder().setSubject(username).claim("userUUID", userUUID).setIssuedAt(new Date())
+				.setExpiration(expiryDate)
+				.signWith(SignatureAlgorithm.HS512, JWT_SECRET.getBytes(StandardCharsets.UTF_8)).compact();
+	}
+
+	public boolean isRefreshTokenValid(String token) {
+		return refreshTokenRepository.findByToken(token).filter(t -> t.getExpiration().isAfter(LocalDateTime.now()))
+				.isPresent();
+	}
+	
+	public String getUsernameFromJWT(String token) {
+		return extractAllClaims(token).getSubject();
+	}
+
+	@Transactional
+	public void invalidateRefreshToken(String token) {
+		refreshTokenRepository.deleteById(token);
 	}
 }

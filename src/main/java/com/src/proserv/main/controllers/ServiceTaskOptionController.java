@@ -1,13 +1,11 @@
 package com.src.proserv.main.controllers;
 
 import javax.mail.MessagingException;
+import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.src.proserv.main.configuration.JWTTokenProvider;
+import com.src.proserv.main.request.dto.FAQRequestDTO;
 import com.src.proserv.main.request.dto.ServiceTaskOptionRequestDTO;
 import com.src.proserv.main.response.dto.JSONResponseDTO;
 import com.src.proserv.main.services.TaskOptionService;
@@ -30,7 +29,7 @@ import lombok.extern.log4j.Log4j2;
 @RestController
 @AllArgsConstructor
 @CrossOrigin
-@RequestMapping("/api/service/categories")
+@RequestMapping("/api/service/options")
 public class ServiceTaskOptionController {
 
 
@@ -40,11 +39,21 @@ public class ServiceTaskOptionController {
 
 	final JWTTokenProvider jwtTokenProvider;
 
-	@DeleteMapping("/{serviceCategoryID}/tasks/{taskID}/option/{optionID}")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-	public ResponseEntity<JSONResponseDTO<?>> deleteOption(@RequestHeader("Authorization") String token,@PathVariable Long serviceCategoryID,@PathVariable Long taskID,@PathVariable Long optionID,Authentication authentication)
+	@PostMapping
+	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
+	public ResponseEntity<JSONResponseDTO<?>> createTOption(@RequestHeader("Authorization") String token,@Valid @RequestBody ServiceTaskOptionRequestDTO optionRequest)
 			throws MessagingException {
-		optionService.deleteServiceOption(optionID,serviceCategoryID,taskID);
-		return ResponseEntity.ok(AppUtils.getJSONObject("Category Succesfully Deleted"));
+		optionService.saveOption(jwtTokenProvider.getUserIDFromToken(token.substring(7)),optionRequest);
+		return ResponseEntity.ok(AppUtils.getJSONObject("FAQ Created Succesfully"));
 	}
+	
+	
+	@PutMapping("/{optionID}")
+	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
+	public ResponseEntity<JSONResponseDTO<?>> updateOption(@RequestHeader("Authorization") String token,@PathVariable Long optionID,@Valid @RequestBody ServiceTaskOptionRequestDTO optionRequest)
+			throws MessagingException {
+		optionService.updateOption(jwtTokenProvider.getUserIDFromToken(token.substring(7)),optionID,optionRequest);
+		return ResponseEntity.ok(AppUtils.getJSONObject("FAQ Update Succesfully"));
+	}
+	
 }

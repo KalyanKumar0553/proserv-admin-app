@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Session Expiring</h2>
+
+<mat-dialog-content>
+  <div *ngIf="!isLoading; else loading">
+    Your session will expire in <strong>{{ countdownDisplay }}</strong>.
+    Would you like to extend it?
+    <mat-dialog-actions align="end">
+      <button mat-raised-button color="primary" (click)="extend()" [disabled]="isLoading">Yes</button>
+      <button mat-button color="warn" (click)="logout()" [disabled]="isLoading">No</button>
+    </mat-dialog-actions>
+  </div>
+  <ng-template #loading>
+    <p>Extending your session...</p>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </ng-template>
+</mat-dialog-content>
+

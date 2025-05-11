@@ -1,5 +1,6 @@
 package com.src.proserv.main.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,16 +35,40 @@ public class FAQService {
 	final UserServiceRequestTaskRepository userTaskRequestRepository;
 
 	public List<FAQResponseDTO> fetchAllFAQ(Long taskID) {
-		return faqRepository.findAllByServiceTaskID(taskID).stream()
-				.map(FAQResponseDTO::fromEntityToFetchOptionResponse).collect(Collectors.toList());
+		return faqRepository.findAllByServiceTaskID(taskID).stream().map(FAQResponseDTO::fromEntityToFetchOptionResponse).collect(Collectors.toList());
 	}
 
-	public void deleteFAQ(Long categoryID,Long taskID,Long faqID) {
-		Optional<FrequentlyAskedQuestion> currFAQ = faqRepository.findByIdAndServiceCategoryIDAndServiceTaskID(faqID,categoryID,taskID);
+	public void deleteFAQ(Long faqID) {
+		Optional<FrequentlyAskedQuestion> currFAQ = faqRepository.findById(faqID);
 		if (currFAQ.isEmpty()) {
-			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-					"FAQ With Given details not available");
+			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"FAQ With Given details not available");
 		}
-		faqRepository.deleteAllByIdAndServiceCategoryIDAndServiceTaskID(faqID, categoryID,taskID);
+		faqRepository.deleteAllById(faqID);
+	}
+	
+	public void saveFAQ(String string, FAQRequestDTO faqRequest) {
+		Optional<FrequentlyAskedQuestion> question = faqRepository.findByQuestionAndServiceTaskID(faqRequest.getQuestion(), faqRequest.getServiceTaskID());
+		if(question.isPresent()) {
+			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"FAQ With Given question for the task already available");
+		}
+		FrequentlyAskedQuestion faqEntity = FAQRequestDTO.toEntityFromFAQRequestDTO(faqRequest);
+		faqRepository.save(faqEntity);
+	}
+	
+	public void updateFAQ(String userID, Long questionID,FAQRequestDTO faqRequest) {
+		Optional<FrequentlyAskedQuestion> question = faqRepository.findByIdAndServiceCategoryIDAndServiceTaskID(questionID,faqRequest.getServiceCategoryID(),faqRequest.getServiceTaskID());
+		if(!question.isPresent()) {
+			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"FAQ With Given ID not available");
+		}
+		FrequentlyAskedQuestion faqEntity = question.get();
+		faqEntity.setLastModifiedBy(userID);
+		faqEntity.setLastModifiedOn(LocalDateTime.now());
+		if(faqRequest.getQuestion()!=null && !faqRequest.getQuestion().equals(faqEntity.getQuestion())) {
+			faqEntity.setQuestion(faqRequest.getQuestion());
+		}
+		if(faqRequest.getAnswer()!=null && !faqRequest.getAnswer().equals(faqEntity.getAnswer())) {
+			faqEntity.setAnswer(faqRequest.getAnswer());
+		}
+		faqRepository.save(faqEntity);
 	}
 }

@@ -27,9 +27,11 @@ public interface FrequentlyAskedQuestionRepository extends JpaRepository<Frequen
 	@Transactional
 	void deleteAllByIdAndServiceCategoryIDAndServiceTaskID(Long id,Long serviceCategoryID,Long serviceTaskID);
 	
+	
 	List<FrequentlyAskedQuestion> findAllByServiceTaskID(Long taskID);
 	List<FrequentlyAskedQuestion> findAllByServiceTaskIDAndServiceCategoryID(Long taskID,Long categoryID);
 	Optional<FrequentlyAskedQuestion> findByIdAndServiceCategoryIDAndServiceTaskID(Long ID,Long categoryID,Long serviceTaskID);
 	Optional<FrequentlyAskedQuestion> findByIdAndServiceTaskID(Long ID, Long serviceTaskID);
 	Optional<FrequentlyAskedQuestion> findByQuestionAndServiceTaskID(String question, Long serviceTaskID);
+	Optional<FrequentlyAskedQuestion> findByIdAndQuestion(Long id,String question);
 }

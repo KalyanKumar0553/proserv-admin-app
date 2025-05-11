@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'app/shared/models/menu-item.model';
 import { Roles } from 'app/shared/models/roles.enum';
 import { AppUtilsService } from 'app/shared/services/app-utils.service';
@@ -31,16 +31,18 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
   sideNavMenu:MenuItem[] = [];
   updateSignal:number = 0;
 
-  constructor() {}
+  constructor(private route: ActivatedRoute) {}
   
   ngOnInit() {
     this.activeComponent = 'list-categories';
     this.appUtils.updateMenuOnRouteChange(this);
-    const state = this.location.getState() as {
-      activeComponent : string
-    };
-    this.activeComponent = state?.activeComponent ?? 'list-categories';
-    this.appUtils.loadMenuBasedOnRoute(this,this.router.url);
+    this.route.queryParams.subscribe(params => {
+      const activeComponent = params['activeComponent'];
+      if (activeComponent) {
+          this.activeComponent = activeComponent ?? 'list-categories';
+          this.appUtils.loadMenuBasedOnRoute(this,this.router.url);
+      }
+    });
   }
 
   updateComponent(componentData: any) {
@@ -52,9 +54,13 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
     }
   }
   
-  componentChangeEvent(activeComponent:string) {
+  componentChangeEvent(activeComponent:MenuItem) {
     this.categoryID = null;
-    this.activeComponent = activeComponent;
+    if(activeComponent.label && activeComponent.route && (activeComponent.label == activeComponent.route)) {
+      this.appUtils.navigateToComponent(activeComponent.route,activeComponent.label);
+    } else {
+      this.activeComponent = activeComponent.route;
+    }
   }
 
   ngOnDestroy(): void {

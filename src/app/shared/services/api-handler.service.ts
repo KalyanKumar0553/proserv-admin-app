@@ -8,6 +8,7 @@ import { ResponseErrors } from '../constants/constants.enum';
   providedIn: 'root'
 })
 export class ApiHandlerService {
+
   protected baseUrl!: string;
 
   constructor(
@@ -154,6 +155,19 @@ export class ApiHandlerService {
       .post(this.formulateApiUrl(apiEndpoint), data, {
         params: requestParams
       })
+      .pipe(
+        map((res) => this.handleResponse(res)),
+        catchError((error: HttpErrorResponse) => this.handleError(error))
+      );
+  }
+
+  saveWithOptions(apiEndpoint: string, data: any, options?: { withCredentials?: boolean, headers?: HttpHeaders }): Observable<any> {
+    const httpOptions: any = {
+      ...options,
+      withCredentials: options?.withCredentials || false,
+    };
+    return this.httpClient
+      .post(this.formulateApiUrl(apiEndpoint), data, httpOptions)
       .pipe(
         map((res) => this.handleResponse(res)),
         catchError((error: HttpErrorResponse) => this.handleError(error))

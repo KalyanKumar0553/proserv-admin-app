@@ -1,25 +1,43 @@
 @import './../../../app.component.scss';
+
 .card {
     border-radius: 23px;
     width: 18rem;
-    padding:0px;
+    padding: 0px;
     position: inherit;
     margin: 23px;
+    display: inline-block;
+    float: left;
 }
+
 .card-title {
     display: inline-flex;
     align-items: center;
+    width: 100%;
     flex-direction: column;
     padding: 14px;
     color: $background-color;
-    font-weight:bolder;
+    font-weight: bolder;
     background: $primary-color;
     border-top-left-radius: 23px;
     border-top-right-radius: 23px;
 }
+.scroll-row-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 1rem 0;
+    gap: 1rem;
+  
+    .card {
+      min-width: 250px;
+      flex: 0 0 auto;
+    }
+  }
 .card-body {
-    display:block;
+    display: block;
 }
+
 .card-text {
     display: inline-flex;
     align-items: center;
@@ -29,6 +47,7 @@
     font-weight: 500;
     color: #4f6776;
 }
+
 .update-link {
     color: #1f5779 !important;
     display: inline-flex;
@@ -40,6 +59,7 @@
     font-size: 12px;
     font-weight: 500;
 }
+
 .status-spinner {
     margin-top: 9rem;
 }

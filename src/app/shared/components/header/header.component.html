@@ -1,36 +1,52 @@
 <header class="d-flex justify-content-between align-items-center px-4 py-2 header-bg text-white shadow-sm">
     
     <div class="d-flex align-items-center gap-4">
-        <div class="header-container">
-            <img src="./../../../../assets/images/logo.png" alt="Logo" class="header-logo" />
+        <div class="header-container d-none d-md-block">
+            <img src="./../../../../assets/images/logo.png" alt="Logo" class="header-logo"/>
         </div>
-        <nav class="d-flex gap-3">
+        <div class="header-container d-block d-md-none">
+              <a data-coreui-toggle="offcanvas" (click)="toggleOffcanvas()" role="button" aria-controls="offcanvasExample">
+                <img src="./../../../../assets/images/logo.png" alt="Logo" class="header-logo"/>
+              </a>
+              <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                <div class="offcanvas-header">
+                    <img src="./../../../../assets/images/logo.png" alt="Logo" class="header-logo"/>
+                  <button type="button" (click)="toggleOffcanvas()" class="btn-close text-reset" data-coreui-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <nav class="nav-menu">
+                        <app-sidenav-mobile [sideNavMenu]="sideNavMenu" [updateSignal]="updateSignal" (componentChangeEvent)="componentChangeEvent($event)"></app-sidenav-mobile>
+                    </nav>
+                </div>
+              </div>
+        </div>
+        <nav class="d-flex gap-3 d-none d-md-block">
             <div class="nav-item-wrapper" tabindex="0" (mouseenter)="setHover('home')" (mouseleave)="setHover(null)">
-                <a routerLink="/home">
-                    <span class="nav-item" [class.active]="isActive('home')" (click)="setActive('home')">
+                <a (click)="setActive('home','home')">
+                    <span class="nav-item" [class.active]="isActive('home')" (click)="setActive('home','home')">
                         <i class="bi bi-house-door-fill"></i>
                         Home
                     </span>
                 </a>
             </div>
             <div class="nav-item-wrapper" tabindex="1" (mouseenter)="setHover('configuration')" (mouseleave)="setHover(null)">
-                <a routerLink="/configuration" (click)="setActive('configuration')">
-                    <span class="nav-item" [class.active]="isActive('configuration')" (click)="setActive('configuration')">
+                <a (click)="setActive('configuration','list-categories')">
+                    <span class="nav-item" [class.active]="isActive('configuration')" (click)="setActive('configuration','list-categories')">
                         <i class="bi bi-gear"></i>
                         Configuration
                     </span>
                 </a>
             </div>
             <div class="nav-item-wrapper" tabindex="2" (mouseenter)="setHover('bookings')" (mouseleave)="setHover(null)">
-                <a routerLink="/bookings" (click)="setActive('bookings')">
-                    <span class="nav-item" [class.active]="isActive('bookings')" (click)="setActive('bookings')">
+                <a (click)="setActive('bookings','bookings')">
+                    <span class="nav-item" [class.active]="isActive('bookings')" (click)="setActive('bookings','booking')">
                         Bookings
                     </span>
                 </a>
             </div>
             <div class="nav-item-wrapper" tabindex="3" (mouseenter)="setHover('billing')" (mouseleave)="setHover(null)">
-                <a routerLink="/billing" (click)="setActive('billing')">
-                    <span class="nav-item" [class.active]="isActive('billing')" (click)="setActive('billing')">
+                <a (click)="setActive('billing','bookings')">
+                    <span class="nav-item" [class.active]="isActive('billing')" (click)="setActive('billing','billing')">
                         <i class="bi bi-receipt"></i>
                         Billing
                     </span>

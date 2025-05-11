@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AppLoginComponent } from 'app/modules/auth/app-login/app-login.component';
 import { MenuItem } from '../models/menu-item.model';
 import { filter, Subscription } from 'rxjs';
-import RouteUrl from '../constants/router-url.enum';
 import { NavigationEnd, Router } from '@angular/router';
 import { appConfig } from 'app/shared/constants/app-config.enum';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 @Injectable({
     providedIn: 'root'
 })
@@ -78,7 +76,7 @@ export class AppUtilsService {
             if (currNavChild.length == 0 && currNav.route == activeLabel) {
                 isExpanded = true;
                 currNav.active = true;
-                break;
+                // break;
             }
             for (let j = 0; j < currNavChild.length; j++) {
                 let currMenuItem = currNavChild[j];
@@ -87,7 +85,7 @@ export class AppUtilsService {
                     isExpanded = true;
                     currMenuItem.active = true;
                     currNav.active = true;
-                    break;
+                    // break;
                 }
             }
             if (isExpanded) {
@@ -96,7 +94,7 @@ export class AppUtilsService {
         }
         if ((!isExpanded) && navItems.length > 0) {
             navItems[0].active = true;
-            if (navItems[0].children.length > 0) {
+            if (navItems?.[0]?.children?.length > 0) {
                 navItems[0].children[0].active = true;
             }
         }
@@ -112,9 +110,7 @@ export class AppUtilsService {
 
     navigateToComponent(route: string, component: string) {
         this.router.navigate([route], {
-            state: {
-                activeComponent: component
-            }
+            queryParams: { activeComponent: component }
         });
     }
 
@@ -122,17 +118,20 @@ export class AppUtilsService {
         context.routerSubscription = this.router.events
             .pipe(filter(event => event instanceof NavigationEnd))
             .subscribe(() => {
-                const state = context.location.getState() as {
-                    activeComponent: string
-                };
-                context.activeComponent = state?.activeComponent ?? 'list-categories';
-                this.loadMenuBasedOnRoute(context, context.router.url);
+                context.route.queryParams.subscribe(params => {
+                    const activeComponent = params['activeComponent'];
+                    if (activeComponent) {
+                        context.activeComponent = activeComponent;
+                        this.loadMenuBasedOnRoute(context, context.router.url);
+                    }
+                });
             });
     }
 
     loadMenuBasedOnRoute(context: any, route: string) {
         if (route.length > 1) {
             route = route.indexOf("/") == -1 ? route : route.substring(route.indexOf("/") + 1);
+            route = route.split('?')[0];
             if (appConfig[route]) {
                 let configData = appConfig[route];
                 let navItems = configData.sideNavMenu;

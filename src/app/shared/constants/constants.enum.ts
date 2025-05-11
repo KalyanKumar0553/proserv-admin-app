@@ -11,6 +11,7 @@ export enum ResponseErrors {
 }
 export enum ApiUrls {
   LOGOUT = '/auth/logout',
+  REFRESH_TOKEN = '/auth/refresh-token',
   LOGIN = '/auth/login',
   SEND_OTP = '/auth/send_otp',
   RESET_PASSWORD_WITHOOUT_OTP = '/auth/reset_password_without_otp',

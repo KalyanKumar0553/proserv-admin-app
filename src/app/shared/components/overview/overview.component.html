@@ -1,35 +1,40 @@
 <div class="over-view-container">
-    <div class="status-spinner"  *ngIf="overviewRequestInProgress">
+    <div class="status-spinner" *ngIf="overviewRequestInProgress">
         <div class="spinner-border text-primary" role="status">
         </div>
         <span class="loading-label">Loading Overview...</span>
     </div>
     <div *ngIf="!overviewRequestInProgress">
-        <div class="row gap-4">
-            <div class="col-sm-12 col-md-1 col-lg-1 col-xl-1">
+        <div class="row">
+            <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 d-none d-md-block">
             </div>
-            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 fit-content animate-card">
-                <div class="card">
-                    <div class="card-title">Active Service Categories</div>
-                    <p class="card-text">{{categoriesCount}}</p>
-                    <div class="card-footer">
-                      <a class="text-primary small update-link" (click)="navigateToComponent('list-categories')">View /Update</a>
+            <div class="col-sm-11 col-md-11 col-lg-11 col-xl-11">
+                <div class="scroll-row-wrapper">
+                    <div class="card animate-card">
+                        <div class="card-title">Active Service Categories</div>
+                        <p class="card-text">{{categoriesCount}}</p>
+                        <div class="card-footer">
+                            <a class="text-primary small update-link" (click)="navigateToComponent('list-categories')">View
+                                /Update</a>
+                        </div>
+                    </div>
+                    <div class="card animate-card">
+                        <div class="card-title">Total Apointments</div>
+                        <p class="card-text">{{categoriesCount}}</p>
+                        <div class="card-footer">
+                            <a class="text-primary small update-link" (click)="navigateToComponent('settings')">View
+                                /Update</a>
+                        </div>
+                    </div>
+                    <div class="card animate-card">
+                        <div class="card-title">Total Apointments</div>
+                        <p class="card-text">{{categoriesCount}}</p>
+                        <div class="card-footer">
+                            <a class="text-primary small update-link" (click)="navigateToComponent('settings')">View
+                                /Update</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 fit-content animate-card">
-                <div class="card">
-                    <div class="card-title">Total Apointments</div>
-                    <p class="card-text">{{categoriesCount}}</p>
-                    <div class="card-footer">
-                      <a class="text-primary small update-link" (click)="navigateToComponent('settings')">View /Update</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
-                <span></span>
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-1 col-xl-1">
             </div>
         </div>
     </div>

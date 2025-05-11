@@ -8,7 +8,7 @@ import { CreateCategoryTaskRequest, UpdateCategoryTaskRequest } from 'app/shared
 import { CategoryService } from 'app/shared/services/categories.service';
 import { SnackbarService } from 'app/shared/services/snackbar.service';
 import { finalize, forkJoin, Subscription } from 'rxjs';
-import { alphabetSpaceValidator, alphaNumericSpaceValidator, atLeastOneAlphabetValidator } from 'app/shared/services/app-validators';
+import { alphaNumericSpaceValidator, atLeastOneAlphabetValidator } from 'app/shared/services/app-validators';
 
 @Component({
   selector: 'app-add-update-category-task',
@@ -163,6 +163,7 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
 
   onTabChange(event: any): void {
     const tabIndex = event.index;
+    this.addFaqForm.reset();
     if(tabIndex!=0) {
       this.faqState = 'list-faq';
     }

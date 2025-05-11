@@ -6,13 +6,13 @@ import { MenuItem } from 'app/shared/models/menu-item.model';
 import { AppUtilsService } from 'app/shared/services/app-utils.service';
 
 @Component({
-  selector: 'app-sidenav',
+  selector: 'app-sidenav-mobile',
   standalone: true,
   imports:[CommonModule],
-  templateUrl: './sidenav.component.html',
-  styleUrl: './sidenav.component.scss'
+  templateUrl: './sidenav-mobile.component.html',
+  styleUrl: './sidenav-mobile.component.scss'
 })
-export class SidenavComponent implements OnInit,OnChanges {
+export class SidenavMobileComponent implements OnInit,OnChanges {
   
   @Input()
   sideNavMenu:MenuItem[] = [];

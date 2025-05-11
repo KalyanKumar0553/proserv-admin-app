@@ -20,12 +20,6 @@
       background-color: $background-color;
       color: $primary-color;
     }
-
-    &:hover {
-      background-color: $primary-color;
-      color: $background-color;
-      transform: scale(1.04); 
-    }
   }
 }
 .nav-main-title {
@@ -51,7 +45,6 @@
 }
 .title-text {
   margin-top: 8px;
-  width:100%;
   display: inline-block;
 }
 .title-icon {
@@ -64,9 +57,6 @@
   cursor: pointer;
 }
 .active-item {
-  background:#d9e5ec;
+  // background:#d9e5ec;
   text-decoration:underline;
-}
-.nav-item {
-  width: 100%;
 }

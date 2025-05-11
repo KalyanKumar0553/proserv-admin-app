@@ -1,9 +1,9 @@
 <div id="configuration-container" class="container-fluid" *ngIf="authService.hasAnyRole([roles.ADMIN,roles.AGENT,roles.USER]);else unauhtorized">
   <div class="row">
-    <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 sidenav-container">
+    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 sidenav-container d-none d-md-block">
       <app-sidenav [sideNavMenu]="sideNavMenu" [updateSignal]="updateSignal" (componentChangeEvent)="componentChangeEvent($event)"></app-sidenav>
     </div>
-    <div class="col-md-9 content-area">
+    <div class="col-sm-12 col-md-8 col-lg-9 col-xl-10  content-area">
       <app-list-category *ngIf="activeComponent=='list-categories'" (updateComponentEvent)="updateComponent($event)"></app-list-category>
       <app-add-update-category *ngIf="activeComponent=='add-update-category'" [categoryID]="categoryID" (updateComponentEvent)="updateComponent($event)"></app-add-update-category>
       <app-settings *ngIf="activeComponent=='settings'"></app-settings>

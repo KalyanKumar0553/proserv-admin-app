@@ -16,9 +16,10 @@ public class TokenCleanupScheduler {
 
     private final InvalidatedTokenRepository tokenRepository;
 
-    @Scheduled(fixedRate = 60 * 60 * 1000)
+    @Scheduled(fixedRate = 5 * 60 * 1000)
     @Transactional
     public void cleanUpExpiredTokens() {
+    	System.out.println("Running Cleaning Token");
     	tokenRepository.deleteAllExpiredTokens(LocalDateTime.now());
     }
 }

@@ -64,12 +64,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Date expiration = claims.getExpiration();
             
             if (expiration != null) {
-                ZonedDateTime zonedExpiration = ZonedDateTime.ofInstant(
-                    expiration.toInstant(),
-                    ZoneId.systemDefault()
-                );
-                String isoTimestamp = zonedExpiration.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-                response.setHeader("X-Token-Expires-At", isoTimestamp);
+        		DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        		String formatted = expiration.toInstant().atZone(ZoneId.systemDefault()).format(formatter);
+        		response.setHeader("X-Token-Expires-At", formatted);
             }
             List<GrantedAuthority> authorities = roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
             UserDetails userDetails = new User(username, "", authorities);

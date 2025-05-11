@@ -13,9 +13,8 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-  private currentUser: { roles: Roles[]; token: string; exp: number } | null = null;
-  private checkInterval = 10000;
-
+  private currentUser: { roles: Roles[]; token: string; exp?: string } | null = null;
+  
   public clearDataTimer: any;
 
   constructor(private apiService:ProServApiService,private router: Router,private localService: LocalStorageService){
@@ -23,9 +22,13 @@ export class AuthService {
   }
 
   logoutUser() {
-    this.clearTimer();
-    return this.apiService.save(ApiUrls.LOGOUT,{});
+    return this.apiService.saveWithOptions(ApiUrls.LOGOUT,{},{withCredentials: true});
   }
+
+  refreshToken() {
+    return this.apiService.saveWithOptions(ApiUrls.REFRESH_TOKEN,{},{withCredentials: true});
+  }
+  
 
   loginUser(payload:any={}) {
     return this.apiService.save(ApiUrls.LOGIN,payload);
@@ -51,13 +54,7 @@ export class AuthService {
     return this.apiService.get(ApiUrls.PING);
   }
 
-  clearTimer() {
-    if(this.clearDataTimer) {
-      clearTimeout(this.clearDataTimer);
-    }
-  }
-
-  getUser(): { roles: Roles[]; token: string } | null {
+  getUser(): { roles: Roles[]; token: string; exp?:string } | null {
     if (!this.currentUser) {
       const stored = localStorage.getItem('user');
       this.currentUser = stored ? JSON.parse(stored) : null;
@@ -87,7 +84,17 @@ export class AuthService {
 
   setUserSession(token: string) {
     const decoded = jwtDecode<JwtPayload>(token);
-    this.currentUser = { token, roles: decoded.roles, exp: decoded.exp };
+    this.currentUser = { token, roles: decoded.roles};
+    localStorage.setItem('user', JSON.stringify(this.currentUser));
+  }
+
+  updateRoles(roles:Roles[]) {
+    this.currentUser.roles = roles;
+    localStorage.setItem('user', JSON.stringify(this.currentUser));
+  }
+
+  updateExpiration(expiration:string) {
+    this.currentUser.exp = expiration;
     localStorage.setItem('user', JSON.stringify(this.currentUser));
   }
 

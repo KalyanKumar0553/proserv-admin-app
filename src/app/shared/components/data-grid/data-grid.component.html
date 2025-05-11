@@ -45,7 +45,7 @@
     </tbody>
   </table>
   <div class="d-flex justify-content-between align-items-center"  *ngIf="paginatedData.length>0">
-    <div>
+    <div *ngIf="filteredData.length > size">
       Showing {{ paginatedData.length }} of {{ filteredData.length }} records
     </div>
     <div class="d-flex align-items-center ms-auto gap-2">

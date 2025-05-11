@@ -13,6 +13,7 @@ import { SpinnerComponent } from './shared/components/spinner/spinner.component'
 import { ConfigService } from './shared/services/config.service';
 import { initializeApp } from './app-init';
 import { SnackbarComponent } from './shared/components/snackbar/snackbar.component';
+import { TokenExpiryInterceptor } from './shared/services/token-expiry.interceptor';
 
 @NgModule({
   imports: [
@@ -37,6 +38,11 @@ import { SnackbarComponent } from './shared/components/snackbar/snackbar.compone
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenExpiryInterceptor,
       multi: true
     },
     {

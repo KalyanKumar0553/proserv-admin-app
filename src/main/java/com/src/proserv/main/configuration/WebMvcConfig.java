@@ -27,7 +27,7 @@ public class WebMvcConfig {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/api/**").allowedOrigins("http://localhost:4200").allowedMethods("*")
-						.allowCredentials(true);
+						.allowCredentials(true).exposedHeaders("X-Token-Expires-At");;
 				;
 			}
 		};
