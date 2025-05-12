@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppLoginComponent } from 'app/modules/auth/app-login/app-login.component';
+import { AppLoginComponent } from '../../modules/auth/app-login/app-login.component';
 
 @Injectable({
   providedIn: 'root'

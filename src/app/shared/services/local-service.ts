@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Preferences } from '@capacitor/preferences';
 
 @Injectable({
   providedIn: 'root'
@@ -8,39 +9,43 @@ export class LocalStorageService {
   constructor() {}
 
   /**
-   * Saves data to localStorage.
+   * Saves data using Capacitor Preferences.
    * @param key - The key to store the data under
    * @param value - The value to store (will be stringified if it's an object)
    */
-  public saveData(key: string, value: any): void {
+  public async saveData(key: string, value: any): Promise<void> {
     const data = typeof value === 'string' ? value : JSON.stringify(value);
-    localStorage.setItem(key, data);
+    await Preferences.set({ key, value: data });
   }
 
   /**
-   * Retrieves data from localStorage.
+   * Retrieves data using Capacitor Preferences.
    * @param key - The key of the data to retrieve
-   * @returns The parsed or raw data from localStorage, or null if not available
+   * @returns The parsed or raw data, or null if not available
    */
-  public getData<T>(key: string): T | null {
-    const data = localStorage.getItem(key);
+  public async getData<T>(key: string): Promise<T | null> {
+    const { value } = await Preferences.get({ key });
+    if (value === null) return null;
+
     try {
-      return data ? JSON.parse(data) as T : null;
-    } catch (error) {
-      return data as unknown as T;
+      return JSON.parse(value) as T;
+    } catch {
+      return value as unknown as T;
     }
   }
 
   /**
-   * Removes data from localStorage.
-   * @param key - The key of the data to remove
+   * Removes a specific key-value pair.
+   * @param key - The key to remove
    */
-  public deleteData(key: string): void {
-    localStorage.removeItem(key);
+  public async deleteData(key: string): Promise<void> {
+    await Preferences.remove({ key });
   }
 
-
-  public clearData() {
-    localStorage.clear();
+  /**
+   * Clears all stored data.
+   */
+  public async clearData(): Promise<void> {
+    await Preferences.clear();
   }
 }

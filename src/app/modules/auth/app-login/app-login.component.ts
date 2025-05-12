@@ -1,15 +1,15 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { AlertTypes, AuthStateConstants, LocalStorageKeys } from 'app/shared/constants/constants.enum';
-import RouteUrl from 'app/shared/constants/router-url.enum';
-import { AuthService } from 'app/shared/services/auth.service';
-import { LocalStorageService } from 'app/shared/services/local-service';
-import { AuthValidationService } from 'app/shared/services/auth-validation-service'
-import { NavigationTrackerService } from 'app/shared/services/navigration-tracking.service';
-import { DeviceDetectorService } from 'app/shared/services/device-detector.service';
+import { AlertTypes, AuthStateConstants, LocalStorageKeys } from '../../../shared/constants/constants.enum';
+import RouteUrl from '../../../shared/constants/router-url.enum';
+import { AuthService } from '../../../shared/services/auth.service';
+import { LocalStorageService } from '../../../shared/services/local-service';
+import { AuthValidationService } from '../../../shared/services/auth-validation-service'
+import { NavigationTrackerService } from '../../../shared/services/navigration-tracking.service';
+import { DeviceDetectorService } from '../../../shared/services/device-detector.service';
 import { filter, Subject, Subscription } from 'rxjs';
-import { AppUtilsService } from 'app/shared/services/app-utils.service';
-import { TokenExpiryService } from 'app/shared/services/token-expiry.service';
+import { AppUtilsService } from '../../../shared/services/app-utils.service';
+import { TokenExpiryService } from '../../../shared/services/token-expiry.service';
 @Component({
   selector: 'app-login',
   templateUrl: './app-login.component.html',
@@ -24,9 +24,9 @@ export class AppLoginComponent implements OnInit, OnDestroy {
   @ViewChild('otpInput') otpInputRef!: ElementRef;
 
   loading:boolean = false;
-  state: string = null;
+  state: string | null = null;
   username:string = "";
-  password: String = null;
+  password: String  | null = null;
   errorMsg = "";
   otp:string = "";
   retypePassword:string = "";

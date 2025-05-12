@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { AuthService } from 'app/shared/services/auth.service';
-import { LocalStorageService } from 'app/shared/services/local-service';
-import RouteUrl from 'app/shared/constants/router-url.enum';
-import { MenuItem } from 'app/shared/models/menu-item.model';
-import { AppUtilsService } from 'app/shared/services/app-utils.service';
+import { AuthService } from '../../services/auth.service';
+import { LocalStorageService } from '../../services/local-service';
+import RouteUrl from '../../../shared/constants/router-url.enum';
+import { MenuItem } from '../../../shared/models/menu-item.model';
+import { AppUtilsService } from '../../services/app-utils.service';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { Subscription } from 'rxjs';
-import { Roles } from 'app/shared/models/roles.enum';
+import { Roles } from '../../../shared/models/roles.enum';
 declare const bootstrap: any;
 import { Location } from '@angular/common';
 import { SidenavMobileComponent } from '../sidenav-mobile/sidenav-mobile.component';
@@ -86,7 +86,7 @@ export class HeaderComponent implements OnInit,OnChanges {
 
   setActive(nav: string,route:string) {
     this.activeNav = nav;
-    this.appUtils.navigateToComponent(nav,route);
+    this.appUtils.navigateToComponent(this,nav,route);
   }
   
   isActive(nav: string): boolean {
@@ -145,9 +145,9 @@ export class HeaderComponent implements OnInit,OnChanges {
     this.categoryID = null;
     let activeHeader = this.appUtils.fetchActiveHeader(this.sideNavMenu);
     if(activeComponent.label == activeComponent.route) {
-      this.appUtils.navigateToComponent(activeComponent.label,activeComponent.route);
+      this.appUtils.navigateToComponent(this,activeComponent.label,activeComponent.route);
     } else {
-      this.appUtils.navigateToComponent(activeHeader,activeComponent.route);
+      this.appUtils.navigateToComponent(this,activeHeader,activeComponent.route);
     }
     
     this.activeComponent = activeComponent.route;

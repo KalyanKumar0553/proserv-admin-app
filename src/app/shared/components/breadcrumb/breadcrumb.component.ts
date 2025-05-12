@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import RouteUrl from 'app/shared/constants/router-url.enum';
-import { BreadCrumbItem } from 'app/shared/models/bread-crumb-item.model';
-import { AppUtilsService } from 'app/shared/services/app-utils.service';
+import { BreadCrumbItem } from '../../../shared/models/bread-crumb-item.model';
+import { AppUtilsService } from '../../../shared/services/app-utils.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -13,11 +13,11 @@ import { AppUtilsService } from 'app/shared/services/app-utils.service';
 })
 export class BreadCrumbComponent {
   @Input()
-  crumbItems : BreadCrumbItem[];
+  crumbItems ?: BreadCrumbItem[];
 
   constructor(private utils:AppUtilsService){}
 
-  navigateToComponent(route: string,component:string) {
-    this.utils.navigateToComponent(route,component);
+  navigateToComponent(route: string,component:string,router:Router) {
+    this.utils.navigateToComponent(this,route,component);
  }
 }

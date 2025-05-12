@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { STATUS } from 'app/shared/constants/constants.enum';
-import RouteUrl from 'app/shared/constants/router-url.enum';
-import { BreadCrumbItem } from 'app/shared/models/bread-crumb-item.model';
-import { Category } from 'app/shared/models/category';
-import { AppUtilsService } from 'app/shared/services/app-utils.service';
-import { CategoryService } from 'app/shared/services/categories.service';
-import { SnackbarService } from 'app/shared/services/snackbar.service';
+import { STATUS } from '../../../shared/constants/constants.enum';
+import RouteUrl from '../../../shared/constants/router-url.enum';
+import { BreadCrumbItem } from '../../../shared/models/bread-crumb-item.model';
+import { Category } from '../../../shared/models/category';
+import { AppUtilsService } from '../../../shared/services/app-utils.service';
+import { CategoryService } from '../../../shared/services/categories.service';
+import { SnackbarService } from '../../../shared/services/snackbar.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -66,6 +66,7 @@ export class ListCategoryComponent implements OnInit,OnDestroy {
   }
 
   editCategory(item: any) {
+    this.utils.navigateToComponent(this,'configuration','add-update-category');
     this.updateComponentEvent.emit({
       component:'add-update-category',
       state:{id:item.id}

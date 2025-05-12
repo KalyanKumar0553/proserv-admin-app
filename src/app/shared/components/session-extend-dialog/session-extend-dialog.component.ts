@@ -3,10 +3,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import RouteUrl from 'app/shared/constants/router-url.enum';
-import { AuthService } from 'app/shared/services/auth.service';
-import { LocalStorageService } from 'app/shared/services/local-service';
-import { TokenExpiryService } from 'app/shared/services/token-expiry.service';
+import RouteUrl from '../../../shared/constants/router-url.enum';
+import { AuthService } from '../../services/auth.service';
+import { LocalStorageService } from '../../services/local-service';
+import { TokenExpiryService } from '../../services/token-expiry.service';
 import { interval, Subscription } from 'rxjs';
 
 @Component({

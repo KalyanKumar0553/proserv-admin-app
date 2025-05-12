@@ -2,7 +2,7 @@ import { NgClass, NgIf } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Component, Inject } from '@angular/core';
 import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
-import { STATUS } from 'app/shared/constants/constants.enum';
+import { STATUS } from '../../constants/constants.enum';
 
 
 @Component({

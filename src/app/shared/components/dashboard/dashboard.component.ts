@@ -3,18 +3,18 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { SpinnerComponent } from '../spinner/spinner.component';
-import { AuthService } from 'app/shared/services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
-import { NavigationTrackerService } from 'app/shared/services/navigration-tracking.service';
-import { DeviceDetectorService } from 'app/shared/services/device-detector.service';
+import { NavigationTrackerService } from '../../services/navigration-tracking.service';
+import { DeviceDetectorService } from '../../services/device-detector.service';
 import { CommonModule, Location } from '@angular/common';
 import { BrowserNotSupportedComponent } from '../browser-not-supported/browser-not-supported.component';
-import RouteUrl from 'app/shared/constants/router-url.enum';
+import RouteUrl from '../../../shared/constants/router-url.enum';
 import { filter, Subscription } from 'rxjs';
 import { inject } from '@angular/core';
-import { MenuItem } from 'app/shared/models/menu-item.model';
-import { appConfig } from 'app/shared/constants/app-config.enum';
-import { AppUtilsService } from 'app/shared/services/app-utils.service';
+import { MenuItem } from '../../../shared/models/menu-item.model';
+import { appConfig } from '../../../shared/constants/app-config.enum';
+import { AppUtilsService } from '../../services/app-utils.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit,OnDestroy {
 
   isLoading: boolean = false;
   isMobile: boolean = false;
-
+  isApp:boolean = false;
   private appUtils = inject(AppUtilsService);
   private deviceDetector = inject(DeviceDetectorService);
   private router = inject(Router);
@@ -43,6 +43,7 @@ export class DashboardComponent implements OnInit,OnDestroy {
 
   async ngOnInit() {
     this.isMobile = this.deviceDetector.isMobileDevice();
+    this.isApp = this.deviceDetector.isApp();
     if (this.isMobile) {
       this.isLoading = false;
     } else {

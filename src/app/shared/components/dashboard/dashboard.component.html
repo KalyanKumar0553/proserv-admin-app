@@ -8,6 +8,6 @@
         <div class="body-content">
             <router-outlet></router-outlet>
         </div>
-        <app-footer></app-footer>
+        <app-footer *ngIf="!isApp"></app-footer>
     </div>
 </ng-template>

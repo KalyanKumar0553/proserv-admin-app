@@ -14,6 +14,8 @@ import { ConfigService } from './shared/services/config.service';
 import { initializeApp } from './app-init';
 import { SnackbarComponent } from './shared/components/snackbar/snackbar.component';
 import { TokenExpiryInterceptor } from './shared/services/token-expiry.interceptor';
+import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+
 
 @NgModule({
   imports: [
@@ -24,6 +26,7 @@ import { TokenExpiryInterceptor } from './shared/services/token-expiry.intercept
     RouterModule,
     ConfigurationModule,
     AppRoutingModule,
+    IonicModule.forRoot(),
     SpinnerComponent,
     SnackbarComponent
 ],

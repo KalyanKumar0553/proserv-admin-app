@@ -1,15 +1,15 @@
 import { Component, ElementRef, EventEmitter, inject, Inject, Input, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ComponentState, CrumbItems, STATUS } from 'app/shared/constants/constants.enum';
-import RouteUrl from 'app/shared/constants/router-url.enum';
-import { BreadCrumbItem } from 'app/shared/models/bread-crumb-item.model';
+import { ComponentState, CrumbItems, STATUS } from '../../../shared/constants/constants.enum';
+import RouteUrl from '../../../shared/constants/router-url.enum';
+import { BreadCrumbItem } from '../../../shared/models/bread-crumb-item.model';
 import { Validators } from '@angular/forms';
-import { AppUtilsService } from 'app/shared/services/app-utils.service';
-import { CategoryService } from 'app/shared/services/categories.service';
+import { AppUtilsService } from '../../../shared/services/app-utils.service';
+import { CategoryService } from '../../../shared/services/categories.service';
 import { finalize, forkJoin, Subscription } from 'rxjs';
-import { SnackbarService } from 'app/shared/services/snackbar.service';
-import { CreateCategoryRequest, UpdateCategoryRequest } from 'app/shared/models/category';
-import { alphabetSpaceValidator,atLeastOneAlphabetValidator } from 'app/shared/services/app-validators';
+import { SnackbarService } from '../../../shared/services/snackbar.service';
+import { CreateCategoryRequest, UpdateCategoryRequest } from '../../../shared/models/category';
+import { alphabetSpaceValidator,atLeastOneAlphabetValidator } from '../../../shared/services/app-validators';
 
 
 @Component({

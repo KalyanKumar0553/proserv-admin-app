@@ -1,4 +1,4 @@
-@import './../../../app.component.scss';
+@use '../../../app.component.scss' as *;
 
 .table {
   margin-top: 1rem;

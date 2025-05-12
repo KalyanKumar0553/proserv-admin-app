@@ -1,5 +1,5 @@
-import RouteUrl from 'app/shared/constants/router-url.enum';
-import { BreadCrumbItem } from 'app/shared/models/bread-crumb-item.model';
+import RouteUrl from '../constants/router-url.enum';
+import { BreadCrumbItem } from '../models/bread-crumb-item.model';
 
 export enum AuthStateConstants {
   LOGIN_STATE = "auth_login",

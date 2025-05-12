@@ -1,5 +1,5 @@
 
-@import './../../../app.component.scss';
+@use '../../../app.component.scss' as *;
 .custom-breadcrumb .breadcrumb {
     background-color: transparent;
     padding-left: 0;

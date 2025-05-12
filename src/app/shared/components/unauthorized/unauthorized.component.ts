@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavigationTrackerService } from 'app/shared/services/navigration-tracking.service';
+import { NavigationTrackerService } from '../../services/navigration-tracking.service';
 
 @Component({
   selector: 'app-unauthorized',

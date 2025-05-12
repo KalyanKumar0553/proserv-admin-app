@@ -1,11 +1,11 @@
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { MenuItem } from 'app/shared/models/menu-item.model';
-import { Roles } from 'app/shared/models/roles.enum';
-import { AppUtilsService } from 'app/shared/services/app-utils.service';
-import { AuthService } from 'app/shared/services/auth.service';
-import { NavigationTrackerService } from 'app/shared/services/navigration-tracking.service';
+import { MenuItem } from '../../shared/models/menu-item.model';
+import { Roles } from '../../shared/models/roles.enum';
+import { AppUtilsService } from '../../shared/services/app-utils.service';
+import { AuthService } from '../../shared/services/auth.service';
+import { NavigationTrackerService } from '../../shared/services/navigration-tracking.service';
 import { filter, Subscription } from 'rxjs';
 
 @Component({
@@ -57,7 +57,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
   componentChangeEvent(activeComponent:MenuItem) {
     this.categoryID = null;
     if(activeComponent.label && activeComponent.route && (activeComponent.label == activeComponent.route)) {
-      this.appUtils.navigateToComponent(activeComponent.route,activeComponent.label);
+      this.appUtils.navigateToComponent(this,activeComponent.route,activeComponent.label);
     } else {
       this.activeComponent = activeComponent.route;
     }

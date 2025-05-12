@@ -1,4 +1,4 @@
-@import './../../../app.component.scss';
+@use '../../../app.component.scss' as *;
 .nav-container {
   height: calc(100vh);
   box-shadow: 0 0 15px 0px #e9eae9 !important;

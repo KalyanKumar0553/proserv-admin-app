@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import RouteUrl from 'app/shared/constants/router-url.enum';
-import { MenuItem } from 'app/shared/models/menu-item.model';
-import { AppUtilsService } from 'app/shared/services/app-utils.service';
+import RouteUrl from '../../constants/router-url.enum';
+import { MenuItem } from '../../models/menu-item.model';
+import { AppUtilsService } from '../../services/app-utils.service';
 
 @Component({
   selector: 'app-sidenav-mobile',

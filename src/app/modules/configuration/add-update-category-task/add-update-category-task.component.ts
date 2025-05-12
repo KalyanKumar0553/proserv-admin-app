@@ -2,13 +2,13 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
-import { ComponentState, STATUS } from 'app/shared/constants/constants.enum';
-import { AppUtilsService } from 'app/shared/services/app-utils.service';
-import { CreateCategoryTaskRequest, UpdateCategoryTaskRequest } from 'app/shared/models/category';
-import { CategoryService } from 'app/shared/services/categories.service';
-import { SnackbarService } from 'app/shared/services/snackbar.service';
+import { ComponentState, STATUS } from '../../../shared/constants/constants.enum';
+import { AppUtilsService } from '../../../shared/services/app-utils.service';
+import { CreateCategoryTaskRequest, UpdateCategoryTaskRequest } from '../../../shared/models/category';
+import { CategoryService } from '../../../shared/services/categories.service';
+import { SnackbarService } from '../../../shared/services/snackbar.service';
 import { finalize, forkJoin, Subscription } from 'rxjs';
-import { alphaNumericSpaceValidator, atLeastOneAlphabetValidator } from 'app/shared/services/app-validators';
+import { alphaNumericSpaceValidator, atLeastOneAlphabetValidator } from '../../../shared/services/app-validators';
 
 @Component({
   selector: 'app-add-update-category-task',

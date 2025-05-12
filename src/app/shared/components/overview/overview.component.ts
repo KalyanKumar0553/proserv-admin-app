@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import RouteUrl from 'app/shared/constants/router-url.enum';
-import { AppUtilsService } from 'app/shared/services/app-utils.service';
-import { OverviewService } from 'app/shared/services/overview.service';
+import RouteUrl from '../../../shared/constants/router-url.enum';
+import { AppUtilsService } from '../../services/app-utils.service';
+import { OverviewService } from '../../services/overview.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -31,7 +31,7 @@ export class OverviewComponent implements OnInit,OnDestroy {
   }
 
   navigateToComponent(component: string) {
-     this.utils.navigateToComponent(RouteUrl.CONFIGURATION,component);
+     this.utils.navigateToComponent(this,RouteUrl.CONFIGURATION,component);
   }
 
   ngOnDestroy(): void {

@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '../models/menu-item.model';
 import { filter, Subscription } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
-import { appConfig } from 'app/shared/constants/app-config.enum';
+import { appConfig } from '../constants/app-config.enum';
 import { FormGroup } from '@angular/forms';
 @Injectable({
     providedIn: 'root'
 })
 export class AppUtilsService {
 
-    constructor(private router: Router) { }
+    constructor() { }
 
     fetchActiveHeader(navItems: MenuItem[]): string {
         let activeHeader = 'home';
@@ -31,7 +31,7 @@ export class AppUtilsService {
     }
 
     fetchActiveComponentFromMenu(navItems: MenuItem[], defaultComponent: string = ''): string {
-        let component = defaultComponent;
+        let component:any = defaultComponent;
         let firstComponent = this.fetchDefaultComponentFromMenu(navItems);
         for (let i = 0; i < navItems.length; i++) {
             let currNav = navItems[i];
@@ -51,7 +51,7 @@ export class AppUtilsService {
     }
 
     fetchDefaultComponentFromMenu(navItems: MenuItem[]): string {
-        let component = '';
+        let component:any = '';
         for (let i = 0; i < navItems.length; i++) {
             let currNav = navItems[i];
             let currNavChild = currNav?.children || [];
@@ -108,14 +108,14 @@ export class AppUtilsService {
         })
     }
 
-    navigateToComponent(route: string, component: string) {
-        this.router.navigate([route], {
+    navigateToComponent(context:any,route: string, component: string) {
+        context.router.navigate([route], {
             queryParams: { activeComponent: component }
         });
     }
 
     updateMenuOnRouteChange(context: any) {
-        context.routerSubscription = this.router.events
+        context.routerSubscription = context.router.events
             .pipe(filter(event => event instanceof NavigationEnd))
             .subscribe(() => {
                 context.route.queryParams.subscribe(params => {
