@@ -11,7 +11,7 @@
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold mb-4" *ngIf="state==addState">Add New Category</h5>
         <h5 class="fw-bold mb-4" *ngIf="state==updateState">Update Category</h5>
-        <button class="btn btn-primary" *ngIf="state==updateState" (click)="addNewCategory();">Add New Category</button>
+        <button type="button" class="btn btn-primary" *ngIf="state==updateState" (click)="addNewCategory($event);">Add New Category</button>
       </div>
       <div class="row g-3 mb-4">
         <div class="col-md-12">
@@ -80,7 +80,7 @@
                 <div class="d-flex justify-content-between align-items-center add-faq-button">
                   <h6 class="fw-bold" *ngIf="tasks.length>0">Tasks</h6>
                   <h6 class="fw-bold" *ngIf="tasks.length==0">No Tasks Available</h6>
-                  <button class="btn btn-sm btn-outline-primary" (click)="showTaskModal(addState)">
+                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="showTaskModal(addState)">
                     <i class="bi bi-plus-circle"></i> Add New Task
                   </button>
                 </div>
@@ -94,7 +94,7 @@
         </div>
       </div>
       <div class="text-end mt-4">
-        <button class="btn btn-primary btn-outline-primary" (click)="onSubmit()">
+        <button type="button" class="btn btn-primary btn-outline-primary" (click)="onSubmit()">
           <i class="bi bi-check-circle me-2"></i>Save Category
         </button>
       </div>

@@ -58,6 +58,10 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       this.fetchCategoryDetails();
     }
+    this.initCategoryForm();
+  }
+
+  initCategoryForm() {
     this.categoryForm = this.fb.group({
       categoryId: [],
       enabled: ['active'],
@@ -169,13 +173,17 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
     this.previewUrl = this.categoryForm.get('displayURL').value?.trim() || null;
   }
 
-  addNewCategory() {
-    this.categoryForm.reset();
+  addNewCategory(event:any): void {
+    event.preventDefault();
     this.state = this.addState;
-    this.previewUrl = null;
     this.categoryID = null;
     this.taskID = null;
-    this.tasks = null;
+    this.previewUrl = null;
+    this.tasks = [];
+    this.initCategoryForm();
+    this.categoryForm.markAsPristine();
+    this.categoryForm.markAsUntouched();
+    this.categoryForm.updateValueAndValidity();
   }
 
 
