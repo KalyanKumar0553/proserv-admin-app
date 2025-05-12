@@ -54,4 +54,7 @@ testem.log
 /target
 # System files
 .DS_Store
+android/*
+www/*
+
 Thumbs.db

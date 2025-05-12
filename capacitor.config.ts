@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'proserv-admin-mobile-app',
+  appName: 'proserv-admin-app',
   webDir: 'www'
 };
 
