@@ -44,33 +44,30 @@ export class DashboardComponent implements OnInit,OnDestroy {
   async ngOnInit() {
     this.isMobile = this.deviceDetector.isMobileDevice();
     this.isApp = this.deviceDetector.isApp();
-    if (this.isMobile) {
-      this.isLoading = false;
-    } else {
-      this.redirectToLoginOrHome();
-      this.appUtils.loadMenuBasedOnRoute(this,this.router.url);
-      this.appUtils.updateMenuOnRouteChange(this);
-    }
+    this.isLoading = false;
+    this.redirectToLoginOrHome();
+    this.appUtils.loadMenuBasedOnRoute(this,this.router.url);
+    this.appUtils.updateMenuOnRouteChange(this);
   }
 
   redirectToLoginOrHome() {
     let previousURL = this.navigationService.getPreviousUrl();
     this.isLoading = true;
     if (previousURL == RouteUrl.LOGIN) {
-      this.router.navigate([RouteUrl.HOME]);
+      this.appUtils.navigateToComponent(this,RouteUrl.HOME,RouteUrl.DASHBOARD);
       this.isLoading = false;
     } else {
       if (this.authService.getToken() != null) {
         this.authService.ping().subscribe(() => {
-          this.router.navigate([RouteUrl.HOME])
+          this.appUtils.navigateToComponent(this,RouteUrl.HOME,RouteUrl.DASHBOARD);
           this.isLoading = false;
         }),(err => {
-          this.router.navigate([RouteUrl.LOGIN]);
+          this.appUtils.navigateToComponent(this,RouteUrl.LOGIN);
           this.isLoading = false;
         });
       } else {
         this.isLoading = false;
-        this.router.navigate([RouteUrl.LOGIN]);
+        this.appUtils.navigateToComponent(this,RouteUrl.LOGIN);
       }
     }
   }

@@ -15,9 +15,9 @@ export class BreadCrumbComponent {
   @Input()
   crumbItems ?: BreadCrumbItem[];
 
-  constructor(private utils:AppUtilsService){}
+  constructor(private utils:AppUtilsService,private router:Router){}
 
-  navigateToComponent(route: string,component:string,router:Router) {
+  navigateToComponent(route: string,component:string) {
     this.utils.navigateToComponent(this,route,component);
  }
 }

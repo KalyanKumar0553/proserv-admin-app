@@ -14,12 +14,16 @@
 
 .modal-content {
   border-radius: 8px;
-  background: $background-color;
 }
 
 .modal-header,
 .modal-footer {
   border: none;
+}
+
+.add-faq-button {
+  margin-bottom: 13px;
+  margin-top: 13px;
 }
 
 .modal-body {

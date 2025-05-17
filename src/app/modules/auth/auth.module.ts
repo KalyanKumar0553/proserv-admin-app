@@ -8,6 +8,7 @@ import { SpinnerComponent } from '../../shared/components/spinner/spinner.compon
 import { DeviceDetectorService } from '../../shared/services/device-detector.service';
 import { BrowserNotSupportedComponent } from '../../shared/components/browser-not-supported/browser-not-supported.component';
 import { AppRoutingModule } from 'app/app.routing';
+import { FooterComponent } from 'app/shared/components/footer/footer.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { AppRoutingModule } from 'app/app.routing';
     AppRoutingModule,
     ReactiveFormsModule,
     SpinnerComponent,
-    BrowserNotSupportedComponent
+    BrowserNotSupportedComponent,
+    FooterComponent
   ],
   exports :[
     RouterModule,

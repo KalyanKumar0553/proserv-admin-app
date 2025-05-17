@@ -22,12 +22,14 @@ export class OverviewComponent implements OnInit,OnDestroy {
   
   ngOnInit(): void {
     this.overviewRequestInProgress = true;
-    this.overviewSubscription = this.overviewService.getOverviewData().subscribe(res=>{
+    this.overviewSubscription = this.overviewService.getOverviewData().subscribe((res)=>{
       this.categoriesCount =  res?.statusMsg?.categoriesCount;
       this.overviewRequestInProgress = false;
-    }),(err=>{
+    },(err)=>{
       this.overviewRequestInProgress = false;
     });
+    this.utils.loadMenuBasedOnRoute(this,this.router.url);
+    this.utils.updateMenuOnRouteChange(this);
   }
 
   navigateToComponent(component: string) {

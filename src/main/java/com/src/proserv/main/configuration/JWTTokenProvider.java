@@ -36,7 +36,7 @@ public class JWTTokenProvider {
 
 	private final String JWT_SECRET = "6rvQrbY7/yDbU6JfDdpHA9gN5Q/w7fhgJEBde0x6CTJtV8Pyyyhqaw+k5HKbfMlvg6nstoAZ2SjkZfte7Ehgqg==";
 
-	private final long ACCESS_TOKEN_EXPIRATION = 15 * 60 * 1000L; // 3 minutes
+	private final long ACCESS_TOKEN_EXPIRATION = 15 * 60 * 1000L; // 15 minutes
 
 	private final long REFRESH_TOKEN_EXPIRATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 

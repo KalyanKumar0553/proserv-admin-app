@@ -1,4 +1,4 @@
-const urlPrefix = `https://proservice.co.in`;
+const urlPrefix = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
 
 // const urlPrefix = `http://localhost:8080`;
 

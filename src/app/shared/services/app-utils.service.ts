@@ -108,7 +108,7 @@ export class AppUtilsService {
         })
     }
 
-    navigateToComponent(context:any,route: string, component: string) {
+    navigateToComponent(context:any,route: string, component: string = '') {
         context.router.navigate([route], {
             queryParams: { activeComponent: component }
         });
@@ -118,7 +118,7 @@ export class AppUtilsService {
         context.routerSubscription = context.router.events
             .pipe(filter(event => event instanceof NavigationEnd))
             .subscribe(() => {
-                context.route.queryParams.subscribe(params => {
+                context?.route?.queryParams.subscribe(params => {
                     const activeComponent = params['activeComponent'];
                     if (activeComponent) {
                         context.activeComponent = activeComponent;
@@ -132,8 +132,10 @@ export class AppUtilsService {
         if (route.length > 1) {
             route = route.indexOf("/") == -1 ? route : route.substring(route.indexOf("/") + 1);
             route = route.split('?')[0];
-            if (appConfig[route]) {
-                let configData = appConfig[route];
+            let menuRoute = route.indexOf("/") == -1 ? route : route.substring(route.indexOf("/") + 1);
+            menuRoute  = menuRoute.split('?')[0];
+            if (appConfig[menuRoute]) {
+                let configData = appConfig[menuRoute];
                 let navItems = configData.sideNavMenu;
                 this.updateMenuExpansion(navItems, context.activeComponent);
                 context.sideNavMenu = navItems;

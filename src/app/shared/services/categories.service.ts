@@ -6,14 +6,14 @@ import { ProServApiService } from './proserv-api.service';
 import {jwtDecode} from 'jwt-decode';
 import { JwtPayload } from '../models/jwt-payload.model';
 import { Roles } from '../models/roles.enum';
-import { CreateCategoryRequest, CreateCategoryTaskRequest, CreateFAQRequest, UpdateCategoryRequest, UpdateCategoryTaskRequest } from '../models/category';
+import { CreateCategoryRequest, CreateCategoryTaskRequest, FAQRequest, UpdateCategoryRequest, UpdateCategoryTaskRequest } from '../models/category';
 import RouteUrl from '../constants/router-url.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-
+  
   private currentUser: { roles: Roles[]; token: string; exp: number } | null = null;
   private checkInterval = 10000;
 
@@ -66,7 +66,11 @@ export class CategoryService {
     return this.apiService.delete(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+categoryID+ApiUrls.TASKS+RouteUrl.SEPERATOR+taskID);
   }
 
-  saveFAQ(categoryID,taskID,payload:CreateFAQRequest) {
+  saveFAQ(payload:FAQRequest) {
+    return payload.id ? this.apiService.update(ApiUrls.FAQS+RouteUrl.SEPERATOR+payload.id,payload) : this.apiService.save(ApiUrls.FAQS,payload);
+  }
 
+  deleteFAQ(categoryID: number, taskID: number, id: any) {
+    return this.apiService.delete(ApiUrls.CATEGORIES+RouteUrl.SEPERATOR+categoryID+ApiUrls.TASKS+RouteUrl.SEPERATOR+taskID+ApiUrls.FAQS_API+RouteUrl.SEPERATOR+id);
   }
 }

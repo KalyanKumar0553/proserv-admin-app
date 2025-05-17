@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.src.proserv.main.exceptions.AbstractRuntimeException;
 import com.src.proserv.main.model.FrequentlyAskedQuestion;
+import com.src.proserv.main.model.ServiceCategory;
+import com.src.proserv.main.model.ServiceTask;
 import com.src.proserv.main.repository.FrequentlyAskedQuestionRepository;
 import com.src.proserv.main.repository.ServiceCategoryRepository;
 import com.src.proserv.main.repository.ServiceTaskOptionRepository;
@@ -17,6 +19,7 @@ import com.src.proserv.main.repository.ServiceTaskRepository;
 import com.src.proserv.main.repository.UserServiceRequestTaskRepository;
 import com.src.proserv.main.request.dto.FAQRequestDTO;
 import com.src.proserv.main.response.dto.FAQResponseDTO;
+import com.src.proserv.main.validators.FAQValidator;
 
 import lombok.AllArgsConstructor;
 
@@ -33,6 +36,8 @@ public class FAQService {
 	final FrequentlyAskedQuestionRepository faqRepository;
 
 	final UserServiceRequestTaskRepository userTaskRequestRepository;
+	
+	final FAQValidator faqValidator;
 
 	public List<FAQResponseDTO> fetchAllFAQ(Long taskID) {
 		return faqRepository.findAllByServiceTaskID(taskID).stream().map(FAQResponseDTO::fromEntityToFetchOptionResponse).collect(Collectors.toList());
@@ -47,19 +52,13 @@ public class FAQService {
 	}
 	
 	public void saveFAQ(String string, FAQRequestDTO faqRequest) {
-		Optional<FrequentlyAskedQuestion> question = faqRepository.findByQuestionAndServiceTaskID(faqRequest.getQuestion(), faqRequest.getServiceTaskID());
-		if(question.isPresent()) {
-			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"FAQ With Given question for the task already available");
-		}
+		faqValidator.validateCreateFAQ(faqRequest);
 		FrequentlyAskedQuestion faqEntity = FAQRequestDTO.toEntityFromFAQRequestDTO(faqRequest);
 		faqRepository.save(faqEntity);
 	}
 	
 	public void updateFAQ(String userID, Long questionID,FAQRequestDTO faqRequest) {
-		Optional<FrequentlyAskedQuestion> question = faqRepository.findByIdAndServiceCategoryIDAndServiceTaskID(questionID,faqRequest.getServiceCategoryID(),faqRequest.getServiceTaskID());
-		if(!question.isPresent()) {
-			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"FAQ With Given ID not available");
-		}
+		var question = faqValidator.validateUpdateFAQ(questionID,faqRequest);
 		FrequentlyAskedQuestion faqEntity = question.get();
 		faqEntity.setLastModifiedBy(userID);
 		faqEntity.setLastModifiedOn(LocalDateTime.now());

@@ -39,8 +39,8 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       const activeComponent = params['activeComponent'];
       if (activeComponent) {
-          this.activeComponent = activeComponent ?? 'list-categories';
-          this.appUtils.loadMenuBasedOnRoute(this,this.router.url);
+        this.activeComponent = activeComponent ?? 'list-categories';
+        this.appUtils.loadMenuBasedOnRoute(this,this.router.url);
       }
     });
   }

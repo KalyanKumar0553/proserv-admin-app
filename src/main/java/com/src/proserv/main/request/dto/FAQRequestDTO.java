@@ -23,13 +23,9 @@ public class FAQRequestDTO {
     private String answer;
 
     
-	@NotNull
-	@NotEmpty
 	private Long serviceTaskID;
 
-	@NotNull
-	@NotEmpty
-    private Long serviceCategoryID;
+	private Long serviceCategoryID;
 
 	public static FrequentlyAskedQuestion toEntityFromFAQRequestDTO(FAQRequestDTO faqRequest) {
 		return FrequentlyAskedQuestion.builder()

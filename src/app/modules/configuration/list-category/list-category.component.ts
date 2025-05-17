@@ -37,7 +37,7 @@ export class ListCategoryComponent implements OnInit,OnDestroy {
   ];
 
   crumbItems:BreadCrumbItem[] = [
-    {'label' : 'Home' , 'route' : RouteUrl.HOME, 'component':''},
+    {'label' : 'Home' , 'route' : RouteUrl.DASHBOARD, 'component':RouteUrl.DASHBOARD},
     {'label' : 'Categories'},
     {'label' : 'View Categories','isTail':true},
   ];

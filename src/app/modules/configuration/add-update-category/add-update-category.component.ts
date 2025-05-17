@@ -9,7 +9,7 @@ import { CategoryService } from '../../../shared/services/categories.service';
 import { finalize, forkJoin, Subscription } from 'rxjs';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
 import { CreateCategoryRequest, UpdateCategoryRequest } from '../../../shared/models/category';
-import { alphabetSpaceValidator,atLeastOneAlphabetValidator } from '../../../shared/services/app-validators';
+import { alphabetSpaceValidator,atLeastOneAlphabetValidator,alphaNumericSpaceSpecialValidator } from '../../../shared/services/app-validators';
 
 
 @Component({
@@ -65,10 +65,10 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
     this.categoryForm = this.fb.group({
       categoryId: [],
       enabled: ['active'],
-      name: ['', [Validators.required,alphabetSpaceValidator(),atLeastOneAlphabetValidator(),Validators.maxLength(254)]],
+      name: ['', [Validators.required,atLeastOneAlphabetValidator(),alphaNumericSpaceSpecialValidator(),Validators.maxLength(254)]],
       serviceProviders: [],
       availableLocations: [],
-      displayURL: ['', [Validators.required,Validators.maxLength(254),atLeastOneAlphabetValidator()]]
+      displayURL: ['', [Validators.required,Validators.maxLength(254),atLeastOneAlphabetValidator(),alphaNumericSpaceSpecialValidator()]]
     });
   }
 

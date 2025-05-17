@@ -8,7 +8,7 @@ import { CreateCategoryTaskRequest, UpdateCategoryTaskRequest } from '../../../s
 import { CategoryService } from '../../../shared/services/categories.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
 import { finalize, forkJoin, Subscription } from 'rxjs';
-import { alphaNumericSpaceValidator, atLeastOneAlphabetValidator } from '../../../shared/services/app-validators';
+import { alphaNumericSpaceSpecialValidator, alphaNumericSpaceValidator, atLeastOneAlphabetValidator } from '../../../shared/services/app-validators';
 
 @Component({
   selector: 'app-add-update-category-task',
@@ -48,6 +48,7 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
   
   private updateCategoryTaskSubscription?: Subscription;
   private getCategoryTaskSubscription?: Subscription;
+  private faqSubscripiton?: Subscription;
 
   constructor(private fb: FormBuilder, private appUtils: AppUtilsService, private categoryService: CategoryService, private snackbar: SnackbarService) { }
 
@@ -59,14 +60,15 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
     this.taskForm = this.fb.group({
       taskID: [],
       enabled: ['active'],
-      title: ['', [Validators.required, alphaNumericSpaceValidator(), atLeastOneAlphabetValidator(), Validators.maxLength(254)]],
-      description: ['', [Validators.required, alphaNumericSpaceValidator(), atLeastOneAlphabetValidator(), Validators.maxLength(254)]],
+      title: ['', [Validators.required, atLeastOneAlphabetValidator(),alphaNumericSpaceSpecialValidator(), Validators.maxLength(254)]],
+      description: ['', [Validators.required, atLeastOneAlphabetValidator(),alphaNumericSpaceSpecialValidator(), Validators.maxLength(254)]],
       note: [''],
       displayURL: ['', [Validators.required]],
     });
     this.addFaqForm = this.fb.group({
-      question: [''],
-      description: [''],
+      id:[],
+      question: ['', [Validators.required, atLeastOneAlphabetValidator(),alphaNumericSpaceSpecialValidator(), Validators.maxLength(254)]],
+      description: ['', [Validators.required, atLeastOneAlphabetValidator(),alphaNumericSpaceSpecialValidator(), Validators.maxLength(254)]],
     });
   }
 
@@ -125,12 +127,12 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
       };
       this.updateCategoryTaskSubscription = this.categoryService.updateCategoryTask(this.categoryID, this.taskID, payload).subscribe({
         next: (res) => {
-          this.snackbar.show('Succesfully Updated Category Details!', STATUS.SUCCESS);
+          this.snackbar.show('Succesfully Updated Task Details!', STATUS.SUCCESS);
           this.isLoading = false;
           this.saveAction.emit();
         },
         error: (err) => {
-          this.snackbar.show('Unable To Update Category Details!', STATUS.ERROR);
+          this.snackbar.show('Unable To Update Task Details!', STATUS.ERROR);
           this.isLoading = false;
         },
       });
@@ -182,11 +184,24 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
   }
 
   onEditFAQ(item: any) {
-
+    this.addFaqForm.get('id').setValue(item.id);
+    this.addFaqForm.get('question').setValue(item.question);
+    this.addFaqForm.get('description').setValue(item.answer);
+    this.faqState = 'add-faq';
   }
 
   onDeleteFAQ(item: any) {
-
+    if(item.id) {
+      this.isLoading = true;
+      this.faqSubscripiton = this.categoryService.deleteFAQ(this.categoryID,this.taskID,item.id).subscribe((res)=>{
+        this.isLoading = false;
+        this.snackbar.show('Succesfully Deleted FAQ Details!', STATUS.SUCCESS);
+        this.loadTaskDetails();
+      },(err)=>{
+        this.isLoading = false;
+        this.snackbar.show('Unable to Delete FAQ Details!', STATUS.ERROR);
+      });
+    }
   }
 
   addInclusion(event: MatChipInputEvent): void {
@@ -253,10 +268,23 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
   }
 
   saveFAQ() {
-    this.allFaqs.push({ 'title': this.addFaqForm.get('question').value, 'body': this.addFaqForm.get('description').value });
-    this.addFaqForm.reset();
-    this.faqState = 'list-faq';
-    this.searchFAQ();
+    if (this.addFaqForm.invalid) {
+      this.appUtils.focusFirstInvalidControl(this, this.addFaqForm);
+      this.addFaqForm.markAllAsTouched();
+      return;
+    }
+    this.isLoading = true;
+    let payload = { 'id':this.addFaqForm.get('id').value, 'question': this.addFaqForm.get('question').value, 'answer': this.addFaqForm.get('description').value, 'serviceTaskID':this.taskID, 'serviceCategoryID':this.categoryID };
+    this.faqSubscripiton = this.categoryService.saveFAQ(payload).subscribe(()=>{
+      this.isLoading = false;
+      this.addFaqForm.reset();
+      this.faqState = 'list-faq';
+      this.loadTaskDetails();
+      this.snackbar.show('Succesfully Saved FAQ Details!', STATUS.SUCCESS);
+    },(err)=>{
+      this.isLoading = false;
+      this.snackbar.show('Error while Saving FAQ !', STATUS.ERROR);
+    });
   }
 
   loadServiceOptions() {
@@ -281,6 +309,9 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
     }
     if (this.updateCategoryTaskSubscription) {
       this.updateCategoryTaskSubscription.unsubscribe();
+    }
+    if(this.faqSubscripiton) {
+      this.faqSubscripiton.unsubscribe();
     }
     this.taskForm.reset();
   }

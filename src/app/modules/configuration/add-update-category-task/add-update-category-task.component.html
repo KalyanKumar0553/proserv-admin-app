@@ -9,7 +9,7 @@
         <div class="col-md-12">
           <div class="spinner-border text-primary" role="status">
           </div>
-          <span class="loading-label">Loading...</span>
+          <span class="loading-label">Loading Task...</span>
         </div>
       </div>
     </div>
@@ -164,7 +164,7 @@
                     </button>
                   </div>
                   <app-data-accordion *ngIf="allFaqs.length>0" id="taskSection" [title]="'Frequently Asked Questions'" [items]="filteredFaqs"
-                    [titleKey]="'title'" [bodyKey]="'body'" [searchable]="true" [showEdit]="true" [showDelete]="true"
+                    [titleKey]="'question'" [bodyKey]="'answer'" [searchable]="true" [showEdit]="true" [showDelete]="true"
                     (searchChanged)="searchFAQ($event)" (editItem)="onEditFAQ($event)"
                     (deleteItem)="onDeleteFAQ($event)"></app-data-accordion>
                 </div>
@@ -174,7 +174,16 @@
                       <div class="col-md-12">
                         <mat-form-field>
                           <mat-label>Question</mat-label>
-                          <input matInput formControlName="question"/>
+                          <input matInput #formField formControlName="question"/>
+                          <mat-error *ngIf="addFaqForm.get('question')?.touched && addFaqForm.get('question')?.hasError('required')">
+                            Question is required.
+                          </mat-error>
+                          <mat-error *ngIf="addFaqForm.get('question')?.touched && addFaqForm.get('question')?.hasError('invalidCharacters')">
+                            {{ addFaqForm.get('question')?.getError('invalidCharacters') }}
+                          </mat-error>
+                          <mat-error *ngIf="addFaqForm.get('question')?.touched && addFaqForm.get('question')?.hasError('maxlength') as err">
+                            Maximum length of characters 254 exceeded.
+                          </mat-error>
                         </mat-form-field>
                       </div>
                     </div>
@@ -183,6 +192,15 @@
                         <mat-form-field>
                           <mat-label>Descripiton</mat-label>
                           <textarea matInput formControlName="description" rows="4"></textarea>
+                          <mat-error *ngIf="addFaqForm.get('description')?.touched && addFaqForm.get('description')?.hasError('required')">
+                            Description is required.
+                          </mat-error>
+                          <mat-error *ngIf="addFaqForm.get('description')?.touched && addFaqForm.get('description')?.hasError('invalidCharacters')">
+                            {{ addFaqForm.get('description')?.getError('invalidCharacters') }}
+                          </mat-error>
+                          <mat-error *ngIf="addFaqForm.get('description')?.touched && addFaqForm.get('description')?.hasError('maxlength') as err">
+                            Maximum length of characters 254 exceeded.
+                          </mat-error>
                         </mat-form-field>    
                       </div>
                     </div>

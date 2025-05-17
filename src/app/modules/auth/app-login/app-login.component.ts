@@ -22,7 +22,7 @@ export class AppLoginComponent implements OnInit, OnDestroy {
   @ViewChild('passwordInput') passwordInputRef!: ElementRef;
   @ViewChild('retypePasswordInput') retypePasswordInputRef!: ElementRef;
   @ViewChild('otpInput') otpInputRef!: ElementRef;
-
+  isApp:boolean = false;
   loading:boolean = false;
   state: string | null = null;
   username:string = "";
@@ -54,6 +54,7 @@ export class AppLoginComponent implements OnInit, OnDestroy {
   
 
   ngOnInit(): void {
+    this.isApp = this.deviceDetector.isApp();
     this.isMobile = this.deviceDetector.isMobileDevice();
     if(!this.isMobile) {
       this.username = "";
@@ -61,7 +62,7 @@ export class AppLoginComponent implements OnInit, OnDestroy {
       if(this.authService.getToken()!=null) {
         this.pingSubscription = this.authService.ping().subscribe((data)=>{
           this.loading = false;
-          this.router.navigateByUrl(RouteUrl.HOME);
+          this.utils.navigateToComponent(this,RouteUrl.HOME,RouteUrl.DASHBOARD);
         },(err)=>{
           this.loading = false;
           this.state = AuthStateConstants.LOGIN_STATE;

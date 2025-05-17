@@ -20,7 +20,9 @@ export enum ApiUrls {
   PING = '/ping',
   OVERVIEW = '/overview',
   CATEGORIES = '/service/categories',
+  FAQS = '/service/faqs',
   TASKS = '/tasks',
+  FAQS_API = '/faqs',
 }
 export enum LocalStorageKeys {
    USER_TOKEN = 'TOKEN'
@@ -44,12 +46,12 @@ export enum STATUS {
 
 export const CrumbItems : Record<string, BreadCrumbItem[]> = {
   AddCategoryCrumbItems : [
-      { 'label': 'Home', 'route': RouteUrl.HOME, 'component': '' },
+      { 'label': 'Home', 'route': RouteUrl.DASHBOARD, 'component': RouteUrl.DASHBOARD},
       { 'label': 'Categories' },
       { 'label': 'Add Category', 'isTail': true },
   ],
   UpdateCategoryCrumbItems : [
-    {'label' : 'Home' , 'route' : RouteUrl.HOME, 'component':''},
+    {'label' : 'Home' , 'route' : RouteUrl.DASHBOARD, 'component':RouteUrl.DASHBOARD},
     {'label' : 'Categories'},
     {'label' : 'Update Category','isTail':true},
   ]

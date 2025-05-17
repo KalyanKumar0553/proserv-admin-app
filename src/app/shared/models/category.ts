@@ -47,7 +47,8 @@ export interface CategoryTask {
   note?:string;
   enabled?:boolean;
 }
-export interface CreateFAQRequest {
+export interface FAQRequest {
+  id?:number;
   question:string;
   answer:string;
   serviceTaskID:number;
