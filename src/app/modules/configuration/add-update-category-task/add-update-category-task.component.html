@@ -169,19 +169,19 @@
                     (deleteItem)="onDeleteFAQ($event)"></app-data-accordion>
                 </div>
                 <div class="mb-3 faq-container" *ngIf="faqState=='add-faq'">
-                  <form [formGroup]="addFaqForm" (ngSubmit)="onSubmit()" class="form-container">
+                  <form [formGroup]="faqForm" class="form-container">
                     <div class="row">
                       <div class="col-md-12">
                         <mat-form-field>
                           <mat-label>Question</mat-label>
                           <input matInput #formField formControlName="question"/>
-                          <mat-error *ngIf="addFaqForm.get('question')?.touched && addFaqForm.get('question')?.hasError('required')">
+                          <mat-error *ngIf="faqForm.get('question')?.touched && faqForm.get('question')?.hasError('required')">
                             Question is required.
                           </mat-error>
-                          <mat-error *ngIf="addFaqForm.get('question')?.touched && addFaqForm.get('question')?.hasError('invalidCharacters')">
-                            {{ addFaqForm.get('question')?.getError('invalidCharacters') }}
+                          <mat-error *ngIf="faqForm.get('question')?.touched && faqForm.get('question')?.hasError('invalidCharacters')">
+                            {{ faqForm.get('question')?.getError('invalidCharacters') }}
                           </mat-error>
-                          <mat-error *ngIf="addFaqForm.get('question')?.touched && addFaqForm.get('question')?.hasError('maxlength') as err">
+                          <mat-error *ngIf="faqForm.get('question')?.touched && faqForm.get('question')?.hasError('maxlength') as err">
                             Maximum length of characters 254 exceeded.
                           </mat-error>
                         </mat-form-field>
@@ -192,13 +192,13 @@
                         <mat-form-field>
                           <mat-label>Descripiton</mat-label>
                           <textarea matInput formControlName="description" rows="4"></textarea>
-                          <mat-error *ngIf="addFaqForm.get('description')?.touched && addFaqForm.get('description')?.hasError('required')">
+                          <mat-error *ngIf="faqForm.get('description')?.touched && faqForm.get('description')?.hasError('required')">
                             Description is required.
                           </mat-error>
-                          <mat-error *ngIf="addFaqForm.get('description')?.touched && addFaqForm.get('description')?.hasError('invalidCharacters')">
-                            {{ addFaqForm.get('description')?.getError('invalidCharacters') }}
+                          <mat-error *ngIf="faqForm.get('description')?.touched && faqForm.get('description')?.hasError('invalidCharacters')">
+                            {{ faqForm.get('description')?.getError('invalidCharacters') }}
                           </mat-error>
-                          <mat-error *ngIf="addFaqForm.get('description')?.touched && addFaqForm.get('description')?.hasError('maxlength') as err">
+                          <mat-error *ngIf="faqForm.get('description')?.touched && faqForm.get('description')?.hasError('maxlength') as err">
                             Maximum length of characters 254 exceeded.
                           </mat-error>
                         </mat-form-field>    
@@ -208,22 +208,143 @@
                 </div>
               </mat-tab>
               <mat-tab label="Options" *ngIf="state==updateState">
-                <div class="mb-3 option-container">
-                  <div class="card-list">
-                    <div *ngFor="let option of taskOptions" class="card p-2 d-flex justify-content-between align-items-center mb-2">
-                      <div>{{ option.name }}</div>
-                      <div>
-                        <i class="bi bi-pencil-fill text-primary me-2" (click)="editOption(option)" style="cursor: pointer;"></i>
-                        <i class="bi bi-trash-fill text-danger" (click)="deleteOption(option)" style="cursor: pointer;"></i>
-                      </div>
+                <div class="mb-3 option-container" *ngIf="optionState=='list-option'">
+                  <div class="d-flex justify-content-between align-items-center add-option-button">
+                    <h6 class="option-label" *ngIf="taskOptions.length>0">Task Options</h6>
+                    <h6 class="option-label" *ngIf="taskOptions.length==0">No Options Available</h6>
+                    <button class="btn btn-sm btn-outline-primary" (click)="addTaskOptionState()">
+                      <i class="bi bi-plus-circle"></i> Add New Option
+                    </button>
+                  </div>
+                  <!-- <app-data-accordion *ngIf="allFaqs.length>0" id="taskSection" [title]="'Frequently Asked Questions'" [items]="filteredFaqs"
+                    [titleKey]="'question'" [bodyKey]="'answer'" [searchable]="true" [showEdit]="true" [showDelete]="true"
+                    (searchChanged)="searchFAQ($event)" (editItem)="onEditFAQ($event)"
+                    (deleteItem)="onDeleteFAQ($event)"></app-data-accordion> -->
+
+                  <div *ngFor="let option of taskOptions" class="card p-2 d-flex justify-content-between align-items-center mb-2">
+                    <div>{{ option.name }}</div>
+                    <div>
+                      <i class="bi bi-pencil-fill text-primary me-2" (click)="editOption(option)" style="cursor: pointer;"></i>
+                      <i class="bi bi-trash-fill text-danger" (click)="deleteOption(option)" style="cursor: pointer;"></i>
                     </div>
                   </div>
+                </div>
+                <div class="mb-3 faq-container" *ngIf="optionState=='add-option'">
+                  <form [formGroup]="optionForm" class="form-container">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Name</mat-label>
+                          <input matInput #formField formControlName="name"/>
+                          <mat-error *ngIf="optionForm.get('name')?.touched && optionForm.get('name')?.hasError('required')">
+                            Option name is required.
+                          </mat-error>
+                          <mat-error *ngIf="optionForm.get('name')?.touched && optionForm.get('name')?.hasError('invalidCharacters')">
+                            {{ optionForm.get('name')?.getError('invalidCharacters') }}
+                          </mat-error>
+                          <mat-error *ngIf="optionForm.get('name')?.touched && optionForm.get('name')?.hasError('maxlength') as err">
+                            Maximum length of characters 254 exceeded.
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Description</mat-label>
+                          <input matInput #formField formControlName="description"/>
+                          <mat-error *ngIf="optionForm.get('description')?.touched && optionForm.get('description')?.hasError('required')">
+                            Description is required.
+                          </mat-error>
+                          <mat-error *ngIf="optionForm.get('description')?.touched && optionForm.get('description')?.hasError('invalidCharacters')">
+                            {{ optionForm.get('description')?.getError('invalidCharacters') }}
+                          </mat-error>
+                          <mat-error *ngIf="optionForm.get('description')?.touched && optionForm.get('description')?.hasError('maxlength') as err">
+                            Maximum length of characters 254 exceeded.
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Default Amount To Perform the task with the Option</mat-label>
+                          <input matInput #formField formControlName="defaultAmount" type="number"/>
+                          <mat-error *ngIf="optionForm.get('defaultAmount')?.touched && optionForm.get('defaultAmount')?.hasError('required')">
+                            Default Amount is required.
+                          </mat-error>
+                          <mat-error *ngIf="optionForm.get('defaultAmount')?.touched && optionForm.get('defaultAmount')?.hasError('invalidAmount')">
+                            {{ optionForm.get('defaultAmount')?.errors?.['invalidAmount'] }}
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Minimum time to Complete the task with the selected option</mat-label>
+                          <input matInput #formField formControlName="taskDuration" type="number"/>
+                          <mat-error *ngIf="optionForm.get('taskDuration')?.touched && optionForm.get('taskDuration')?.hasError('required')">
+                            Default Amount is required.
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Inclusions</mat-label>
+                          <mat-chip-grid #inclusionChipGrid aria-label="Enter Inclusions for the task option">
+                            <mat-chip-row *ngFor="let item of optionInclusions"
+                              (removed)="removeOptionInclusion(item)"
+                              [editable]="true"
+                              (edited)="editOptionInclusion(item, $event)">
+                              {{item}}
+                              <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                              </button>
+                            </mat-chip-row>
+                            <input
+                              placeholder="Enter Option Inclusions Detail..."
+                              [matChipInputFor]="inclusionChipGrid"
+                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                              [matChipInputAddOnBlur]="true"
+                              (matChipInputTokenEnd)="addOptionInclusion($event)"/>
+                          </mat-chip-grid>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field>
+                          <mat-label>Exclusions</mat-label>
+                          <mat-chip-grid #exclusionChipGrid aria-label="Enter Exclusions for the task option">
+                            <mat-chip-row *ngFor="let item of optionExclusions"
+                              (removed)="removeOptionExclusion(item)"
+                              [editable]="true"
+                              (edited)="editOptionExclusion(item, $event)">
+                              {{item}}
+                              <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                              </button>
+                            </mat-chip-row>
+                            <input
+                              placeholder="Enter Option Exclusions Detail..."
+                              [matChipInputFor]="exclusionChipGrid"
+                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                              [matChipInputAddOnBlur]="true"
+                              (matChipInputTokenEnd)="addOptionExclusion($event)"/>
+                          </mat-chip-grid>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </mat-tab>
             </mat-tab-group>
           </div>
         </div>
-        <div class="modal-footer"  *ngIf="faqState!='add-faq'">
+        <div class="modal-footer"  *ngIf="faqState!='add-faq' && optionState!='add-option'">
           <button type="button" class="btn btn-secondary" *ngIf="!requestInProgress" (click)="onCancel()">Close</button>
           <button *ngIf="!requestInProgress" type="button" class="btn btn-primary" (click)="onSave()">Save Task</button>
           <button class="btn btn-outline-primary" type="button" *ngIf="requestInProgress">
@@ -234,6 +355,14 @@
         <div class="modal-footer"  *ngIf="faqState=='add-faq'">
           <button type="button" class="btn btn-secondary" *ngIf="!requestInProgress" (click)="cancelAddFAQ()">Back</button>
           <button *ngIf="!requestInProgress" type="button" class="btn btn-primary" (click)="saveFAQ()">Save FAQ</button>
+          <button class="btn btn-outline-primary" type="button" *ngIf="requestInProgress">
+            <span class="spinner-border spinner-border-sm spinner-border-primary" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
+        </div>
+        <div class="modal-footer"  *ngIf="optionState=='add-option'">
+          <button type="button" class="btn btn-secondary" *ngIf="!requestInProgress" (click)="cancelAddOption()">Back</button>
+          <button *ngIf="!requestInProgress" type="button" class="btn btn-primary" (click)="saveOption()">Save Option</button>
           <button class="btn btn-outline-primary" type="button" *ngIf="requestInProgress">
             <span class="spinner-border spinner-border-sm spinner-border-primary" role="status" aria-hidden="true"></span>
             Loading...

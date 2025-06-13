@@ -24,6 +24,7 @@ import { AddUpdateCategoryTaskComponent } from './add-update-category-task/add-u
 import { MatChipsModule } from '@angular/material/chips';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { SnackbarComponent } from '../../shared/components/snackbar/snackbar.component';
+import { ListProvidersComponent } from './list-providers/list-providers.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { SnackbarComponent } from '../../shared/components/snackbar/snackbar.com
     AddUpdateCategoryComponent,
     SettingsComponent,
     AddUpdateCategoryTaskComponent,
+    ListProvidersComponent
   ],
   imports: [
     CommonModule,

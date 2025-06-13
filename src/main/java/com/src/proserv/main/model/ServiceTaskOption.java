@@ -6,13 +6,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Builder
 @Table(name="service_task_option")
+@NoArgsConstructor
+@AllArgsConstructor
 public class ServiceTaskOption extends Auditable {
 
     @Id
@@ -28,6 +32,12 @@ public class ServiceTaskOption extends Auditable {
     private Long serviceTaskID;
     
     private Long defaultAmount;
+    
+    private Long taskDuration;
+    
+    private String inclusions;
+    
+    private String exclusions;
     
     private String displayURL;
     

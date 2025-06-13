@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.src.proserv.main.exceptions.AbstractRuntimeException;
+import com.src.proserv.main.model.ServiceTask;
 import com.src.proserv.main.model.ServiceTaskOption;
 import com.src.proserv.main.repository.FrequentlyAskedQuestionRepository;
 import com.src.proserv.main.repository.ServiceCategoryRepository;
@@ -17,7 +18,9 @@ import com.src.proserv.main.repository.ServiceTaskOptionRepository;
 import com.src.proserv.main.repository.ServiceTaskRepository;
 import com.src.proserv.main.repository.UserServiceRequestTaskRepository;
 import com.src.proserv.main.request.dto.ServiceTaskOptionRequestDTO;
+import com.src.proserv.main.request.dto.ServiceTaskRequestDTO;
 import com.src.proserv.main.response.dto.ServiceTaskOptionResponseDTO;
+import com.src.proserv.main.utils.AppUtils;
 
 import lombok.AllArgsConstructor;
 
@@ -52,11 +55,28 @@ public class TaskOptionService {
 		optionRepository.deleteAllByIdAndServiceCategoryID(optionID,serviceCategoryID);
 	}
 
-	public void saveOption(String userIDFromToken, @Valid ServiceTaskOptionRequestDTO optionRequest) {
-		
+	public String saveOption(String userIDFromToken, @Valid ServiceTaskOptionRequestDTO optionRequest) {
+		String name = optionRequest.getName();
+		Long serviceCategoryID = optionRequest.getServiceCategoryID();
+		Optional<ServiceTaskOption> currOption = optionRepository.findByNameAndServiceCategoryID(name,serviceCategoryID);
+		if(currOption.isPresent()) {
+			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Service task with Given Title already available");
+		}
+		ServiceTaskOption serviceTask = ServiceTaskOptionRequestDTO.toEntityFromOperationRequestDTO(optionRequest);
+		optionRepository.save(serviceTask);
+		return "Task Option Created Succesfully";
 	}
 
-	public void updateOption(String userIDFromToken, Long optionID, @Valid ServiceTaskOptionRequestDTO optionRequest) {
-		
+	public String updateOption(String userIDFromToken, Long optionID, @Valid ServiceTaskOptionRequestDTO optionRequest) {
+		Long serviceCategoryID = optionRequest.getServiceCategoryID();
+		Long serviceTaskID =  optionRequest.getServiceTaskID();
+		Optional<ServiceTaskOption> existingTaskOption = optionRepository.findByIdAndServiceCategoryIDAndServiceTaskID(optionID,serviceCategoryID,serviceTaskID);
+		if(existingTaskOption.isEmpty()) {
+			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Task Option with Details not available");
+		}
+		ServiceTaskOption serviceTaskOption = existingTaskOption.get();
+		AppUtils.applyPatch(optionRequest, existingTaskOption);
+		optionRepository.save(serviceTaskOption);
+		return "Task Option Updated Succesfully";
 	}
 }

@@ -27,11 +27,11 @@ public class ServiceTaskValidator {
 
 	}
 
-	public void validateUpdateTaskRequest(ServiceTaskRequestDTO OptionRequest) {
-		Optional<Long> id = Optional.ofNullable(OptionRequest.getId());
+	public void validateUpdateTaskRequest(ServiceTaskRequestDTO taskRequest) {
+		Optional<Long> id = Optional.ofNullable(taskRequest.getId());
 		if (id.isEmpty() || id.get()<=0) {
-			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Invalid Option ID.");
+			throw new AbstractRuntimeException(HttpStatus.BAD_REQUEST.value(), "Invalid Task ID.");
 		}
-		validateCreateTaskRequest(OptionRequest);
+		validateCreateTaskRequest(taskRequest);
 	}
 }

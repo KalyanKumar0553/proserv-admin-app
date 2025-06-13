@@ -4,18 +4,14 @@ export interface Category {
   providers: number;
   locations: number;
 }
-export interface CreateCategoryRequest {
+export interface CategoryRequest {
+  id?:string;
   name: string;
   displayURL?: string;
   enabled: boolean;
 }
-export interface UpdateCategoryRequest {
-  id:string;
-  name: string;
-  displayURL?: string;
-  enabled: boolean;
-}
-export interface CreateCategoryTaskRequest {
+export interface CategoryTaskRequest {
+    id?:number;
     serviceCategoryID:number;
     title:string;
     displayURL:string;
@@ -25,27 +21,16 @@ export interface CreateCategoryTaskRequest {
     note?:string;
     enabled:boolean;
 }
-export interface UpdateCategoryTaskRequest {
-  id:number;
-  serviceCategoryID:number;
-  title:string;
-  displayURL:string;
-  description:string;
-  inclusions?:string;
-  exclusions?:string;
-  note?:string;
-  enabled:boolean;
-}
-export interface CategoryTask {
+export interface TaskOptionRequest {
   id?:number;
-  title?:string;
-  description?:string;
-  serviceCategoryID?:number;
-  inclusions?:string;
-  exclusions?:string;
-  displayURL?:string;
-  note?:string;
-  enabled?:boolean;
+  name:string;
+  description:string;
+  defaultAmount:number;
+  taskDuration:number;
+  inclusions:string;
+  exclusions:string;
+  serviceTaskID:number;
+  serviceCategoryID:number;
 }
 export interface FAQRequest {
   id?:number;

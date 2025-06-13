@@ -1,5 +1,7 @@
 package com.src.proserv.main.request.dto;
 
+import javax.validation.constraints.NotNull;
+
 import com.src.proserv.main.model.ServiceTask;
 
 import lombok.Data;
@@ -9,8 +11,11 @@ public class ServiceTaskRequestDTO {
 
     private Long id;
 
+    
+    @NotNull
     private Long serviceCategoryID;
 
+    @NotNull
     private String title;
 
     private String displayURL;

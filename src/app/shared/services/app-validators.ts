@@ -56,3 +56,19 @@ export function startsWithAlphabetValidator(): ValidatorFn {
         return !startsWithAlphabet ? { doesNotStartWithAlphabet: true } : null;
     };
 }
+export function minimumAmountValidator(minAmount: number = 10): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (value == null || value === '') {
+        return null;
+      }
+      const amount = parseFloat(value);
+      if (isNaN(amount)) {
+        return { invalidAmount: 'Amount must be a valid number' };
+      }
+      if (amount < minAmount) {
+        return { minAmount: `Minimum amount should be ${minAmount}` };
+      }
+      return null;
+    };
+}

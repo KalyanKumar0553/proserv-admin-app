@@ -1,4 +1,4 @@
-<nav aria-label="breadcrumb" class="custom-breadcrumb">
+<nav aria-label="breadcrumb" class="custom-breadcrumb d-none d-md-block">
     <ol class="breadcrumb mb-4">
         <li *ngFor="let item of crumbItems" class="breadcrumb-item breadcrumb-hover" [class.active-link]="item.isTail">
             <a *ngIf="item.route" (click)="navigateToComponent(item.route,item.component)">{{item.label}}</a>

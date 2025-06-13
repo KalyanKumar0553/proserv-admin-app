@@ -22,6 +22,7 @@ export enum ApiUrls {
   CATEGORIES = '/service/categories',
   FAQS = '/service/faqs',
   TASKS = '/tasks',
+  OPTIONS = '/options',
   FAQS_API = '/faqs',
 }
 export enum LocalStorageKeys {

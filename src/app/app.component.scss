@@ -24,9 +24,11 @@ body {
     background-color: $primary-color;
     border-color: $primary-color;
     color: $background-color;
+    .status-spinner {
+        background-color: $background-color;
+    }
 }
 .btn-outline-danger {
-    // background-color: $danger-color;
     border-color: $danger-color;
     color: $danger-color;
 }
@@ -35,12 +37,6 @@ body {
     background-color: $danger-color;
     border-color: $danger-color;
     color: $background-color;
-}
-.spinner-border {
-    color:$primary-color;
-}
-.spinner-border:hover {
-    color: inherit;
 }
 .btn-outline-primary {
     background-color: $background-color;

@@ -69,11 +69,11 @@ public class TaskService {
 	public String createServiceTask(String userUUID,ServiceTaskRequestDTO serviceTaskRequest) {
 		String title = serviceTaskRequest.getTitle();
 		Long serviceCategoryID = serviceTaskRequest.getServiceCategoryID();
-		ServiceTask serviceTask = ServiceTaskRequestDTO.toEntityFromTaskRequestDTO(serviceTaskRequest);
-		Optional<ServiceTask> currOption = taskRepository.findByTitleAndServiceCategoryIDIgnoreCase(title,serviceCategoryID);
-		if(currOption.isPresent()) {
+		Optional<ServiceTask> currTask = taskRepository.findByTitleAndServiceCategoryIDIgnoreCase(title,serviceCategoryID);
+		if(currTask.isPresent()) {
 			throw new AbstractRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Service task with Given Title already available");
 		}
+		ServiceTask serviceTask = ServiceTaskRequestDTO.toEntityFromTaskRequestDTO(serviceTaskRequest);
 		taskRepository.save(serviceTask);
 		return "Service Task Created Succesfully";
 	}

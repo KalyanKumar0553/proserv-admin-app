@@ -21,7 +21,7 @@
   border: none;
 }
 
-.add-faq-button {
+.add-faq-button, .add-option-button {
   margin-bottom: 13px;
   margin-top: 13px;
 }
@@ -43,29 +43,27 @@
   display: inline;
   float: right;
   border: 0px;
-  background: $background-color;
 }
 
 mat-form-field {
   margin-top: 2%;
   width: 98%;
 }
-
 .general-container,
 .faq-container,
 .option-container {
   margin-top: 1%;
   width: 98%;
   max-height: 480px;
-  overflow: scroll;
+  overflow: hidden;
+  overflow-y: scroll;
 }
-
 .card-list .card {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border: 1px solid #e0e0e0;
 }
 
-.faq-label {
+.faq-label,.option-label {
   font-weight: 500 !important;
   color: $primary-color;
 }

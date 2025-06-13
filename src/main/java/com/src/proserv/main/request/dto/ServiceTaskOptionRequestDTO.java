@@ -15,22 +15,37 @@ public class ServiceTaskOptionRequestDTO {
 	@NotNull
 	@NotEmpty
     private String name;
-
+    
 	@NotNull
-	@NotEmpty
     private String description;
 
 	@NotNull
-	@NotEmpty
-    private Long defaultAmount;
+    private Long serviceCategoryID;
 
-	public static ServiceTaskOption toEntityFromOperationRequestDTO(Long serviceCategoryID,Long serviceTaskID,ServiceTaskOptionRequestDTO requestDTO) {
+	@NotNull
+    private Long serviceTaskID;
+    
+    private Long defaultAmount;
+    
+    private Long taskDuration;
+    
+    private String inclusions;
+    
+    private String exclusions;
+    
+    private String displayURL;
+
+	public static ServiceTaskOption toEntityFromOperationRequestDTO(ServiceTaskOptionRequestDTO requestDTO) {
 		return ServiceTaskOption.builder()
 				.name(requestDTO.getName())
 	            .description(requestDTO.getDescription())
-	            .serviceCategoryID(serviceCategoryID)
-	            .serviceTaskID(serviceTaskID)
+	            .serviceCategoryID(requestDTO.getServiceCategoryID())
+	            .serviceTaskID(requestDTO.getServiceTaskID())
 	            .defaultAmount(requestDTO.getDefaultAmount())
+	            .taskDuration(requestDTO.getTaskDuration())
+	            .displayURL(requestDTO.getDisplayURL())
+	            .inclusions(requestDTO.getInclusions())
+	            .exclusions(requestDTO.getExclusions())
 	            .build();
 	}
 

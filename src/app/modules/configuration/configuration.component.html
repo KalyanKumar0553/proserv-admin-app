@@ -7,6 +7,7 @@
       <app-list-category *ngIf="activeComponent=='list-categories'" (updateComponentEvent)="updateComponent($event)"></app-list-category>
       <app-add-update-category *ngIf="activeComponent=='add-update-category'" [categoryID]="categoryID" (updateComponentEvent)="updateComponent($event)"></app-add-update-category>
       <app-settings *ngIf="activeComponent=='settings'"></app-settings>
+      <app-list-providers *ngIf="activeComponent=='list-providers'"></app-list-providers>
     </div>
   </div>
 </div>

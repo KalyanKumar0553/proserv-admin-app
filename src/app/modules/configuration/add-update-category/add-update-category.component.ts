@@ -1,15 +1,13 @@
 import { Component, ElementRef, EventEmitter, inject, Inject, Input, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ComponentState, CrumbItems, STATUS } from '../../../shared/constants/constants.enum';
-import RouteUrl from '../../../shared/constants/router-url.enum';
 import { BreadCrumbItem } from '../../../shared/models/bread-crumb-item.model';
-import { Validators } from '@angular/forms';
 import { AppUtilsService } from '../../../shared/services/app-utils.service';
 import { CategoryService } from '../../../shared/services/categories.service';
 import { finalize, forkJoin, Subscription } from 'rxjs';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
-import { CreateCategoryRequest, UpdateCategoryRequest } from '../../../shared/models/category';
-import { alphabetSpaceValidator,atLeastOneAlphabetValidator,alphaNumericSpaceSpecialValidator } from '../../../shared/services/app-validators';
+import { FormUtilsService } from 'app/shared/services/form-utils.service';
+import { CategoryRequest } from 'app/shared/models/category';
 
 
 @Component({
@@ -36,12 +34,17 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
   showDeleteModal: boolean = false;
   @ViewChildren('formField') formFields!: QueryList<ElementRef>;
 
-  private appUtils = inject(AppUtilsService);
-  
+  private formUtils:FormUtilsService = inject(FormUtilsService);
+  private fb:FormBuilder = inject(FormBuilder);
+  private appUtils: AppUtilsService = inject(AppUtilsService);
+  private categoryService: CategoryService = inject(CategoryService);
+  private snackbar: SnackbarService = inject(SnackbarService);
+
   private getCategorySubscription?: Subscription;
   private updateCategorySubscription?: Subscription;
   private deleteCategoryTaskSubscription?: Subscription;
   tabIndex: number = 0;
+
   addCrumbItems: BreadCrumbItem[] = CrumbItems.AddCategoryCrumbItems;
   updateCrumbItems: BreadCrumbItem[] = CrumbItems.UpdateCategoryCrumbItems;
 
@@ -50,26 +53,19 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
   taskState = ComponentState.UPDATE;
 
 
-  constructor(private fb: FormBuilder, private categoryService: CategoryService, private snackservice: SnackbarService) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.state = this.categoryID ? ComponentState.UPDATE : ComponentState.ADD;
+    this.initCategoryForm();
     if (this.state == this.updateState) {
       this.isLoading = true;
       this.fetchCategoryDetails();
     }
-    this.initCategoryForm();
   }
 
   initCategoryForm() {
-    this.categoryForm = this.fb.group({
-      categoryId: [],
-      enabled: ['active'],
-      name: ['', [Validators.required,atLeastOneAlphabetValidator(),alphaNumericSpaceSpecialValidator(),Validators.maxLength(254)]],
-      serviceProviders: [],
-      availableLocations: [],
-      displayURL: ['', [Validators.required,Validators.maxLength(254),atLeastOneAlphabetValidator(),alphaNumericSpaceSpecialValidator()]]
-    });
+    this.categoryForm = this.formUtils.buildCategoryForm(this);
   }
 
   fetchCategoryDetails() {
@@ -113,35 +109,33 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
     }
     this.isLoading = true;
     if (this.state == this.updateState) {
-      let payload: UpdateCategoryRequest = { id: this.categoryID, name: this.categoryForm.get('name').value, displayURL: this.categoryForm.get('displayURL').value, enabled: this.categoryForm.get('enabled').value == 'active' };
-      this.updateCategorySubscription = this.categoryService.updateCategory(this.categoryID, payload).subscribe({
+      let payload: CategoryRequest = { id: this.categoryID, name: this.categoryForm.get('name').value, displayURL: this.categoryForm.get('displayURL').value, enabled: this.categoryForm.get('enabled').value == 'active' };
+      this.updateCategorySubscription = this.categoryService.saveCategory(payload).subscribe({
         next: (res) => {
-          this.snackservice.show('Succesfully Updated Category Details!', STATUS.SUCCESS);
+          this.snackbar.show('Succesfully Updated Category Details!', STATUS.SUCCESS);
           this.isLoading = false;
         },
         error: (err) => {
-          this.snackservice.show('Unable To Update Category Details!', STATUS.ERROR);
+          this.snackbar.show('Unable To Update Category Details!', STATUS.ERROR);
           this.isLoading = false;
         },
       });
     } else {
-      let payload: CreateCategoryRequest = { name: this.categoryForm.get('name').value, displayURL: this.categoryForm.get('displayURL').value, enabled: this.categoryForm.get('enabled').value == 'active' };
+      let payload: CategoryRequest = { name: this.categoryForm.get('name').value, displayURL: this.categoryForm.get('displayURL').value, enabled: this.categoryForm.get('enabled').value == 'active' };
       this.updateCategorySubscription = this.categoryService.saveCategory(payload).subscribe({
         next: (res) => {
           this.categoryForm.reset();
           this.previewUrl = '';
-          this.snackservice.show('Succesfully Saved Category Details!', STATUS.SUCCESS);
+          this.snackbar.show('Succesfully Saved Category Details!', STATUS.SUCCESS);
           this.isLoading = false;
         },
         error: (err) => {
-          this.snackservice.show((err?.message??'Unable To Save Category Details!'), STATUS.ERROR);
+          this.snackbar.show((err?.message??'Unable To Save Category Details!'), STATUS.ERROR);
           this.isLoading = false;
         }
       });
     }
   }
-
-
 
   showTaskModal(state: any) {
     this.showAddTask = true;
@@ -208,13 +202,13 @@ export class AddUpdateCategoryComponent implements OnInit, OnDestroy {
       this.showDeleteModal = false;
       this.taskID = null;
       this.isLoading = false;
-      this.snackservice.show('Deleted Task Succsefully',STATUS.SUCCESS);
+      this.snackbar.show('Deleted Task Succsefully',STATUS.SUCCESS);
       this.fetchCategoryDetails();
     },(err)=>{
       this.showDeleteModal = false;
       this.taskID = null;
       this.isLoading = false;
-      this.snackservice.show('Unable To Delete Task',STATUS.ERROR);
+      this.snackbar.show('Unable To Delete Task',STATUS.ERROR);
     });
   }
 

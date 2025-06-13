@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.src.proserv.main.model.ServiceTaskOption;
 
 public interface ServiceTaskOptionRepository extends JpaRepository<ServiceTaskOption, Long> {
+	
 	@Transactional
 	void deleteAllByServiceCategoryID(Long serviceCategoryID);
 	
@@ -20,6 +21,7 @@ public interface ServiceTaskOptionRepository extends JpaRepository<ServiceTaskOp
 	
 	@Transactional
 	void deleteAllByServiceCategoryIDAndServiceTaskID(Long serviceCategoryID,Long serviceTaskID);
+	
 	@Transactional
 	void deleteById(Long id);
 
@@ -27,5 +29,5 @@ public interface ServiceTaskOptionRepository extends JpaRepository<ServiceTaskOp
 
 	Optional<ServiceTaskOption> findByNameAndServiceCategoryID(String name,Long serviceCategoryID);
 	
-	List<ServiceTaskOption> findAllByServiceCategoryIDAndServiceTaskID(Long serviceCategoryID,Long serviceTaskID);
+	List<ServiceTaskOption> findAllByServiceCategoryIDAndServiceTaskID(Long serviceCategoryID, Long serviceTaskID);
 }

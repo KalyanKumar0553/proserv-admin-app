@@ -1,14 +1,14 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { ComponentState, STATUS } from '../../../shared/constants/constants.enum';
 import { AppUtilsService } from '../../../shared/services/app-utils.service';
-import { CreateCategoryTaskRequest, UpdateCategoryTaskRequest } from '../../../shared/models/category';
+import { CategoryTaskRequest, FAQRequest, TaskOptionRequest } from '../../../shared/models/category';
 import { CategoryService } from '../../../shared/services/categories.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
 import { finalize, forkJoin, Subscription } from 'rxjs';
-import { alphaNumericSpaceSpecialValidator, alphaNumericSpaceValidator, atLeastOneAlphabetValidator } from '../../../shared/services/app-validators';
+import { FormUtilsService } from 'app/shared/services/form-utils.service';
 
 @Component({
   selector: 'app-add-update-category-task',
@@ -27,6 +27,7 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
 
   @ViewChildren('formField') formFields!: QueryList<ElementRef>;
   faqState: string = 'list-faq';
+  optionState: string = 'list-option';
   
   addState = ComponentState.ADD;
   updateState = ComponentState.UPDATE;
@@ -35,41 +36,44 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
   previewUrl = '';
 
   taskForm: FormGroup;
-  addFaqForm: FormGroup;
+  faqForm: FormGroup;
+  optionForm: FormGroup;
 
-  allFaqs = [];
-  filteredFaqs = [];
+  allFaqs: FAQRequest[] = [];
+  filteredFaqs: FAQRequest[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
   
   inclusions: string[] = [];
   exclusions: string[] = [];
   taskOptions: any = [];
 
-  
+  taskOptionInclusions: string[][] = [];
+  taskOptionExclusions: string[][] = [];
+
+  optionInclusions:string[] = [];
+  optionExclusions:string[] = [];
+
   private updateCategoryTaskSubscription?: Subscription;
+  private updateTaskOptionSubscription ?: Subscription;
   private getCategoryTaskSubscription?: Subscription;
   private faqSubscripiton?: Subscription;
 
-  constructor(private fb: FormBuilder, private appUtils: AppUtilsService, private categoryService: CategoryService, private snackbar: SnackbarService) { }
-
+  private formUtils:FormUtilsService = inject(FormUtilsService);
+  private fb:FormBuilder = inject(FormBuilder);
+  private appUtils: AppUtilsService = inject(AppUtilsService);
+  private categoryService: CategoryService = inject(CategoryService);
+  private snackbar: SnackbarService = inject(SnackbarService);
+  
+  constructor() { }
+  
   ngOnInit(): void {
+    this.taskForm = this.formUtils.buildTaskForm(this);
+    this.faqForm = this.formUtils.buildFAQForm(this);
+    this.optionForm = this.formUtils.buildOptionForm(this);
     if (this.state == this.updateState) {
       this.isLoading = true;
       this.loadTaskDetails();
     }
-    this.taskForm = this.fb.group({
-      taskID: [],
-      enabled: ['active'],
-      title: ['', [Validators.required, atLeastOneAlphabetValidator(),alphaNumericSpaceSpecialValidator(), Validators.maxLength(254)]],
-      description: ['', [Validators.required, atLeastOneAlphabetValidator(),alphaNumericSpaceSpecialValidator(), Validators.maxLength(254)]],
-      note: [''],
-      displayURL: ['', [Validators.required]],
-    });
-    this.addFaqForm = this.fb.group({
-      id:[],
-      question: ['', [Validators.required, atLeastOneAlphabetValidator(),alphaNumericSpaceSpecialValidator(), Validators.maxLength(254)]],
-      description: ['', [Validators.required, atLeastOneAlphabetValidator(),alphaNumericSpaceSpecialValidator(), Validators.maxLength(254)]],
-    });
   }
 
 
@@ -82,13 +86,19 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       })
     ).subscribe(([taskResponse]) => {
-      this.isLoading = false;
+      // this.isLoading = false;
       if (taskResponse?.statusMsg[0]?.faqs) {
         this.allFaqs = taskResponse?.statusMsg[0]?.faqs || [];
         this.filteredFaqs = taskResponse?.statusMsg[0]?.faqs || [];
       }
       if (taskResponse?.statusMsg[0]?.options?.length ?? false) {
+        this.taskOptionInclusions = [];
+        this.taskOptionExclusions = [];
         this.taskOptions = taskResponse?.statusMsg[0]?.options || [];
+        this.taskOptions.forEach(o => {
+          this.taskOptionInclusions.push((o?.inclusions||'').split(","));
+          this.taskOptionExclusions.push((o?.exclusions||'').split(","));
+        });
       }
       if (taskResponse?.statusMsg?.length > 0) {
         let taskData = taskResponse.statusMsg[0];
@@ -114,7 +124,7 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
     }
     this.isLoading = true;
     if (this.state == this.updateState) {
-      let payload: UpdateCategoryTaskRequest = {
+      let payload: CategoryTaskRequest = {
         id: this.taskID,
         serviceCategoryID: this.categoryID,
         title: this.taskForm.get('title').value,
@@ -125,7 +135,7 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
         note: this.taskForm.get('note').value,
         enabled: this.taskForm.get('enabled').value == 'active'
       };
-      this.updateCategoryTaskSubscription = this.categoryService.updateCategoryTask(this.categoryID, this.taskID, payload).subscribe({
+      this.updateCategoryTaskSubscription = this.categoryService.saveCategoryTask(this.categoryID, payload).subscribe({
         next: (res) => {
           this.snackbar.show('Succesfully Updated Task Details!', STATUS.SUCCESS);
           this.isLoading = false;
@@ -137,7 +147,7 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
         },
       });
     } else {
-      let payload: CreateCategoryTaskRequest = {
+      let payload: CategoryTaskRequest = {
         serviceCategoryID: this.categoryID,
         title: this.taskForm.get('title').value,
         description: this.taskForm.get('description').value,
@@ -165,9 +175,10 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
 
   onTabChange(event: any): void {
     const tabIndex = event.index;
-    this.addFaqForm.reset();
+    this.faqForm.reset();
     if(tabIndex!=0) {
       this.faqState = 'list-faq';
+      this.optionState = 'list-option';
     }
   }
 
@@ -180,13 +191,13 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
   }
 
   searchFAQ(term: string = '') {
-    this.filteredFaqs = this.allFaqs.filter(f => f.title.toLowerCase().includes(term.toLowerCase()));
+      this.filteredFaqs = term ? this.allFaqs.filter(f => f.question.toLowerCase().includes(term.toLowerCase())) : this.allFaqs;
   }
 
   onEditFAQ(item: any) {
-    this.addFaqForm.get('id').setValue(item.id);
-    this.addFaqForm.get('question').setValue(item.question);
-    this.addFaqForm.get('description').setValue(item.answer);
+    this.faqForm.get('id').setValue(item.id);
+    this.faqForm.get('question').setValue(item.question);
+    this.faqForm.get('description').setValue(item.answer);
     this.faqState = 'add-faq';
   }
 
@@ -258,26 +269,116 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
     }
   }
 
+  addOptionInclusion(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    if (value) {
+      this.optionInclusions.push(value);
+    }
+    event.chipInput!.clear();
+  }
+
+  removeOptionInclusion(item: string): void {
+    const index = this.optionInclusions.indexOf(item);
+    if (index >= 0) {
+      this.optionInclusions.splice(index, 1);
+    }
+  }
+
+  addOptionExclusion(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    if (value) {
+      this.optionExclusions.push(value);
+    }
+    event.chipInput!.clear();
+  }
+
+  removeOptionExclusion(item: string): void {
+    const index = this.optionExclusions.indexOf(item);
+    if (index >= 0) {
+      this.optionExclusions.splice(index, 1);
+    }
+  }
+
+  editOptionInclusion(item: string, event: MatChipEditedEvent) {
+    const value = event.value.trim();
+    if (!value) {
+      this.removeOptionInclusion(item);
+      return;
+    }
+    const index = this.optionInclusions.indexOf(item);
+    if (index >= 0) {
+      this.optionInclusions[index] = value;
+    }
+  }
+
+  editOptionExclusion(item: string, event: MatChipEditedEvent) {
+    const value = event.value.trim();
+    if (!value) {
+      this.removeOptionExclusion(item);
+      return;
+    }
+    const index = this.optionExclusions.indexOf(item);
+    if (index >= 0) {
+      this.optionExclusions[index] = value;
+    }
+  }
+
   addFAQState() {
     this.faqState = 'add-faq';
   }
 
-  cancelAddFAQ() {
-    this.faqState = 'list-faq';
-    this.addFaqForm.reset();
+  addTaskOptionState() {
+    this.optionState = 'add-option';
   }
 
-  saveFAQ() {
-    if (this.addFaqForm.invalid) {
-      this.appUtils.focusFirstInvalidControl(this, this.addFaqForm);
-      this.addFaqForm.markAllAsTouched();
+  cancelAddFAQ() {
+    this.faqState = 'list-faq';
+    this.searchFAQ();
+    this.faqForm.reset();
+  }
+
+  saveOption() {
+    if (this.optionForm.invalid) { 
+      this.appUtils.focusFirstInvalidControl(this, this.optionForm);
+      this.optionForm.markAllAsTouched();
       return;
     }
     this.isLoading = true;
-    let payload = { 'id':this.addFaqForm.get('id').value, 'question': this.addFaqForm.get('question').value, 'answer': this.addFaqForm.get('description').value, 'serviceTaskID':this.taskID, 'serviceCategoryID':this.categoryID };
+    let payload : TaskOptionRequest = {
+      'id': this.optionState=='add-option' ? null : this.optionForm.get('id').value, 
+      'name':this.optionForm.get('name').value, 
+      'description':this.optionForm.get('description').value, 
+      'defaultAmount':this.optionForm.get('defaultAmount').value,
+      'taskDuration':this.optionForm.get('taskDuration').value,
+      'inclusions':this.optionInclusions.toString(),
+      'exclusions':this.optionExclusions.toString(),
+      'serviceTaskID':this.taskID, 
+      'serviceCategoryID':this.categoryID,
+    };
+    this.updateCategoryTaskSubscription = this.categoryService.saveTaskOption(this.categoryID,payload).subscribe({
+      next: (res) => {
+        this.snackbar.show('Succesfully Updated Option Details!', STATUS.SUCCESS);
+        this.isLoading = false;
+        this.saveAction.emit();
+      },
+      error: (err) => {
+        this.snackbar.show('Unable To Update Option Details!', STATUS.ERROR);
+        this.isLoading = false;
+      },
+    });
+  }
+
+  saveFAQ() {
+    if (this.faqForm.invalid) {
+      this.appUtils.focusFirstInvalidControl(this, this.faqForm);
+      this.faqForm.markAllAsTouched();
+      return;
+    }
+    this.isLoading = true;
+    let payload = { 'id':this.faqForm.get('id').value, 'question': this.faqForm.get('question').value, 'answer': this.faqForm.get('description').value, 'serviceTaskID':this.taskID, 'serviceCategoryID':this.categoryID };
     this.faqSubscripiton = this.categoryService.saveFAQ(payload).subscribe(()=>{
       this.isLoading = false;
-      this.addFaqForm.reset();
+      this.faqForm.reset();
       this.faqState = 'list-faq';
       this.loadTaskDetails();
       this.snackbar.show('Succesfully Saved FAQ Details!', STATUS.SUCCESS);
@@ -313,6 +414,13 @@ export class AddUpdateCategoryTaskComponent implements OnInit, OnDestroy {
     if(this.faqSubscripiton) {
       this.faqSubscripiton.unsubscribe();
     }
-    this.taskForm.reset();
+    if(this.taskForm) {
+      this.taskForm.reset();
+    }
+  }
+
+  cancelAddOption() {
+    this.optionState = 'list-option';
+    this.optionForm.reset();
   }
 }

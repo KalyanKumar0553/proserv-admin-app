@@ -9,8 +9,8 @@
       <app-breadcrumb *ngIf="state==addState" [crumbItems]="addCrumbItems"></app-breadcrumb>
       <app-breadcrumb *ngIf="state==updateState" [crumbItems]="updateCrumbItems"></app-breadcrumb>
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="fw-bold mb-4" *ngIf="state==addState">Add New Category</h5>
-        <h5 class="fw-bold mb-4" *ngIf="state==updateState">Update Category</h5>
+        <h5 class="fw-bold mb-4 d-none d-md-block" *ngIf="state==addState">Add New Category</h5>
+        <h5 class="fw-bold mb-4 d-none d-md-block" *ngIf="state==updateState">Update Category</h5>
         <button type="button" class="btn btn-primary" *ngIf="state==updateState" (click)="addNewCategory($event);">Add New Category</button>
       </div>
       <div class="row g-3 mb-4">

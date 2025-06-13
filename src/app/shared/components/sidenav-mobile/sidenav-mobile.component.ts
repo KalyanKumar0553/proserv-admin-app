@@ -35,17 +35,7 @@ export class SidenavMobileComponent implements OnInit,OnChanges {
     }
   }
 
-  toggleExpansion(navItem:any= {}) {
-    this.sideNavMenu.forEach(element => {
-      if(navItem.labelText!=element.labelText) {
-        element.active = false;
-      }
-    });
-    navItem.active = !navItem.active;
-    this.changeDetector.detectChanges();
-  }
-
-  setActiveLabel(navItem:MenuItem) {
+  setActiveLabel(navItem:MenuItem,toogle:boolean = false) {
     let prevActiveComponent = this.appUtils.fetchActiveComponentFromMenu(this.sideNavMenu);
     this.sideNavMenu.forEach(element => {
       element.active = false;
@@ -59,8 +49,12 @@ export class SidenavMobileComponent implements OnInit,OnChanges {
       });
     });
     navItem.active=true;
-    if(navItem.route != prevActiveComponent) {
+    if(toogle) {
       this.componentChangeEvent.emit(navItem);
+    } else {
+      if(navItem.route != prevActiveComponent) {
+        this.componentChangeEvent.emit(navItem);
+      }
     }
   }
 }

@@ -1,12 +1,14 @@
 <div class="nav-container">
   <div class="sidenav" *ngFor="let navItem of sideNavMenu">
     <div class="nav-main-title">
-      <span class="title-text" (click)="setActiveLabel(navItem)" *ngIf="!navItem.active">
+      <span class="title-text" *ngIf="navItem?.children?.length>0;else noclickspan" (click)="setActiveLabel(navItem.children[0],true)">
         {{navItem.labelText}}
       </span>
-      <span class="title-text" *ngIf="navItem.active">
-        {{navItem.labelText}}
-      </span>
+      <ng-template #noclickspan>
+        <span class="title-text" (click)="setActiveLabel(navItem)">
+          {{navItem.labelText}}
+        </span>
+      </ng-template>
     </div>
     <ul class="nav flex-column" *ngIf="navItem.active">
       <li class="nav-item" [class.active-item]="item.active" *ngFor="let item of navItem.children" (click)="setActiveLabel(item)">

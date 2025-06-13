@@ -1,6 +1,7 @@
 package com.src.proserv.main.controllers;
 
 import javax.mail.MessagingException;
+import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,10 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.src.proserv.main.configuration.JWTTokenProvider;
+import com.src.proserv.main.request.dto.ServiceTaskOptionRequestDTO;
 import com.src.proserv.main.request.dto.ServiceTaskRequestDTO;
 import com.src.proserv.main.response.dto.JSONResponseDTO;
+import com.src.proserv.main.services.TaskOptionService;
 import com.src.proserv.main.services.TaskService;
 import com.src.proserv.main.utils.AppUtils;
+import com.src.proserv.main.validators.ServiceOptionValidator;
 import com.src.proserv.main.validators.ServiceTaskValidator;
 
 import lombok.AllArgsConstructor;
@@ -39,6 +43,11 @@ public class ServiceTaskController {
 	final ServiceTaskValidator taskValidator;
 
 	final JWTTokenProvider jwtTokenProvider;
+	
+	final TaskOptionService optionService;
+
+	final ServiceOptionValidator optionValidator;
+
 
 	@GetMapping("/{serviceCategoryID}/tasks")
 	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
@@ -78,5 +87,20 @@ public class ServiceTaskController {
 		taskValidator.validateUpdateTaskRequest(taskRequestDTO);
     	return ResponseEntity.ok(AppUtils.getJSONObject(taskService.updateServiceTask(jwtTokenProvider.getUserIDFromToken(token.substring(7)),taskRequestDTO)));
 	}
-
+	
+	@PostMapping("/{serviceCategoryID}/options")
+	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
+	public ResponseEntity<JSONResponseDTO<?>> createOption(@RequestHeader("Authorization") String token,@Valid @RequestBody ServiceTaskOptionRequestDTO optionRequest)
+			throws MessagingException {
+		optionValidator.validateCreateOptionRequest(optionRequest);
+		return ResponseEntity.ok(AppUtils.getJSONObject(optionService.saveOption(jwtTokenProvider.getUserIDFromToken(token.substring(7)),optionRequest)));
+	}
+	
+	@PutMapping("/{serviceCategoryID}/options/{optionID}")
+	@PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN','USER')")
+	public ResponseEntity<JSONResponseDTO<?>> updateOption(@RequestHeader("Authorization") String token,@PathVariable Long optionID,@Valid @RequestBody ServiceTaskOptionRequestDTO optionRequest)
+			throws MessagingException {
+		optionValidator.validateUpdateOptionRequest(optionRequest);
+		return ResponseEntity.ok(AppUtils.getJSONObject(optionService.updateOption(jwtTokenProvider.getUserIDFromToken(token.substring(7)),optionID,optionRequest)));
+	}
 }

@@ -11,6 +11,7 @@ import com.src.proserv.main.model.ServiceCategory;
 
 
 public interface ServiceCategoryRepository extends JpaRepository<ServiceCategory, Long> {
+	
 	@Query("SELECT COUNT(st) FROM ServiceCategory st where st.enabled = true")
 	long getTotalCategories();
 	Optional<ServiceCategory> findByName(String name);
